@@ -219,10 +219,10 @@ const OrgChart = ({ units, members, onMemberClick }) => {
 
     const visibleNodes = [];
     const visibleEdges = [];
-    const VERTICAL_GAP = 120;
+    const VERTICAL_GAP = 150;
     const HORIZONTAL_GAP = 50;
-    const MEMBER_GAP = 100;
-    const MEMBER_Y_OFFSET = 65;
+    const MEMBER_GAP = 140;
+    const MEMBER_Y_OFFSET = 100;
 
     const subtreeHeightMap = {};
     const subtreeWidthMap = {};
