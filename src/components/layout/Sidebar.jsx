@@ -165,8 +165,8 @@ const Sidebar = ({ members, units, searchTerm, setSearchTerm, onMemberClick, onA
             
             <div style={{ 
               display: 'grid', 
-              gridTemplateColumns: isMobile ? 'repeat(4, 1fr)' : 'repeat(auto-fill, minmax(130px, 1fr))',
-              gap: isMobile ? '8px' : '15px' 
+              gridTemplateColumns: isMobile ? 'repeat(4, 1fr)' : 'repeat(auto-fill, minmax(110px, 1fr))',
+              gap: isMobile ? '8px' : '12px' 
             }}>
               {posMembers
                 .sort((a, b) => getPriority(a.position) - getPriority(b.position))
@@ -180,12 +180,12 @@ const Sidebar = ({ members, units, searchTerm, setSearchTerm, onMemberClick, onA
                       onClick={() => onMemberClick(member)}
                       className="glass member-card-mini"
                       style={{
-                        padding: isMobile ? '8px 4px' : '12px',
+                        padding: isMobile ? '8px 4px' : '10px 6px',
                         cursor: 'pointer',
                         textAlign: 'center',
                         position: 'relative',
                         border: '1px solid rgba(255, 255, 255, 0.08)',
-                        borderRadius: '12px',
+                        borderRadius: '10px',
                         background: 'rgba(255, 255, 255, 0.03)',
                         transition: 'box-shadow 0.3s ease',
                         minWidth: 0
@@ -207,10 +207,10 @@ const Sidebar = ({ members, units, searchTerm, setSearchTerm, onMemberClick, onA
                           src={member.photo} 
                           alt={member.lastName} 
                           style={{ 
-                            width: isMobile ? '36px' : '48px', 
-                            height: isMobile ? '36px' : '48px', 
-                            borderRadius: '10px', 
-                            marginBottom: '6px',
+                            width: isMobile ? '36px' : '40px', 
+                            height: isMobile ? '36px' : '40px', 
+                            borderRadius: '8px', 
+                            marginBottom: '4px',
                             border: `1px solid ${roleColor}`,
                             objectFit: 'cover'
                           }} 
@@ -219,7 +219,7 @@ const Sidebar = ({ members, units, searchTerm, setSearchTerm, onMemberClick, onA
                       
                       <div style={{ 
                         fontWeight: '700', 
-                        fontSize: isMobile ? '0.7rem' : '0.85rem',
+                        fontSize: isMobile ? '0.7rem' : '0.75rem',
                         color: '#ffffff',
                         lineHeight: '1.2',
                         overflow: 'hidden',
@@ -229,7 +229,7 @@ const Sidebar = ({ members, units, searchTerm, setSearchTerm, onMemberClick, onA
                         {fullName}
                       </div>
                       <div style={{ 
-                        fontSize: isMobile ? '0.55rem' : '0.65rem', 
+                        fontSize: isMobile ? '0.55rem' : '0.6rem', 
                         color: roleColor, 
                         fontWeight: '800', 
                         textTransform: 'uppercase',
@@ -242,6 +242,7 @@ const Sidebar = ({ members, units, searchTerm, setSearchTerm, onMemberClick, onA
                   );
                 })}
             </div>
+
 
           </div>
         ))}
