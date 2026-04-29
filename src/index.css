@@ -116,19 +116,19 @@ html, body, #root {
   }
 
   .nav-sidebar {
-    width: 100%;
-    height: 60px;
-    flex-direction: row;
-    padding: 0;
-    border-right: none;
-    border-bottom: 1px solid var(--glass-border);
-    justify-content: center;
-    position: fixed;
-    top: 0;
-    left: 0;
-    z-index: 10000;
-    background: rgba(13, 17, 23, 0.95);
-    backdrop-filter: blur(10px);
+    width: 100% !important;
+    height: 60px !important;
+    flex-direction: row !important;
+    padding: 0 !important;
+    border-right: none !important;
+    border-bottom: 1px solid var(--glass-border) !important;
+    justify-content: center !important;
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    z-index: 30000 !important; /* 最前面へ */
+    background: rgba(13, 17, 23, 0.98) !important;
+    backdrop-filter: blur(20px) !important;
   }
 
   .nav-logo {
@@ -136,24 +136,43 @@ html, body, #root {
   }
 
   .nav-items {
-    flex: 1;
-    display: flex;
+    flex: 1 !important;
+    display: flex !important;
     flex-direction: row !important;
     gap: 0 !important;
-    justify-content: space-around;
-    height: 100%;
+    justify-content: space-around !important;
+    align-items: center !important;
+    height: 100% !important;
+    margin: 0 !important;
   }
 
   .nav-sidebar .nav-btn {
-    flex: 1;
-    height: 100%;
-    border-radius: 0;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    padding: 0;
+    flex: 1 !important;
+    height: 100% !important;
+    border-radius: 0 !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+    padding: 0 !important;
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
   }
+
+  .nav-label {
+    position: static !important;
+    opacity: 1 !important;
+    background: transparent !important;
+    font-size: 0.6rem !important;
+    margin-left: 0 !important;
+    margin-top: 2px !important;
+    color: inherit !important;
+    border: none !important;
+    box-shadow: none !important;
+    transform: none !important;
+  }
+
 
   .app-container-mobile {
     display: flex;
