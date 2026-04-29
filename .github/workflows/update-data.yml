@@ -1,0 +1,24 @@
+name: Update Mock Data
+on:
+  repository_dispatch:
+    types: [update-data]
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+      
+      - name: Update mockData.js
+        run: |
+          echo "export const mockData = ${{ github.event.client_payload.data }};" > src/data/mockData.js
+          
+      - name: Commit and Push
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git add src/data/mockData.js
+          git commit -m "Update personnel data from web interface"
+          git push
