@@ -176,30 +176,30 @@ const Sidebar = ({ members, units, searchTerm, setSearchTerm, onMemberClick, onA
                   return (
                     <motion.div
                       key={member.id}
-                      whileHover={{ y: -5, scale: 1.02 }}
+                      whileHover={{ y: -5, scale: 1.05, backgroundColor: 'rgba(255, 255, 255, 0.08)' }}
                       onClick={() => onMemberClick(member)}
                       className="glass member-card-mini"
                       style={{
-                        padding: isMobile ? '8px 4px' : '10px 6px',
+                        padding: isMobile ? '8px 4px' : '12px 8px',
                         cursor: 'pointer',
                         textAlign: 'center',
                         position: 'relative',
-                        border: '1px solid rgba(255, 255, 255, 0.08)',
+                        border: '1px solid rgba(255, 255, 255, 0.15)',
                         borderRadius: '10px',
-                        background: 'rgba(255, 255, 255, 0.03)',
-                        transition: 'box-shadow 0.3s ease',
-                        minWidth: 0
+                        background: 'rgba(255, 255, 255, 0.05)',
+                        transition: 'all 0.3s ease',
+                        minWidth: 0,
+                        boxShadow: '0 4px 12px rgba(0,0,0,0.2)'
                       }}
                     >
                       <div style={{ 
                         position: 'absolute', 
                         top: 0, 
-                        left: '50%', 
-                        transform: 'translateX(-50%)',
-                        width: '40%', 
+                        left: '0', 
+                        width: '100%', 
                         height: '2px', 
                         background: roleColor,
-                        borderRadius: '0 0 4px 4px'
+                        boxShadow: `0 0 10px ${roleColor}66`
                       }} />
 
                       {member.photo && (
@@ -207,11 +207,11 @@ const Sidebar = ({ members, units, searchTerm, setSearchTerm, onMemberClick, onA
                           src={member.photo} 
                           alt={member.lastName} 
                           style={{ 
-                            width: isMobile ? '36px' : '40px', 
-                            height: isMobile ? '36px' : '40px', 
+                            width: isMobile ? '36px' : '44px', 
+                            height: isMobile ? '36px' : '44px', 
                             borderRadius: '8px', 
-                            marginBottom: '4px',
-                            border: `1px solid ${roleColor}`,
+                            marginBottom: '6px',
+                            border: `1.5px solid ${roleColor}`,
                             objectFit: 'cover'
                           }} 
                         />
@@ -219,30 +219,31 @@ const Sidebar = ({ members, units, searchTerm, setSearchTerm, onMemberClick, onA
                       
                       <div style={{ 
                         fontWeight: '700', 
-                        fontSize: isMobile ? '0.7rem' : '0.75rem',
+                        fontSize: isMobile ? '0.7rem' : '0.8rem',
                         color: '#ffffff',
                         lineHeight: '1.2',
                         overflow: 'hidden',
                         textOverflow: 'ellipsis',
-                        whiteSpace: 'nowrap'
+                        whiteSpace: 'nowrap',
+                        marginBottom: '4px'
                       }}>
                         {fullName}
                       </div>
                       <div style={{ 
-                        fontSize: isMobile ? '0.55rem' : '0.65rem', 
+                        display: 'inline-block',
+                        fontSize: isMobile ? '0.55rem' : '0.6rem', 
                         backgroundColor: roleColor,
                         color: '#000000',
                         fontWeight: '900', 
                         textTransform: 'uppercase',
-                        marginTop: '4px',
-                        padding: '1px 4px',
+                        padding: '1px 6px',
                         borderRadius: '3px',
-                        display: 'inline-block',
                         letterSpacing: '0'
                       }}>
                         {member.position}
                       </div>
                     </motion.div>
+
                   );
                 })}
             </div>
