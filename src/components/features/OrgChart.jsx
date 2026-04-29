@@ -30,9 +30,30 @@ const getPositionClass = (pos) => {
   return 'pos-staff';
 };
 
+const getUnitColor = (label, level) => {
+  if (level === 0) return 'linear-gradient(135deg, #ffd700, #b8860b)'; // 支店
+  if (label.includes('営業所')) {
+    // 営業所ごとに固有の色（名前のハッシュ等で簡易的に振り分け）
+    const colors = [
+      'linear-gradient(135deg, #ff9a9e, #fecfef)', // ピンク
+      'linear-gradient(135deg, #a1c4fd, #c2e9fb)', // スカイ
+      'linear-gradient(135deg, #84fab0, #8fd3f4)', // エメラルド
+      'linear-gradient(135deg, #fccb90, #d57eeb)', // パープル/オレンジ
+      'linear-gradient(135deg, #e0c3fc, #8ec5fc)', // ラベンダー
+      'linear-gradient(135deg, #f093fb, #f5576c)'  // ピンク/パープル
+    ];
+    const index = label.length % colors.length;
+    return colors[index];
+  }
+  if (label.includes('業務')) {
+    return 'linear-gradient(135deg, #4facfe, #00f2fe)'; // 業務部（ブルー系）
+  }
+  return 'linear-gradient(135deg, #667eea, #764ba2)'; // デフォルト
+};
+
 const UnitNode = ({ data }) => {
   const isMobile = window.innerWidth < 768;
-  const isChild = data.level > 1;
+  const unitBg = getUnitColor(data.label, data.level);
 
   return (
     <div
@@ -41,13 +62,11 @@ const UnitNode = ({ data }) => {
       style={{
         width: isMobile ? '220px' : '260px',
         padding: isMobile ? '12px' : '18px 30px',
-        background: isChild 
-          ? 'linear-gradient(135deg, rgba(107, 70, 193, 0.9), rgba(68, 51, 122, 0.9))'
-          : 'linear-gradient(135deg, rgba(124, 77, 255, 0.9), rgba(75, 0, 179, 0.9))',
-        border: '1px solid rgba(255, 255, 255, 0.15)',
+        background: unitBg,
+        border: '1px solid rgba(255, 255, 255, 0.3)',
         borderRadius: '16px',
-        color: 'white',
-        fontWeight: '700',
+        color: data.label.includes('営業所') ? '#1a202c' : 'white', // 営業所は明るい色が多いので文字を暗く
+        fontWeight: '800',
         fontSize: isMobile ? '1rem' : '1.15rem',
         cursor: 'pointer',
         transition: 'all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275)',
@@ -55,12 +74,12 @@ const UnitNode = ({ data }) => {
         alignItems: 'center',
         justifyContent: 'center',
         gap: '12px',
-        boxShadow: data.isExpanded ? '0 20px 40px rgba(0,0,0,0.4)' : '0 10px 20px rgba(0,0,0,0.2)',
+        boxShadow: data.isExpanded ? '0 20px 40px rgba(0,0,0,0.3)' : '0 10px 20px rgba(0,0,0,0.15)',
         backdropFilter: 'blur(10px)',
       }}
     >
       <Handle type="target" position={Position.Top} style={{ background: 'transparent', border: 'none' }} />
-      <div style={{ flex: 1, textAlign: 'center', letterSpacing: '0.05em' }}>{data.label}</div>
+      <div style={{ flex: 1, textAlign: 'center', letterSpacing: '0.05em', textShadow: unitBg.includes('ffd700') ? 'none' : '0 2px 4px rgba(0,0,0,0.2)' }}>{data.label}</div>
       <div style={{ 
         opacity: 0.6, 
         display: 'flex', 
@@ -81,7 +100,6 @@ const MemberNode = ({ data }) => {
   const roleColor = getPositionColor(displayPosition);
   const posClass = getPositionClass(displayPosition);
   const fullName = `${member.lastName || ''} ${member.firstName || ''}`;
-  const isAdditional = !member.isMainRole;
   const isMobile = window.innerWidth < 768;
 
   return (
@@ -89,14 +107,11 @@ const MemberNode = ({ data }) => {
       className={`glass member-node ${posClass}`}
       onClick={() => data.onClick(member)}
       style={{
-        borderLeft: isMobile ? `5px solid ${roleColor}` : 'none',
-        background: isMobile 
-          ? `linear-gradient(90deg, ${roleColor}15 0%, rgba(255,255,255,0.05) 100%)`
-          : 'rgba(255, 255, 255, 0.03)',
+        background: 'rgba(255, 255, 255, 0.03)',
         padding: isMobile ? '12px 16px' : '15px',
         width: isMobile ? '230px' : '260px',
         borderRadius: '16px',
-        border: isMobile ? 'none' : '1px solid rgba(255, 255, 255, 0.08)',
+        border: '1px solid rgba(255, 255, 255, 0.08)',
         transition: 'all 0.3s ease',
         boxShadow: '0 4px 15px rgba(0,0,0,0.1)',
         backdropFilter: 'blur(12px)',
@@ -104,16 +119,6 @@ const MemberNode = ({ data }) => {
         overflow: 'hidden'
       }}
     >
-      {!isMobile && (
-        <div style={{ 
-          position: 'absolute', 
-          top: 0, 
-          left: 0, 
-          width: '4px', 
-          height: '100%', 
-          background: roleColor 
-        }} />
-      )}
       <Handle type="target" position={Position.Top} style={{ background: 'transparent', border: 'none' }} />
       <div style={{ display: 'flex', alignItems: 'center', gap: '15px', width: '100%' }}>
         {!isMobile && member.photo && (
@@ -138,12 +143,17 @@ const MemberNode = ({ data }) => {
           }}>
             {fullName}
           </div>
+          {/* 役職ラベルを色付きバッジに変更 */}
           <div style={{ 
-            fontSize: isMobile ? '0.75rem' : '0.7rem', 
-            color: roleColor, 
-            fontWeight: '800', 
+            display: 'inline-block',
+            fontSize: isMobile ? '0.7rem' : '0.65rem', 
+            backgroundColor: roleColor,
+            color: '#000000', // 背景色が明るいことが多いので黒文字
+            fontWeight: '900', 
             textTransform: 'uppercase', 
-            marginTop: '4px',
+            marginTop: '6px',
+            padding: '2px 8px',
+            borderRadius: '4px',
             letterSpacing: '0.05em'
           }}>
             {displayPosition}
@@ -154,6 +164,7 @@ const MemberNode = ({ data }) => {
     </div>
   );
 };
+
 
 
 
