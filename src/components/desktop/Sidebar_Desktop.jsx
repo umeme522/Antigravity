@@ -194,7 +194,6 @@ const Sidebar_Desktop = ({ members, units, searchTerm, setSearchTerm, onMemberCl
                             height: '48px', 
                             borderRadius: '10px', 
                             marginBottom: '8px',
-                            border: `2px solid ${roleColor}`,
                             objectFit: 'cover'
                           }} 
                         />
@@ -214,18 +213,15 @@ const Sidebar_Desktop = ({ members, units, searchTerm, setSearchTerm, onMemberCl
                       </div>
                       <div style={{ 
                         display: 'inline-block',
-                        fontSize: '0.65rem', 
-                        backgroundColor: roleColor,
-                        color: '#ffffff', 
+                        fontSize: '0.75rem', 
+                        color: roleColor, // 文字を役職の色に
                         fontWeight: '900', 
                         textTransform: 'uppercase',
-                        padding: '3px 8px',
-                        borderRadius: '4px',
-                        letterSpacing: '0.02em',
-                        boxShadow: `0 2px 8px ${roleColor}40`
+                        letterSpacing: '0.02em'
                       }}>
                         {member.position}
                       </div>
+
                     </motion.div>
                   );
                 })}

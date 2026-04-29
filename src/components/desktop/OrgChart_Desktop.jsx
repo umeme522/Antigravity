@@ -130,8 +130,7 @@ const MemberNode = ({ data }) => {
               width: '50px', 
               height: '50px', 
               borderRadius: '12px', 
-              objectFit: 'cover',
-              border: `2px solid ${roleColor}`
+              objectFit: 'cover'
             }} 
           />
         )}
@@ -146,14 +145,11 @@ const MemberNode = ({ data }) => {
           </div>
           <div style={{ 
             display: 'inline-block',
-            fontSize: '0.65rem', 
-            backgroundColor: roleColor,
-            color: '#ffffff', 
+            fontSize: '0.75rem', 
+            color: roleColor, 
             fontWeight: '900', 
             textTransform: 'uppercase', 
-            marginTop: '6px',
-            padding: '2px 8px',
-            borderRadius: '4px',
+            marginTop: '4px',
             letterSpacing: '0.05em'
           }}>
             {displayPosition}
