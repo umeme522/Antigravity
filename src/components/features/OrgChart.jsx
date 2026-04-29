@@ -273,12 +273,13 @@ const OrgChart = ({ units, members, onMemberClick }) => {
           target: unitId,
           type: 'smoothstep',
           style: { 
-            stroke: isMobile ? 'rgba(255,255,255,0.4)' : 'rgba(255,255,255,0.2)', // スマホでは線を少し濃く
-            strokeWidth: isMobile ? 2 : 1.5, 
-            strokeDasharray: isMobile ? '0' : '4 4' // スマホは実線で見やすく
+            stroke: isMobile ? 'rgba(255,255,255,0.35)' : 'rgba(255,255,255,0.2)', 
+            strokeWidth: isMobile ? 2.5 : 1.5, // スマホではさらに太くして繋がりを強調
+            strokeDasharray: isMobile ? '0' : '4 4' 
           },
         });
       }
+
 
 
       const unitNodeHeight = isMobile ? 50 : 60;
@@ -309,8 +310,9 @@ const OrgChart = ({ units, members, onMemberClick }) => {
 
       // 子組織表示（展開されている時のみ）
       if (isExpanded && u.children.length > 0) {
-        // スマホでは子組織を右に少しずらして「インデント」させる (35px)
-        const indentOffset = isMobile ? 35 : 0;
+        // スマホでは子組織を右側にガッツリ寄せて「2カラム風」にする
+        // 親ユニットの幅が220pxなので、180pxほど右にずらす
+        const indentOffset = isMobile ? 180 : 0;
         let childY = y + currentOffset + (isMobile ? 35 : VERTICAL_GAP_EXPANDED);
         
         u.children.forEach((childId) => {
@@ -318,6 +320,7 @@ const OrgChart = ({ units, members, onMemberClick }) => {
           childY += subtreeHeightMap[childId] + (isMobile ? 25 : VERTICAL_GAP_BASE);
         });
       }
+
 
 
     };
