@@ -129,11 +129,17 @@ const Sidebar_Desktop = ({ members, units, searchTerm, setSearchTerm, onMemberCl
                 }, {})
               )
               .sort(([groupA], [groupB]) => {
-                if (groupBy === 'joinDate') return groupB.localeCompare(groupA);
+                if (groupBy === 'joinDate') {
+                  // 「不明」を常に一番下に
+                  if (groupA.includes('不明')) return 1;
+                  if (groupB.includes('不明')) return -1;
+                  return groupB.localeCompare(groupA); // 年度を降順で
+                }
                 const posA = filteredMembers.find(m => getGroupTitle(m.position) === groupA)?.position || '';
                 const posB = filteredMembers.find(m => getGroupTitle(m.position) === groupB)?.position || '';
                 return getPriority(posA) - getPriority(posB);
               })
+
               .map(([groupTitle, posMembers]) => (
                 <div key={groupTitle} style={{ marginBottom: '24px' }}>
                   <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '12px', borderBottom: '1px solid rgba(255,255,255,0.05)', paddingBottom: '6px' }}>
