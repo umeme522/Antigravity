@@ -37,10 +37,11 @@ const Sidebar_Desktop = ({ members, units, searchTerm, setSearchTerm, onMemberCl
   const getGroupTitle = (pos) => {
     if (pos.includes('支店長') || pos.includes('副支店長') || pos.includes('部長')) return '支店長・部長';
     if (pos.includes('所長') || pos.includes('課長')) return '課長・所長';
-    if (pos.includes('副長')) return '副長職';
-    if (pos.includes('係長')) return '係長職';
-    return '一般スタッフ';
+    if (pos.includes('副長')) return '副長';
+    if (pos.includes('係長')) return '係長';
+    return 'スタッフ';
   };
+
 
 
   return (
