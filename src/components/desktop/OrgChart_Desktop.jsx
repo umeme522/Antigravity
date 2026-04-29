@@ -192,6 +192,7 @@ const OrgChart_Desktop = ({ units, members, onMemberClick }) => {
       const leader = u.members.length > 0 ? u.members[0] : null;
       const generalMembers = u.members.length > 1 ? u.members.slice(1) : [];
 
+      // 部署ノードの中央揃え (280px幅)
       vNodes.push({
         id: unitId,
         type: 'unit',
@@ -200,7 +201,7 @@ const OrgChart_Desktop = ({ units, members, onMemberClick }) => {
           level, 
           leader, 
           isExpanded, 
-          hasChildren: u.children.length > 0 || generalMembers.length > 0, // ここで判定
+          hasChildren: u.children.length > 0 || generalMembers.length > 0,
           onClick: () => toggleUnit(unitId),
           onMemberClick
         },
@@ -213,17 +214,18 @@ const OrgChart_Desktop = ({ units, members, onMemberClick }) => {
 
       const unitHeight = leader ? 130 : 60;
       if (isExpanded) {
-        // 一般メンバーの配置
+        // 一般メンバーの配置 (260px幅を中央に寄せる)
         generalMembers.forEach((m, i) => {
           const mId = `m-${m.id}-at-${unitId}`;
           vNodes.push({
             id: mId,
             type: 'member',
             data: { member: m, onClick: onMemberClick },
-            position: { x: x - 130, y: y + unitHeight + 40 + (i * MEMBER_GAP) },
+            position: { x: x - 130, y: y + unitHeight + 40 + (i * MEMBER_GAP) }, // x-130で中央揃え
           });
           vEdges.push({ id: `e-${unitId}-${mId}`, source: unitId, target: mId, type: 'smoothstep' });
         });
+
 
         const totalMHeight = generalMembers.length * MEMBER_GAP;
         let startX = x - size.width / 2;
