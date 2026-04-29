@@ -229,11 +229,15 @@ const Sidebar = ({ members, units, searchTerm, setSearchTerm, onMemberClick, onA
                         {fullName}
                       </div>
                       <div style={{ 
-                        fontSize: isMobile ? '0.55rem' : '0.6rem', 
-                        color: roleColor, 
-                        fontWeight: '800', 
+                        fontSize: isMobile ? '0.55rem' : '0.65rem', 
+                        backgroundColor: roleColor,
+                        color: '#000000',
+                        fontWeight: '900', 
                         textTransform: 'uppercase',
-                        marginTop: '2px',
+                        marginTop: '4px',
+                        padding: '1px 4px',
+                        borderRadius: '3px',
+                        display: 'inline-block',
                         letterSpacing: '0'
                       }}>
                         {member.position}
@@ -242,8 +246,8 @@ const Sidebar = ({ members, units, searchTerm, setSearchTerm, onMemberClick, onA
                   );
                 })}
             </div>
-
-
+            {/* モバイルの下部余白（スクロール切れ防止） */}
+            {isMobile && <div style={{ height: '120px' }} />}
           </div>
         ))}
       </div>

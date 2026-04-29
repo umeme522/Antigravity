@@ -189,6 +189,7 @@ html, body, #root {
     height: calc(100vh - 60px);
     overflow-y: auto;
     position: relative;
+    padding-bottom: 150px;
   }
 
   .sidebar {
