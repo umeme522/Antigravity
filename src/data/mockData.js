@@ -135,21 +135,33 @@ export const mockData = {
       employeeId: 
     },
     {
-      id: m0_2,
-      lastName: 堀内,
-      firstName: 芳人,
-      reading: ホリウチ ヨシト,
-      position: 副支店長,
-      unitId: u1,
+      id: "m0_2",
+      lastName: "堀内",
+      firstName: "芳人",
+      reading: "ホリウチ ヨシト",
+      position: "副支店長",
+      unitId: "u1",
       additionalUnitIds: [
-        u_dept3
+        "u_dept3"
       ],
-      birthDate: ,
-      joinDate: 2001,
-      photo: https://api.dicebear.com/7.x/avataaars/svg?seed=Horiuchi,
-      employeeId: ,
-      additionalPosition: 部長,
-      birthplace: 静岡県磐田市
+      birthDate: "1977-10-15",
+      joinDate: "2001",
+      photo: "https://api.dicebear.com/7.x/avataaars/svg?seed=Horiuchi",
+      employeeId: "",
+      additionalPosition: "部長",
+      birthplace: "静岡県磐田市",
+      careerHistory: [
+        {
+          id: "career_1",
+          period: "2001-2010",
+          department: "営業部 営業一課"
+        },
+        {
+          id: "career_2",
+          period: "2010-2020",
+          department: "業務部 課長"
+        }
+      ]
     },
     {
       id: m_admin_1,
