@@ -4,12 +4,26 @@ import { mockData } from '../data/mockData';
 export const useOrgData = () => {
   const [units, setUnits] = useState(() => {
     const saved = localStorage.getItem('org-units');
-    return saved ? JSON.parse(saved) : (mockData.units || []);
+    const localUnits = saved ? JSON.parse(saved) : [];
+    // プログラム側のユニット定義が更新されている場合はそちらを優先（またはマージ）
+    if (mockData.units && mockData.units.length > localUnits.length) {
+      return mockData.units;
+    }
+    return localUnits.length > 0 ? localUnits : (mockData.units || []);
   });
   
   const [members, setMembers] = useState(() => {
     const saved = localStorage.getItem('org-members');
-    return saved ? JSON.parse(saved) : (mockData.members || []);
+    const localMembers = saved ? JSON.parse(saved) : [];
+    
+    // キャッシュ問題の解決: 
+    // プログラム側のデータ(mockData)の方がメンバー数が多い場合は、自動で最新版を読み込む
+    if (mockData.members && mockData.members.length > localMembers.length) {
+      console.log('Program data is newer than local storage. Updating...');
+      return mockData.members;
+    }
+    
+    return localMembers.length > 0 ? localMembers : (mockData.members || []);
   });
 
   // データが変更されるたびにブラウザに保存
