@@ -41,9 +41,6 @@ function App() {
     setSelectedMember(newMember);
   };
 
-  const handleBackup = () => backupData(members, units);
-  const handleRestore = (e) => restoreData(e, setMembers, setUnits);
-
   const currentMember = selectedMember || members[0];
   const selectedUnit = units.find(u => u.id === currentMember?.unitId);
 
@@ -53,9 +50,8 @@ function App() {
       <Navigation 
         isSidebarOpen={isSidebarOpen}
         setIsSidebarOpen={setIsSidebarOpen}
-        onBackup={handleBackup}
-        onRestore={handleRestore}
       />
+
 
       {/* 2. サイドバー (メンバー一覧) */}
       <AnimatePresence onExitComplete={() => window.dispatchEvent(new Event('resize'))}>
