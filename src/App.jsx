@@ -22,8 +22,7 @@ function App() {
     members,
     setMembers,
     updateMember,
-    createNewMember,
-    resetToDefault
+    createNewMember
   } = useOrgData();
 
   const handleMemberClick = (member) => {
@@ -56,7 +55,6 @@ function App() {
         setIsSidebarOpen={setIsSidebarOpen}
         onBackup={handleBackup}
         onRestore={handleRestore}
-        onReset={resetToDefault}
       />
 
       {/* 2. サイドバー (メンバー一覧) */}
