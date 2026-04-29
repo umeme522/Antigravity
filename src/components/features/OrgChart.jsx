@@ -117,23 +117,20 @@ const MemberNode = ({ data }) => {
         <div style={{ flex: 1, minWidth: 0 }}>
           <div style={{ 
             fontWeight: '700', 
-            fontSize: '1rem', // 名前を少し小さく (1.15rem -> 1rem)
+            fontSize: '0.95rem', 
             color: roleColor, 
-            whiteSpace: 'nowrap', 
-            overflow: 'hidden', 
-            textOverflow: 'ellipsis' 
+            lineHeight: '1.2',
+            wordBreak: 'break-all' // 長い名前でも強制的に改行して表示
           }}>
             {fullName}
           </div>
           <div style={{ 
-            fontSize: '0.7rem', 
+            fontSize: '0.65rem', 
             color: roleColor, 
             fontWeight: '800', 
             textTransform: 'uppercase', 
-            marginTop: '1px',
-            whiteSpace: 'nowrap',
-            overflow: 'hidden',
-            textOverflow: 'ellipsis'
+            marginTop: '2px',
+            lineHeight: '1.2'
           }}>
             {displayPosition}
           </div>
@@ -143,6 +140,7 @@ const MemberNode = ({ data }) => {
     </div>
   );
 };
+
 
 const nodeTypes = {
   unit: UnitNode,
