@@ -44,8 +44,9 @@ export const mockData = {
       firstName: "芳人",
       reading: "ホリウチ ヨシト",
       position: "副支店長",
-      unitId: "u1",
-      additionalUnitIds: ["u_dept3"],
+      unitId: "u_dept3",
+      additionalUnitIds: [],
+
       birthDate: "1977-10-15",
       joinDate: "2001",
       photo: "https://api.dicebear.com/7.x/avataaars/svg?seed=Horiuchi",

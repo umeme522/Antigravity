@@ -34,7 +34,7 @@ const UnitNode = ({ data }) => {
         style={{
           padding: '16px 20px',
           background: unitBg,
-          borderRadius: leader ? '16px 16px 0 0' : '16px', // リーダーがいる場合は下を平らに
+          borderRadius: leader ? '16px 16px 0 0' : '16px',
           color: 'white',
           fontWeight: '900',
           fontSize: '1.1rem',
@@ -50,10 +50,13 @@ const UnitNode = ({ data }) => {
         }}
       >
         <span style={{ flex: 1 }}>{label}</span>
-        <div style={{ transform: isExpanded ? 'rotate(180deg)' : 'rotate(0deg)', transition: 'transform 0.4s', opacity: 0.7 }}>
-          <ChevronDown size={18} />
-        </div>
+        {data.hasChildren && (
+          <div style={{ transform: isExpanded ? 'rotate(180deg)' : 'rotate(0deg)', transition: 'transform 0.4s', opacity: 0.7 }}>
+            <ChevronDown size={18} />
+          </div>
+        )}
       </div>
+
 
       {/* リーダーカード (隣接・セット) */}
       {leader && (
@@ -195,8 +198,9 @@ const OrgChart_Desktop = ({ units, members, onMemberClick }) => {
         data: { 
           label: u.name, 
           level, 
-          leader, // リーダー情報を渡す
+          leader, 
           isExpanded, 
+          hasChildren: u.children.length > 0 || generalMembers.length > 0, // ここで判定
           onClick: () => toggleUnit(unitId),
           onMemberClick
         },
