@@ -14,12 +14,12 @@ import { ChevronDown, ChevronUp } from 'lucide-react';
 
 const getPositionColor = (pos) => {
   if (!pos) return '#a0aec0';
-  if (pos.includes('支店長') || pos.includes('副支店長')) return '#ffd700'; // 釁E
+  if (pos.includes('支店長') || pos.includes('副支店長')) return '#ffd700'; // 金
   if (pos.includes('部長')) return '#ff4b4b'; // 赤
-  if (pos.includes('所長') || pos.includes('課長')) return '#4b7bff'; // 靁E
+  if (pos.includes('所長') || pos.includes('課長')) return '#4b7bff'; // 青
   if (pos.includes('副長')) return '#ff9500'; // オレンジ
-  if (pos.includes('係長')) return '#00e676'; // 緁E
-  return '#a0aec0'; // スタチE���E�グレー�E�E
+  if (pos.includes('係長')) return '#00e676'; // 緑
+  return '#a0aec0'; // スタッフ（グレー）
 };
 
 
@@ -34,28 +34,27 @@ const getPositionClass = (pos) => {
 };
 
 const getUnitColor = (label, level) => {
-  if (level === 0) return 'linear-gradient(135deg, #ffd700, #b8860b)'; // 支庁E
+  if (level === 0) return 'linear-gradient(135deg, #ffd700, #b8860b)'; // 支店
   if (label.includes('営業所')) {
-    // 営業所ごとに固有�E色�E�名前�Eハッシュ等で簡易的に振り�Eけ！E
     const colors = [
       'linear-gradient(135deg, #ff9a9e, #fecfef)', // ピンク
       'linear-gradient(135deg, #a1c4fd, #c2e9fb)', // スカイ
-      'linear-gradient(135deg, #84fab0, #8fd3f4)', // エメラルチE
-      'linear-gradient(135deg, #fccb90, #d57eeb)', // パ�Eプル/オレンジ
+      'linear-gradient(135deg, #84fab0, #8fd3f4)', // エメラルド
+      'linear-gradient(135deg, #fccb90, #d57eeb)', // パープル/オレンジ
       'linear-gradient(135deg, #e0c3fc, #8ec5fc)', // ラベンダー
-      'linear-gradient(135deg, #f093fb, #f5576c)'  // ピンク/パ�Eプル
+      'linear-gradient(135deg, #f093fb, #f5576c)'  // ピンク/パープル
     ];
     const index = label.length % colors.length;
     return colors[index];
   }
-  if (label.includes('業勁E)) {
-    return 'linear-gradient(135deg, #4facfe, #00f2fe)'; // 業務部�E�ブルー系�E�E
+  if (label.includes('業務')) {
+    return 'linear-gradient(135deg, #4facfe, #00f2fe)'; // 業務部（ブルー系）
   }
-  return 'linear-gradient(135deg, #667eea, #764ba2)'; // チE��ォルチE
+  return 'linear-gradient(135deg, #667eea, #764ba2)'; // デフォルト
 };
 
 const UnitNode = ({ data }) => {
-  const isMobile = false;
+  const isMobile = false; /* Forced desktop layout */
   const unitBg = getUnitColor(data.label, data.level);
 
   return (
@@ -63,14 +62,14 @@ const UnitNode = ({ data }) => {
       onClick={data.onClick}
       className={`unit-node ${data.isExpanded ? 'expanded' : ''}`}
       style={{
-        width: isMobile ? '220px' : '260px',
-        padding: isMobile ? '12px' : '18px 30px',
+        width: '260px',
+        padding: '18px 30px',
         background: unitBg,
         border: '1px solid rgba(255, 255, 255, 0.3)',
         borderRadius: '16px',
-        color: data.label.includes('営業所') ? '#1a202c' : 'white', // 営業所は明るぁE��が多いので斁E��を暗く
+        color: data.label.includes('営業所') ? '#1a202c' : 'white',
         fontWeight: '800',
-        fontSize: isMobile ? '1rem' : '1.15rem',
+        fontSize: '1.15rem',
         cursor: 'pointer',
         transition: 'all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275)',
         display: 'flex',
@@ -103,7 +102,7 @@ const MemberNode = ({ data }) => {
   const roleColor = getPositionColor(displayPosition);
   const posClass = getPositionClass(displayPosition);
   const fullName = `${member.lastName || ''} ${member.firstName || ''}`;
-  const isMobile = false;
+  const isMobile = false; /* Forced desktop layout */
 
   return (
     <div
@@ -111,8 +110,8 @@ const MemberNode = ({ data }) => {
       onClick={() => data.onClick(member)}
       style={{
         background: 'rgba(255, 255, 255, 0.03)',
-        padding: isMobile ? '12px 16px' : '15px',
-        width: isMobile ? '230px' : '260px',
+        padding: '15px',
+        width: '260px',
         borderRadius: '16px',
         border: '1px solid rgba(255, 255, 255, 0.08)',
         transition: 'all 0.3s ease',
@@ -124,7 +123,7 @@ const MemberNode = ({ data }) => {
     >
       <Handle type="target" position={Position.Top} style={{ background: 'transparent', border: 'none' }} />
       <div style={{ display: 'flex', alignItems: 'center', gap: '15px', width: '100%' }}>
-        {!isMobile && member.photo && (
+        {member.photo && (
           <img 
             src={member.photo} 
             alt={fullName} 
@@ -140,18 +139,17 @@ const MemberNode = ({ data }) => {
         <div style={{ flex: 1, minWidth: 0 }}>
           <div style={{ 
             fontWeight: '700', 
-            fontSize: isMobile ? '1.1rem' : '1rem',
+            fontSize: '1rem',
             color: '#ffffff', 
             lineHeight: '1.2'
           }}>
             {fullName}
           </div>
-          {/* 役職ラベルを色付きバッジに変更 */}
           <div style={{ 
             display: 'inline-block',
-            fontSize: isMobile ? '0.7rem' : '0.65rem', 
+            fontSize: '0.65rem', 
             backgroundColor: roleColor,
-            color: '#ffffff', // 白斁E��に変更
+            color: '#ffffff', 
             fontWeight: '900', 
             textTransform: 'uppercase', 
             marginTop: '6px',
@@ -161,7 +159,6 @@ const MemberNode = ({ data }) => {
           }}>
             {displayPosition}
           </div>
-
         </div>
       </div>
       <Handle type="source" position={Position.Bottom} style={{ background: 'transparent', border: 'none' }} />
@@ -169,77 +166,29 @@ const MemberNode = ({ data }) => {
   );
 };
 
-
-
-
-
-
 const nodeTypes = {
   unit: UnitNode,
-  member: MemberNode,
+  member: MemberNode
 };
 
 const OrgChart = ({ units, members, onMemberClick }) => {
+  const isMobile = false; /* Forced desktop layout */
+  const [nodes, setNodes] = useState([]);
+  const [edges, setEdges] = useState([]);
   const [expandedUnits, setExpandedUnits] = useState(new Set(['u1']));
-  const [rfInstance, setRfInstance] = useState(null);
-
-  useEffect(() => {
-    const handleResize = () => {
-      if (rfInstance) {
-        rfInstance.fitView({ padding: 0.2, duration: 300 });
-      }
-    };
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
-  }, [rfInstance]);
 
   const toggleUnit = (unitId) => {
-    setExpandedUnits(prev => {
-      const next = new Set(prev);
-      if (next.has(unitId)) {
-        next.delete(unitId);
-      } else {
-        next.add(unitId);
-      }
-      return next;
-    });
+    onUnitClick(unitId);
   };
 
-  const [isMobile, setIsMobile] = useState(false);
-
-  useEffect(() => {
-    const handleResize = () => setIsMobile(false);
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
-  }, []);
-
-  const { nodes, edges } = useMemo(() => {
-
-    const positionPriority = {
-
-      '支店長': 1,
-      '部長': 2,
-      '所長': 3,
-      '課長': 4,
-      '副長': 5,
-      '係長': 6,
-      'スタチE��': 7,
-    };
-
-    const getPriority = (pos) => {
-      if (!pos) return 99;
-      if (pos.includes('支店長')) return 1;
-      if (pos.includes('部長')) return 2;
-      return positionPriority[pos] || 99;
-    };
-
+  const { nodes: visibleNodes, edges: visibleEdges } = useMemo(() => {
     const unitMap = {};
     units.forEach(u => {
       unitMap[u.id] = { ...u, children: [], members: [] };
     });
 
-    // メンバ�Eのソートと割り当て
-    const sortedMembers = [...members].sort((a, b) => getPriority(a.position) - getPriority(b.position));
+    const sortedMembers = [...members].sort((a, b) => (a.order || 0) - (b.order || 0));
+
     sortedMembers.forEach(m => {
       if (unitMap[m.unitId]) {
         unitMap[m.unitId].members.push({ ...m, displayPosition: m.position, isMainRole: true });
@@ -253,16 +202,14 @@ const OrgChart = ({ units, members, onMemberClick }) => {
       }
     });
 
-    // ユニット�E階層構篁E
     units.forEach(u => {
       if (u.parentId && unitMap[u.parentId]) unitMap[u.parentId].children.push(u.id);
     });
 
-    // ユニット�Eソート（総務、営業などは下�E方へ�E�E
     const sortPriority = (name) => {
       if (name.includes('総務')) return 100;
       if (name.includes('営業')) return 90;
-      if (name.includes('支庁E)) return 1;
+      if (name.includes('支店')) return 1;
       return 50;
     };
 
@@ -272,11 +219,9 @@ const OrgChart = ({ units, members, onMemberClick }) => {
 
     const visibleNodes = [];
     const visibleEdges = [];
-    const VERTICAL_GAP_BASE = isMobile ? 30 : 60;
-    const VERTICAL_GAP_EXPANDED = isMobile ? 80 : 120;
-    const VERTICAL_GAP = 120; // PC用
-    const HORIZONTAL_GAP = 50; // PC用
-    const MEMBER_GAP = isMobile ? 85 : 100;
+    const VERTICAL_GAP = 120;
+    const HORIZONTAL_GAP = 50;
+    const MEMBER_GAP = 100;
     const MEMBER_Y_OFFSET = 65;
 
     const subtreeHeightMap = {};
@@ -285,8 +230,8 @@ const OrgChart = ({ units, members, onMemberClick }) => {
     const calculateSubtreeSize = (unitId) => {
       const u = unitMap[unitId];
       const isExpanded = expandedUnits.has(unitId);
-      const unitNodeHeight = isMobile ? 50 : 60;
-      const unitNodeWidth = isMobile ? 220 : 250;
+      const unitNodeHeight = 60;
+      const unitNodeWidth = 250;
       const membersHeight = isExpanded ? (u.members.length * MEMBER_GAP) + MEMBER_Y_OFFSET : 0;
       
       if (!isExpanded || u.children.length === 0) {
@@ -296,22 +241,10 @@ const OrgChart = ({ units, members, onMemberClick }) => {
       }
 
       const childrenSizes = u.children.map(calculateSubtreeSize);
-      
-      if (isMobile) {
-        if (u.parentId === 'u1') {
-          const childrenHeight = childrenSizes.reduce((acc, s) => acc + s.height, 0) + (u.children.length * 25);
-          subtreeHeightMap[unitId] = unitNodeHeight + membersHeight + 35 + childrenHeight;
-        } else {
-          const childrenHeight = childrenSizes.reduce((acc, s) => acc + s.height, 0) + (u.children.length * 20);
-          subtreeHeightMap[unitId] = Math.max(unitNodeHeight + membersHeight, childrenHeight);
-        }
-        subtreeWidthMap[unitId] = unitNodeWidth + (u.parentId !== 'u1' ? 180 : 0);
-      } else {
-        const totalWidth = childrenSizes.reduce((acc, s) => acc + s.width, 0) + (u.children.length - 1) * HORIZONTAL_GAP;
-        const maxHeight = Math.max(...childrenSizes.map(s => s.height));
-        subtreeWidthMap[unitId] = Math.max(unitNodeWidth, totalWidth);
-        subtreeHeightMap[unitId] = unitNodeHeight + membersHeight + VERTICAL_GAP + maxHeight;
-      }
+      const totalWidth = childrenSizes.reduce((acc, s) => acc + s.width, 0) + (u.children.length - 1) * HORIZONTAL_GAP;
+      const maxHeight = Math.max(...childrenSizes.map(s => s.height));
+      subtreeWidthMap[unitId] = Math.max(unitNodeWidth, totalWidth);
+      subtreeHeightMap[unitId] = unitNodeHeight + membersHeight + VERTICAL_GAP + maxHeight;
       
       return { height: subtreeHeightMap[unitId], width: subtreeWidthMap[unitId] };
     };
@@ -319,7 +252,7 @@ const OrgChart = ({ units, members, onMemberClick }) => {
     const layoutNodes = (unitId, x, y, level = 0) => {
       const u = unitMap[unitId];
       const isExpanded = expandedUnits.has(unitId);
-      const nodeWidth = isMobile ? 230 : 250;
+      const nodeWidth = 250;
 
       visibleNodes.push({
         id: unitId,
@@ -341,31 +274,17 @@ const OrgChart = ({ units, members, onMemberClick }) => {
           target: unitId,
           type: 'smoothstep',
           style: { 
-            stroke: isMobile ? 'rgba(255,255,255,0.35)' : 'rgba(255,255,255,0.2)', 
-            strokeWidth: isMobile ? 2.5 : 1.5,
-            strokeDasharray: isMobile ? '0' : '4 4' 
+            stroke: 'rgba(255,255,255,0.2)', 
+            strokeWidth: 1.5,
+            strokeDasharray: '4 4' 
           },
         });
       }
 
-      const unitNodeHeight = isMobile ? 50 : 60;
+      const unitNodeHeight = 60;
       let currentOffset = unitNodeHeight + 15;
 
-      if (isExpanded && isMobile) {
-        if (u.parentId === 'u1') {
-          let childY = y + currentOffset + 35;
-          u.children.forEach((childId) => {
-            layoutNodes(childId, x, childY, level + 1);
-            childY += subtreeHeightMap[childId] + 25;
-          });
-        } else {
-          let childY = y;
-          u.children.forEach((childId) => {
-            layoutNodes(childId, x + 230, childY, level + 1);
-            childY += subtreeHeightMap[childId] + 20;
-          });
-        }
-      } else if (isExpanded && !isMobile) {
+      if (isExpanded) {
         let startX = x - subtreeWidthMap[unitId] / 2;
         u.children.forEach((childId) => {
           const childWidth = subtreeWidthMap[childId];
@@ -396,10 +315,8 @@ const OrgChart = ({ units, members, onMemberClick }) => {
       }
     };
 
-
     const roots = units.filter(u => !u.parentId);
     roots.forEach(r => calculateSubtreeSize(r.id));
-
 
     const mainRoot = roots.find(r => r.id === 'u1');
     if (mainRoot) {
@@ -407,7 +324,12 @@ const OrgChart = ({ units, members, onMemberClick }) => {
     }
 
     return { nodes: visibleNodes, edges: visibleEdges };
-  }, [units, members, onMemberClick, expandedUnits, isMobile]);
+  }, [units, members, onMemberClick, expandedUnits]);
+
+  useEffect(() => {
+    setNodes(visibleNodes);
+    setEdges(visibleEdges);
+  }, [visibleNodes, visibleEdges]);
 
   const { setCenter } = useReactFlow();
 
@@ -423,10 +345,10 @@ const OrgChart = ({ units, members, onMemberClick }) => {
       }
       
       setTimeout(() => {
-        const clickedNode = nodes.find(n => n.id === `unit-${unitId}`);
+        const clickedNode = visibleNodes.find(n => n.id === unitId);
         if (clickedNode) {
           setCenter(clickedNode.position.x + 130, clickedNode.position.y + 30, { 
-            zoom: isMobile ? 0.8 : 1, 
+            zoom: 1, 
             duration: 800 
           });
         }
@@ -440,7 +362,7 @@ const OrgChart = ({ units, members, onMemberClick }) => {
     if (node.type === 'member') {
       onMemberClick(node.data.member);
       setCenter(node.position.x + 130, node.position.y + 40, { 
-        zoom: isMobile ? 0.9 : 1.1, 
+        zoom: 1.1, 
         duration: 800 
       });
     }
@@ -480,4 +402,3 @@ const OrgChartWrapper = (props) => (
 );
 
 export default OrgChartWrapper;
-

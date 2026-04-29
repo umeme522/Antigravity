@@ -1,76 +1,62 @@
 import React, { useState } from 'react';
-import { Search, Users, ChevronRight, Plus } from 'lucide-react';
+import { Search, Plus } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 const getPositionColor = (pos) => {
   if (!pos) return '#a0aec0';
-  if (pos.includes('支店長') || pos.includes('副支店長')) return '#ffd700'; // 釁E  if (pos.includes('部長')) return '#ff4b4b'; // 赤
-  if (pos.includes('所長') || pos.includes('課長')) return '#4b7bff'; // 靁E  if (pos.includes('副長')) return '#ff9500'; // オレンジ
-  if (pos.includes('係長')) return '#00e676'; // 緁E  return '#a0aec0'; // スタチE���E�グレー�E�E};
+  if (pos.includes('支店長') || pos.includes('副支店長')) return '#ffd700'; // 金
+  if (pos.includes('部長')) return '#ff4b4b'; // 赤
+  if (pos.includes('所長') || pos.includes('課長')) return '#4b7bff'; // 青
+  if (pos.includes('副長')) return '#ff9500'; // オレンジ
+  if (pos.includes('係長')) return '#00e676'; // 緑
+  return '#a0aec0'; // スタッフ（グレー）
+};
 
 
 const Sidebar = ({ members, units, searchTerm, setSearchTerm, onMemberClick, onAddMember }) => {
-  const isMobile = false;
-  const [groupBy, setGroupBy] = useState('position');
+  const isMobile = false; /* Forced desktop layout */
+  const [groupBy, setGroupBy] = useState('position'); // 'position' or 'joinDate'
 
-
-  const filteredMembers = members.filter(m => {
-    const fullName = `${m.lastName || ''} ${m.firstName || ''}`.toLowerCase();
-    const unit = units.find(u => u.id === m.unitId)?.name.toLowerCase() || '';
-    const posStr = (m.position || '').toLowerCase();
-    const search = (searchTerm || '').toLowerCase();
-    return fullName.includes(search) || posStr.includes(search) || unit.includes(search);
+  const filteredMembers = members.filter(member => {
+    const fullName = `${member.lastName} ${member.firstName}`.toLowerCase();
+    const pos = (member.position || '').toLowerCase();
+    const search = searchTerm.toLowerCase();
+    return fullName.includes(search) || pos.includes(search);
   });
 
-  const getGroupTitle = (pos) => {
-    if (!pos) return 'スタチE��';
-    if (pos.includes('支店長') || pos.includes('副支店長') || pos.includes('部長')) return '支店長・副支店長・部長';
-    if (pos.includes('所長') || pos.includes('課長')) return '所長・課長';
-    if (pos.includes('副長')) return '副長';
-    if (pos.includes('係長')) return '係長';
-    return 'スタチE��';
-  };
-
   const getPriority = (pos) => {
-    if (!pos) return 8;
+    if (!pos) return 1000;
     if (pos.includes('支店長')) return 1;
     if (pos.includes('副支店長')) return 2;
     if (pos.includes('部長')) return 3;
-    if (pos.includes('所長')) return 4;
-    if (pos.includes('課長')) return 5;
-    if (pos.includes('副長')) return 6;
-    if (pos.includes('係長')) return 7;
-    return 8;
+    if (pos.includes('所長') || pos.includes('課長')) return 10;
+    if (pos.includes('副長')) return 20;
+    if (pos.includes('係長')) return 30;
+    return 100;
+  };
+
+  const getGroupTitle = (pos) => {
+    if (pos.includes('支店長') || pos.includes('副支店長')) return '経営・支店長';
+    if (pos.includes('部長')) return '部長職';
+    if (pos.includes('所長') || pos.includes('課長')) return '課長・所長';
+    if (pos.includes('副長')) return '副長職';
+    if (pos.includes('係長')) return '係長職';
+    return '一般スタッフ';
   };
 
   return (
     <motion.div 
-      initial={{ x: -550, opacity: 0 }}
+      initial={{ x: -100, opacity: 0 }}
       animate={{ x: 0, opacity: 1 }}
-      exit={{ x: -550, opacity: 0 }}
-      transition={{ type: 'spring', damping: 30, stiffness: 300 }}
-      className="sidebar" 
+      className="sidebar"
+      style={{ padding: '24px', height: '100%', display: 'flex', flexDirection: 'column' }}
     >
-      <div className="sidebar-header" style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-          <h2 style={{ fontSize: '1.2rem', color: '#ffffff', display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <Users size={20} color="var(--accent-primary)" />
-            Members
-            <span style={{ 
-              fontSize: '0.8rem', 
-              background: 'rgba(255,255,255,0.1)', 
-              padding: '2px 8px', 
-              borderRadius: '12px', 
-              color: 'var(--text-secondary)',
-              marginLeft: '4px',
-              fontWeight: 'normal'
-            }}>
-              {searchTerm ? `${filteredMembers.length} / ${members.length}名` : `全 ${members.length} 名`}
-            </span>
-          </h2>
+      <div className="sidebar-header" style={{ marginBottom: '24px' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
+          <h2 style={{ fontSize: '1.2rem', fontWeight: '900', color: '#ffffff', margin: 0, letterSpacing: '0.05em' }}>MEMBERS</h2>
           <button 
             onClick={onAddMember}
-            style={{
+            style={{ 
               padding: '8px 12px',
               background: 'var(--accent-primary)',
               color: '#000',
@@ -93,34 +79,36 @@ const Sidebar = ({ members, units, searchTerm, setSearchTerm, onMemberClick, onA
           <input
             type="text"
             className="search-input"
-            placeholder="名前、役職、E��署..."
+            placeholder="名前、役職、部署..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             style={{ paddingLeft: '36px', height: '40px', fontSize: '0.9rem', width: '100%', color: '#ffffff' }}
           />
         </div>
 
-        <div style={{ display: 'flex', gap: '8px', marginTop: '4px' }}>
+        <div style={{ display: 'flex', gap: '8px', marginTop: '12px' }}>
           <button 
             onClick={() => setGroupBy('position')}
-            style={{ flex: 1, padding: '6px', fontSize: '0.8rem', borderRadius: '6px', background: groupBy === 'position' ? 'var(--accent-primary)' : 'rgba(255,255,255,0.1)', color: groupBy === 'position' ? '#000' : '#fff', border: 'none', cursor: 'pointer', fontWeight: 'bold', transition: 'all 0.2s ease' }}
+            style={{ flex: 1, padding: '8px', fontSize: '0.8rem', borderRadius: '8px', background: groupBy === 'position' ? 'var(--accent-primary)' : 'rgba(255,255,255,0.1)', color: groupBy === 'position' ? '#000' : '#fff', border: 'none', cursor: 'pointer', fontWeight: 'bold', transition: 'all 0.2s ease' }}
           >
-            役職頁E          </button>
+            役職別
+          </button>
           <button 
             onClick={() => setGroupBy('joinDate')}
-            style={{ flex: 1, padding: '6px', fontSize: '0.8rem', borderRadius: '6px', background: groupBy === 'joinDate' ? 'var(--accent-primary)' : 'rgba(255,255,255,0.1)', color: groupBy === 'joinDate' ? '#000' : '#fff', border: 'none', cursor: 'pointer', fontWeight: 'bold', transition: 'all 0.2s ease' }}
+            style={{ flex: 1, padding: '8px', fontSize: '0.8rem', borderRadius: '8px', background: groupBy === 'joinDate' ? 'var(--accent-primary)' : 'rgba(255,255,255,0.1)', color: groupBy === 'joinDate' ? '#000' : '#fff', border: 'none', cursor: 'pointer', fontWeight: 'bold', transition: 'all 0.2s ease' }}
           >
-            入社年度頁E          </button>
+            入社年度別
+          </button>
         </div>
       </div>
 
-      <div className="member-list" style={{ marginTop: '20px', flex: 1, overflowY: 'auto', paddingRight: '4px' }}>
+      <div className="member-list" style={{ flex: 1, overflowY: 'auto', paddingRight: '4px' }}>
         {Object.entries(
           filteredMembers.reduce((acc, m) => {
             let group;
             if (groupBy === 'joinDate') {
               const year = (m.joinDate && typeof m.joinDate === 'string') ? m.joinDate.split('-')[0] : m.joinDate;
-              group = year ? `${year}年` : '不�E';
+              group = year ? `${year}年` : '不明';
             } else {
               group = getGroupTitle(m.position || 'Staff');
             }
@@ -131,8 +119,8 @@ const Sidebar = ({ members, units, searchTerm, setSearchTerm, onMemberClick, onA
         )
         .sort(([groupA], [groupB]) => {
           if (groupBy === 'joinDate') {
-            if (groupA === '不�E') return 1;
-            if (groupB === '不�E') return -1;
+            if (groupA === '不明') return 1;
+            if (groupB === '不明') return -1;
             return groupB.localeCompare(groupA); 
           } else {
             const posA = filteredMembers.find(m => getGroupTitle(m.position) === groupA)?.position || '';
@@ -154,7 +142,8 @@ const Sidebar = ({ members, units, searchTerm, setSearchTerm, onMemberClick, onA
                 {groupTitle}
               </h3>
               <span style={{ fontSize: '0.8rem', color: 'rgba(255,255,255,0.4)' }}>
-                {posMembers.length} 吁E              </span>
+                {posMembers.length} 名
+              </span>
             </div>
             
             <div style={{ 
@@ -246,21 +235,6 @@ const Sidebar = ({ members, units, searchTerm, setSearchTerm, onMemberClick, onA
         ))}
       </div>
     </motion.div>
-  );
-};
-
-export default Sidebar;          );
-                })}
-
-            </div>
-            {/* モバイルの下部余白�E�スクロール刁E��防止�E�E*/}
-            {isMobile && <div style={{ height: '120px' }} />}
-          </div>
-        ))}
-      </div>
-    </motion.div>
-
-
   );
 };
 
