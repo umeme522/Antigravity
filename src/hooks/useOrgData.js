@@ -1,37 +1,68 @@
 import { useState, useCallback } from 'react';
 import { mockData } from '../data/mockData';
 
+const OWNER = 'umeme522';
+const REPO = 'Antigravity';
+
 export const useOrgData = () => {
   const [units, setUnits] = useState(mockData.units || []);
   const [members, setMembers] = useState(mockData.members || []);
   const [isSaving, setIsSaving] = useState(false);
 
+  // トークンをブラウザに保存して、二度目からは入力を省く
+  const [token, setToken] = useState(() => localStorage.getItem('GITHUB_SYNC_TOKEN') || '');
+
   const saveToGitHub = useCallback(async (currentUnits, currentMembers) => {
-    if (isSaving) return;
+    let activeToken = token;
+    
+    if (!activeToken) {
+      const input = prompt('GitHubのアクセストークン(ghp_...)を入力してください。一度入力すればこのブラウザが記憶します：');
+      if (input) {
+        activeToken = input;
+        setToken(input);
+        localStorage.setItem('GITHUB_SYNC_TOKEN', input);
+      } else {
+        return;
+      }
+    }
+
     setIsSaving(true);
 
     try {
-      // 画面からローカルの同期サーバー（私）にデータを送る
-      const response = await fetch('http://localhost:3001/save', {
+      const response = await fetch(`https://api.github.com/repos/${OWNER}/${REPO}/dispatches`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Authorization': `token ${activeToken}`,
+          'Accept': 'application/vnd.github.v3+json',
+          'Content-Type': 'application/json',
+        },
         body: JSON.stringify({
-          data: JSON.stringify({ units: currentUnits, members: currentMembers }, null, 2)
+          event_type: 'update-data',
+          client_payload: {
+            data: JSON.stringify({ units: currentUnits, members: currentMembers }, null, 2)
+          }
         })
       });
 
       if (response.ok) {
-        alert('データを永久保存しました！全員の画面に自動的に反映されます。');
+        alert('データを永久保存しました！全員に反映されるまで約1分かかります。');
       } else {
-        throw new Error('Save failed');
+        const errorData = await response.json();
+        if (response.status === 401 || response.status === 403) {
+          alert('トークンの認証に失敗しました。もう一度入力し直してください。');
+          localStorage.removeItem('GITHUB_SYNC_TOKEN');
+          setToken('');
+        } else {
+          throw new Error(errorData.message || 'Failed to save');
+        }
       }
     } catch (e) {
-      console.error('Save failed:', e);
-      alert('保存に失敗しました。ローカルサーバーが起動しているか確認してください。');
+      console.error('Save error:', e);
+      alert('保存に失敗しました。ネット接続またはトークンを確認してください。');
     } finally {
       setIsSaving(false);
     }
-  }, [isSaving]);
+  }, [token]);
 
   const updateMember = (updatedMember) => {
     if (!updatedMember) return;
@@ -76,6 +107,7 @@ export const useOrgData = () => {
     isSaving
   };
 };
+
 
 
 
