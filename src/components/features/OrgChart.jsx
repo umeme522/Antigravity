@@ -11,14 +11,15 @@ import 'reactflow/dist/style.css';
 import { ChevronDown, ChevronUp } from 'lucide-react';
 
 const getPositionColor = (pos) => {
-  if (!pos) return 'var(--pos-staff)';
-  if (pos.includes('支店長') || pos.includes('副支店長')) return 'var(--pos-executive)';
-  if (pos.includes('部長')) return 'var(--pos-manager)';
-  if (pos.includes('所長') || pos.includes('課長')) return 'var(--pos-director)';
-  if (pos.includes('副長')) return 'var(--pos-subdirector)';
-  if (pos.includes('係長')) return 'var(--pos-lead)';
-  return 'var(--pos-staff)';
+  if (!pos) return '#a0aec0';
+  if (pos.includes('支店長') || pos.includes('副支店長')) return '#ffd700'; // 金
+  if (pos.includes('部長')) return '#ff4b4b'; // 赤
+  if (pos.includes('所長') || pos.includes('課長')) return '#4b7bff'; // 青
+  if (pos.includes('副長')) return '#ff9500'; // オレンジ
+  if (pos.includes('係長')) return '#00e676'; // 緑
+  return '#a0aec0'; // スタッフ（グレー）
 };
+
 
 const getPositionClass = (pos) => {
   if (!pos) return 'pos-staff';
@@ -148,7 +149,7 @@ const MemberNode = ({ data }) => {
             display: 'inline-block',
             fontSize: isMobile ? '0.7rem' : '0.65rem', 
             backgroundColor: roleColor,
-            color: '#000000', // 背景色が明るいことが多いので黒文字
+            color: '#ffffff', // 白文字に変更
             fontWeight: '900', 
             textTransform: 'uppercase', 
             marginTop: '6px',
@@ -158,6 +159,7 @@ const MemberNode = ({ data }) => {
           }}>
             {displayPosition}
           </div>
+
         </div>
       </div>
       <Handle type="source" position={Position.Bottom} style={{ background: 'transparent', border: 'none' }} />

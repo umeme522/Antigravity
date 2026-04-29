@@ -3,14 +3,15 @@ import { Search, Users, ChevronRight, Plus } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 const getPositionColor = (pos) => {
-  if (!pos) return 'var(--pos-staff)';
-  if (pos.includes('支店長') || pos.includes('副支店長')) return 'var(--pos-executive)';
-  if (pos.includes('部長')) return 'var(--pos-manager)';
-  if (pos.includes('所長') || pos.includes('課長')) return 'var(--pos-director)';
-  if (pos.includes('副長')) return 'var(--pos-subdirector)';
-  if (pos.includes('係長')) return 'var(--pos-lead)';
-  return 'var(--pos-staff)';
+  if (!pos) return '#a0aec0';
+  if (pos.includes('支店長') || pos.includes('副支店長')) return '#ffd700'; // 金
+  if (pos.includes('部長')) return '#ff4b4b'; // 赤
+  if (pos.includes('所長') || pos.includes('課長')) return '#4b7bff'; // 青
+  if (pos.includes('副長')) return '#ff9500'; // オレンジ
+  if (pos.includes('係長')) return '#00e676'; // 緑
+  return '#a0aec0'; // スタッフ（グレー）
 };
+
 
 const Sidebar = ({ members, units, searchTerm, setSearchTerm, onMemberClick, onAddMember }) => {
   const isMobile = window.innerWidth < 768;
@@ -231,9 +232,9 @@ const Sidebar = ({ members, units, searchTerm, setSearchTerm, onMemberClick, onA
                       </div>
                       <div style={{ 
                         display: 'inline-block',
-                        fontSize: isMobile ? '0.55rem' : '0.6rem', 
+                        fontSize: isMobile ? '0.55rem' : '0.65rem', 
                         backgroundColor: roleColor,
-                        color: '#000000',
+                        color: '#ffffff', // 白文字に変更
                         fontWeight: '900', 
                         textTransform: 'uppercase',
                         padding: '1px 6px',
@@ -243,6 +244,7 @@ const Sidebar = ({ members, units, searchTerm, setSearchTerm, onMemberClick, onA
                         {member.position}
                       </div>
                     </motion.div>
+
 
                   );
                 })}
