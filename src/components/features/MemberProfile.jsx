@@ -339,13 +339,60 @@ const MemberProfile = ({ member, unit, units, onUpdate, onClose, isPermanent }) 
           <div className="form-row-mobile-stack" style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
             <div className="form-group">
               <label style={{ color: 'var(--text-secondary)' }}>生年月日</label>
-              <input name="birthDate" type="date" value={formData.birthDate || ''} onChange={handleChange} className="edit-input" style={{ color: '#ffffff' }} />
+              <div style={{ display: 'flex', gap: '8px' }}>
+                <select 
+                  value={formData.birthDate?.split('-')[0] || ''} 
+                  onChange={(e) => {
+                    const parts = (formData.birthDate || '--').split('-');
+                    const newDate = `${e.target.value}-${parts[1] || '01'}-${parts[2] || '01'}`;
+                    setFormData(prev => ({ ...prev, birthDate: newDate }));
+                  }}
+                  className="edit-input" 
+                  style={{ color: '#ffffff', background: '#1a202c', flex: 2 }}
+                >
+                  <option value="">年</option>
+                  {Array.from({ length: 85 }, (_, i) => 2024 - i).map(y => (
+                    <option key={y} value={y}>{y}</option>
+                  ))}
+                </select>
+                <select 
+                  value={formData.birthDate?.split('-')[1] || ''} 
+                  onChange={(e) => {
+                    const parts = (formData.birthDate || '1990--').split('-');
+                    const newDate = `${parts[0] || '1990'}-${e.target.value.padStart(2, '0')}-${parts[2] || '01'}`;
+                    setFormData(prev => ({ ...prev, birthDate: newDate }));
+                  }}
+                  className="edit-input" 
+                  style={{ color: '#ffffff', background: '#1a202c', flex: 1 }}
+                >
+                  <option value="">月</option>
+                  {Array.from({ length: 12 }, (_, i) => i + 1).map(m => (
+                    <option key={m} value={m.toString().padStart(2, '0')}>{m}</option>
+                  ))}
+                </select>
+                <select 
+                  value={formData.birthDate?.split('-')[2] || ''} 
+                  onChange={(e) => {
+                    const parts = (formData.birthDate || '1990-01-').split('-');
+                    const newDate = `${parts[0] || '1990'}-${parts[1] || '01'}-${e.target.value.padStart(2, '0')}`;
+                    setFormData(prev => ({ ...prev, birthDate: newDate }));
+                  }}
+                  className="edit-input" 
+                  style={{ color: '#ffffff', background: '#1a202c', flex: 1 }}
+                >
+                  <option value="">日</option>
+                  {Array.from({ length: 31 }, (_, i) => i + 1).map(d => (
+                    <option key={d} value={d.toString().padStart(2, '0')}>{d}</option>
+                  ))}
+                </select>
+              </div>
             </div>
             <div className="form-group">
               <label style={{ color: 'var(--text-secondary)' }}>年齢</label>
               <div className="read-only-field" style={{ color: '#ffffff', padding: '10px 14px', background: 'rgba(255,255,255,0.05)', borderRadius: '8px' }}>{calculateAge(formData.birthDate)}</div>
             </div>
           </div>
+
 
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1.5fr', gap: '12px', marginTop: '12px' }}>
             <div className="form-group">
