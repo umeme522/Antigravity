@@ -253,7 +253,7 @@ const OrgChart_Desktop = ({ units, members, onMemberClick }) => {
 
   useEffect(() => { setNodes(visibleNodes); setEdges(visibleEdges); }, [visibleNodes, visibleEdges]);
 
-  const { setCenter, getNodes, getZoom } = useReactFlow();
+  const { fitBounds, getNodes } = useReactFlow();
   const toggleUnit = (uid) => {
     setExpandedUnits(prev => {
       const n = new Set(prev);
@@ -263,17 +263,38 @@ const OrgChart_Desktop = ({ units, members, onMemberClick }) => {
       return n;
     });
 
-    // 展開時にそのノードを中央へ移動（ズームは現在の倍率を維持、寄りすぎないように調整）
+    // 展開時にその「サブツリー全体」が収まるように調整
     setTimeout(() => {
-      const node = getNodes().find(n => n.id === uid);
-      if (node) {
-        const currentZoom = getZoom();
-        // 1.0(100%)を超える極端な拡大はしないように制限してフォーカス
-        const zoomLevel = Math.min(currentZoom, 0.8); 
-        setCenter(node.position.x + 140, node.position.y + 120, { duration: 800, zoom: zoomLevel });
+      const allNodes = getNodes();
+      const parentNode = allNodes.find(n => n.id === uid);
+      if (!parentNode) return;
+
+      // この部署に属する全てのノード（ユニットとメンバー）を抽出
+      const branchNodes = allNodes.filter(n => {
+        return n.id === uid || n.id.startsWith(`m-${uid}`) || n.id.includes(`at-${uid}`);
+      });
+
+      // さらに、その部署の直下の子供ユニットも探す（簡易的な1階層チェック）
+      const childUnits = allNodes.filter(n => {
+        const u = units.find(unit => unit.id === n.id);
+        return u && u.parentId === uid;
+      });
+
+      const targets = [...branchNodes, ...childUnits];
+      if (targets.length > 0) {
+        const minX = Math.min(...targets.map(n => n.position.x));
+        const maxX = Math.max(...targets.map(n => n.position.x + 280));
+        const minY = Math.min(...targets.map(n => n.position.y));
+        const maxY = Math.max(...targets.map(n => n.position.y + 200));
+
+        fitBounds(
+          { x: minX, y: minY, width: maxX - minX, height: maxY - minY },
+          { padding: 100, duration: 800 }
+        );
       }
-    }, 50);
+    }, 100);
   };
+
 
   return (
     <div style={{ width: '100%', height: '100%', position: 'relative' }}>
