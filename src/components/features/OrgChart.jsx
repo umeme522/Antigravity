@@ -32,42 +32,43 @@ const getPositionClass = (pos) => {
 
 const UnitNode = ({ data }) => {
   const isMobile = window.innerWidth < 768;
-  const isChild = data.level > 1; // 階層に応じた色分け
+  const isChild = data.level > 1;
 
   return (
     <div
       onClick={data.onClick}
       className={`unit-node ${data.isExpanded ? 'expanded' : ''}`}
       style={{
-        width: isMobile ? '220px' : '250px',
-        padding: isMobile ? '12px' : '15px 25px',
+        width: isMobile ? '220px' : '260px',
+        padding: isMobile ? '12px' : '18px 30px',
         background: isChild 
-          ? 'linear-gradient(135deg, #6b46c1, #44337a)' 
-          : 'linear-gradient(135deg, var(--accent-secondary), #4b00b3)', 
-        border: isChild ? '1px solid rgba(255,255,255,0.2)' : 'none',
-        borderRadius: '12px',
+          ? 'linear-gradient(135deg, rgba(107, 70, 193, 0.9), rgba(68, 51, 122, 0.9))'
+          : 'linear-gradient(135deg, rgba(124, 77, 255, 0.9), rgba(75, 0, 179, 0.9))',
+        border: '1px solid rgba(255, 255, 255, 0.15)',
+        borderRadius: '16px',
         color: 'white',
         fontWeight: '700',
-        fontSize: isMobile ? '1rem' : '1.1rem',
+        fontSize: isMobile ? '1rem' : '1.15rem',
         cursor: 'pointer',
-        transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+        transition: 'all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275)',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        gap: '8px',
-        boxShadow: data.isExpanded ? '0 10px 25px rgba(0,0,0,0.4)' : '0 4px 10px rgba(0,0,0,0.2)'
+        gap: '12px',
+        boxShadow: data.isExpanded ? '0 20px 40px rgba(0,0,0,0.4)' : '0 10px 20px rgba(0,0,0,0.2)',
+        backdropFilter: 'blur(10px)',
       }}
     >
       <Handle type="target" position={Position.Top} style={{ background: 'transparent', border: 'none' }} />
-      <div style={{ flex: 1, textAlign: 'center' }}>{data.label}</div>
+      <div style={{ flex: 1, textAlign: 'center', letterSpacing: '0.05em' }}>{data.label}</div>
       <div style={{ 
         opacity: 0.6, 
         display: 'flex', 
         alignItems: 'center',
-        transition: 'transform 0.3s',
+        transition: 'transform 0.4s',
         transform: data.isExpanded ? 'rotate(180deg)' : 'rotate(0deg)'
       }}>
-        <ChevronDown size={18} />
+        <ChevronDown size={20} />
       </div>
       <Handle type="source" position={Position.Bottom} style={{ background: 'transparent', border: 'none' }} />
     </div>
@@ -88,35 +89,62 @@ const MemberNode = ({ data }) => {
       className={`glass member-node ${posClass}`}
       onClick={() => data.onClick(member)}
       style={{
-        borderLeft: `5px solid ${roleColor}`,
-        background: `linear-gradient(90deg, ${roleColor}${isAdditional ? '08' : '15'} 0%, rgba(255,255,255,0.05) 100%)`,
-        opacity: isAdditional ? 0.9 : 1,
-        padding: isMobile ? '12px 16px' : '8px 12px',
-        width: isMobile ? '230px' : '250px',
-        minHeight: isMobile ? '65px' : 'auto',
-        display: 'flex',
-        alignItems: 'center'
+        borderLeft: isMobile ? `5px solid ${roleColor}` : 'none',
+        background: isMobile 
+          ? `linear-gradient(90deg, ${roleColor}15 0%, rgba(255,255,255,0.05) 100%)`
+          : 'rgba(255, 255, 255, 0.03)',
+        padding: isMobile ? '12px 16px' : '15px',
+        width: isMobile ? '230px' : '260px',
+        borderRadius: '16px',
+        border: isMobile ? 'none' : '1px solid rgba(255, 255, 255, 0.08)',
+        transition: 'all 0.3s ease',
+        boxShadow: '0 4px 15px rgba(0,0,0,0.1)',
+        backdropFilter: 'blur(12px)',
+        position: 'relative',
+        overflow: 'hidden'
       }}
     >
+      {!isMobile && (
+        <div style={{ 
+          position: 'absolute', 
+          top: 0, 
+          left: 0, 
+          width: '4px', 
+          height: '100%', 
+          background: roleColor 
+        }} />
+      )}
       <Handle type="target" position={Position.Top} style={{ background: 'transparent', border: 'none' }} />
-      <div style={{ display: 'flex', alignItems: 'center', gap: '12px', width: '100%' }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: '15px', width: '100%' }}>
+        {!isMobile && member.photo && (
+          <img 
+            src={member.photo} 
+            alt={fullName} 
+            style={{ 
+              width: '50px', 
+              height: '50px', 
+              borderRadius: '12px', 
+              objectFit: 'cover',
+              border: `2px solid ${roleColor}`
+            }} 
+          />
+        )}
         <div style={{ flex: 1, minWidth: 0 }}>
           <div style={{ 
-            fontWeight: '800', 
-            fontSize: isMobile ? '1.1rem' : '0.95rem',
-            color: roleColor, 
-            lineHeight: '1.2',
-            wordBreak: 'break-all'
+            fontWeight: '700', 
+            fontSize: isMobile ? '1.1rem' : '1rem',
+            color: '#ffffff', 
+            lineHeight: '1.2'
           }}>
             {fullName}
           </div>
           <div style={{ 
-            fontSize: isMobile ? '0.75rem' : '0.65rem', 
+            fontSize: isMobile ? '0.75rem' : '0.7rem', 
             color: roleColor, 
             fontWeight: '800', 
             textTransform: 'uppercase', 
-            marginTop: '3px',
-            lineHeight: '1.2'
+            marginTop: '4px',
+            letterSpacing: '0.05em'
           }}>
             {displayPosition}
           </div>
@@ -126,6 +154,7 @@ const MemberNode = ({ data }) => {
     </div>
   );
 };
+
 
 
 

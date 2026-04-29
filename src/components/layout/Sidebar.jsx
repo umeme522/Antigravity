@@ -163,42 +163,61 @@ const Sidebar = ({ members, units, searchTerm, setSearchTerm, onMemberClick, onA
             
             <div style={{ 
               display: 'grid', 
-              gridTemplateColumns: 'repeat(3, 1fr)', // 3人並びに戻してゆったり表示
-              gap: '12px' 
+              gridTemplateColumns: isMobile ? 'repeat(3, 1fr)' : 'repeat(auto-fill, minmax(160px, 1fr))',
+              gap: isMobile ? '12px' : '20px' 
             }}>
-
-
               {posMembers
                 .sort((a, b) => getPriority(a.position) - getPriority(b.position))
-                .map((member) => {
-                const roleColor = getPositionColor(member.position);
-                const fullName = `${member.lastName} ${member.firstName}`;
-                return (
-                  <div 
-                    key={member.id}
-                    className="member-card-dense"
-                    onClick={() => onMemberClick(member)}
-                    style={{
-                      padding: '12px 6px',
-                      borderRadius: '12px',
-                      cursor: 'pointer',
-                      display: 'flex',
-                      flexDirection: 'column', 
-                      alignItems: 'center',
-                      gap: '8px',
-                      transition: 'all 0.2s ease',
-                      border: '1px solid rgba(255,255,255,0.05)',
-                      background: 'rgba(255,255,255,0.03)',
-                      minWidth: 0
-                    }}
-                  >
-                    <div style={{ textAlign: 'center', width: '100%', minWidth: 0 }}>
+                .map(member => {
+                  const roleColor = getPositionColor(member.position);
+                  return (
+                    <motion.div
+                      key={member.id}
+                      whileHover={{ y: -5, scale: 1.02 }}
+                      onClick={() => onMemberClick(member)}
+                      className="glass member-card-mini"
+                      style={{
+                        padding: isMobile ? '10px' : '16px',
+                        cursor: 'pointer',
+                        textAlign: 'center',
+                        position: 'relative',
+                        border: '1px solid rgba(255, 255, 255, 0.08)',
+                        borderRadius: '16px',
+                        background: 'rgba(255, 255, 255, 0.03)',
+                        transition: 'box-shadow 0.3s ease'
+                      }}
+                    >
                       <div style={{ 
-                        fontSize: '0.8rem', 
-                        fontWeight: '600', 
+                        position: 'absolute', 
+                        top: 0, 
+                        left: '50%', 
+                        transform: 'translateX(-50%)',
+                        width: '40%', 
+                        height: '3px', 
+                        background: roleColor,
+                        borderRadius: '0 0 4px 4px',
+                        boxShadow: `0 0 10px ${roleColor}66`
+                      }} />
+
+                      {member.photo && (
+                        <img 
+                          src={member.photo} 
+                          alt={member.lastName} 
+                          style={{ 
+                            width: isMobile ? '40px' : '60px', 
+                            height: isMobile ? '40px' : '60px', 
+                            borderRadius: '14px', 
+                            marginBottom: '10px',
+                            border: `2px solid ${roleColor}`,
+                            objectFit: 'cover'
+                          }} 
+                        />
+                      )}
+                      
+                      <div style={{ 
+                        fontWeight: '700', 
+                        fontSize: isMobile ? '0.85rem' : '1rem',
                         color: '#ffffff',
-                        lineHeight: '1.2',
-                        wordBreak: 'break-all'
                       }}>
                         {fullName}
                       </div>
