@@ -228,24 +228,43 @@ const OrgChart = ({ units, members, onMemberClick }) => {
     const visibleEdges = [];
     // モバイル向けに全体的にコンパクトにする
     const isMobile = window.innerWidth < 768;
-    const NODE_WIDTH = isMobile ? 200 : 250;
-    const CHILD_GAP = isMobile ? 30 : 50;
-    const VERTICAL_GAP = isMobile ? 100 : 120;
-    const MEMBER_Y_OFFSET = isMobile ? 70 : 80;
-    const MEMBER_GAP = isMobile ? 80 : 100;
+    const NODE_WIDTH = isMobile ? 180 : 250;
+    const CHILD_GAP = isMobile ? 20 : 50;
+    const VERTICAL_GAP = isMobile ? 80 : 120;
+    const MEMBER_Y_OFFSET = isMobile ? 60 : 80;
+    const MEMBER_GAP = isMobile ? 70 : 100;
 
     const subtreeWidthMap = {};
-    const calculateWidth = (unitId) => {
+    const subtreeHeightMap = {};
+
+    const calculateSubtreeSize = (unitId) => {
       const u = unitMap[unitId];
       const isExpanded = expandedUnits.has(unitId);
+      
       if (!isExpanded || u.children.length === 0) {
         subtreeWidthMap[unitId] = NODE_WIDTH;
-        return NODE_WIDTH;
+        subtreeHeightMap[unitId] = (u.members.length * MEMBER_GAP) + MEMBER_Y_OFFSET;
+        return { width: NODE_WIDTH, height: subtreeHeightMap[unitId] };
       }
-      const childrenWidth = u.children.reduce((acc, childId) => acc + calculateWidth(childId), 0) + (u.children.length - 1) * CHILD_GAP;
-      const width = Math.max(NODE_WIDTH, childrenWidth);
-      subtreeWidthMap[unitId] = width;
-      return width;
+
+      if (isMobile) {
+        // スマホでは縦に積むので、幅は最大値、高さは合計値
+        const childrenSizes = u.children.map(calculateSubtreeSize);
+        const childrenHeight = childrenSizes.reduce((acc, s) => acc + s.height, 0) + (u.children.length * VERTICAL_GAP);
+        const maxWidth = Math.max(NODE_WIDTH, ...childrenSizes.map(s => s.width));
+        subtreeWidthMap[unitId] = maxWidth;
+        subtreeHeightMap[unitId] = (u.members.length * MEMBER_GAP) + MEMBER_Y_OFFSET + childrenHeight;
+        return { width: maxWidth, height: subtreeHeightMap[unitId] };
+      } else {
+        // PCでは横に並べる
+        const childrenSizes = u.children.map(calculateSubtreeSize);
+        const totalChildrenWidth = childrenSizes.reduce((acc, s) => acc + s.width, 0) + (u.children.length - 1) * CHILD_GAP;
+        const width = Math.max(NODE_WIDTH, totalChildrenWidth);
+        const maxHeight = Math.max(...childrenSizes.map(s => s.height));
+        subtreeWidthMap[unitId] = width;
+        subtreeHeightMap[unitId] = (u.members.length * MEMBER_GAP) + MEMBER_Y_OFFSET + VERTICAL_GAP + maxHeight;
+        return { width, height: subtreeHeightMap[unitId] };
+      }
     };
 
     const layoutNodes = (unitId, centerX, y, level = 0) => {
@@ -270,8 +289,7 @@ const OrgChart = ({ units, members, onMemberClick }) => {
           source: u.parentId,
           target: unitId,
           type: 'smoothstep',
-          animated: false,
-          style: { stroke: 'rgba(255,255,255,0.45)', strokeWidth: 1.5, strokeDasharray: '6 4' },
+          style: { stroke: 'rgba(255,255,255,0.3)', strokeWidth: 1.5, strokeDasharray: '6 4' },
         });
       }
 
@@ -291,29 +309,38 @@ const OrgChart = ({ units, members, onMemberClick }) => {
             source: unitId,
             target: nodeId,
             type: 'smoothstep',
-            animated: false,
-            style: { stroke: 'rgba(255,255,255,0.45)', strokeWidth: 1.5, strokeDasharray: '6 4' },
+            style: { stroke: 'rgba(255,255,255,0.3)', strokeWidth: 1.5, strokeDasharray: '6 4' },
           });
         }
       });
 
-      const membersHeight = u.members.length > 0 ? (u.members.length * MEMBER_GAP) + MEMBER_Y_OFFSET : 150;
+      const membersHeight = (u.members.length * MEMBER_GAP) + MEMBER_Y_OFFSET;
 
       if (isExpanded && u.children.length > 0) {
-        const totalChildrenWidth = u.children.reduce((acc, cid) => acc + subtreeWidthMap[cid], 0) + (u.children.length - 1) * CHILD_GAP;
-        let currentX = centerX - totalChildrenWidth / 2;
-
-        u.children.forEach((childId) => {
-          const childWidth = subtreeWidthMap[childId];
-          const childCenterX = currentX + childWidth / 2;
-          layoutNodes(childId, childCenterX, y + membersHeight + VERTICAL_GAP, level + 1);
-          currentX += childWidth + CHILD_GAP;
-        });
+        if (isMobile) {
+          // スマホ向け：縦一列に並べる
+          let currentY = y + membersHeight + VERTICAL_GAP / 2;
+          u.children.forEach((childId) => {
+            layoutNodes(childId, centerX, currentY, level + 1);
+            currentY += subtreeHeightMap[childId] + VERTICAL_GAP / 2;
+          });
+        } else {
+          // PC向け：横並び
+          const totalChildrenWidth = u.children.reduce((acc, cid) => acc + subtreeWidthMap[cid], 0) + (u.children.length - 1) * CHILD_GAP;
+          let currentX = centerX - totalChildrenWidth / 2;
+          u.children.forEach((childId) => {
+            const childWidth = subtreeWidthMap[childId];
+            const childCenterX = currentX + childWidth / 2;
+            layoutNodes(childId, childCenterX, y + membersHeight + VERTICAL_GAP, level + 1);
+            currentX += childWidth + CHILD_GAP;
+          });
+        }
       }
     };
 
     const roots = units.filter(u => !u.parentId);
-    roots.forEach(r => calculateWidth(r.id));
+    roots.forEach(r => calculateSubtreeSize(r.id));
+
 
     const mainRoot = roots.find(r => r.id === 'u1');
     if (mainRoot) {

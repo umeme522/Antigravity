@@ -190,11 +190,6 @@ const Sidebar = ({ members, units, searchTerm, setSearchTerm, onMemberClick, onA
                       minWidth: 0
                     }}
                   >
-                    <img 
-                      src={member.photo} 
-                      alt="" 
-                      style={{ width: '40px', height: '40px', borderRadius: '50%', border: `2px solid ${roleColor}`, flexShrink: 0 }} 
-                    />
                     <div style={{ textAlign: 'center', width: '100%', minWidth: 0 }}>
                       <div style={{ 
                         fontSize: '0.8rem', 
@@ -223,6 +218,7 @@ const Sidebar = ({ members, units, searchTerm, setSearchTerm, onMemberClick, onA
         ))}
       </div>
     </motion.div>
+
   );
 };
 
