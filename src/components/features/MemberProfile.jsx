@@ -166,7 +166,8 @@ const MemberProfile = ({ member, unit, units, onUpdate, onClose, isPermanent }) 
       const children = units.filter(u => u.parentId === parentId);
       
       children.forEach(unit => {
-        const indent = '\u00A0\u00A0'.repeat(level);
+        // インデントをさらに強調 (全角スペースを増やしてズレを大きくする)
+        const indent = '\u3000'.repeat(level); 
         results.push(
           <option key={unit.id} value={unit.id} style={{ background: '#1a202c', color: '#ffffff' }}>
             {level > 0 ? `${indent}└ ${unit.name}` : unit.name}
@@ -179,17 +180,27 @@ const MemberProfile = ({ member, unit, units, onUpdate, onClose, isPermanent }) 
     return getUnitTree();
   };
 
+  const renderYearOptions = () => {
+    const years = [];
+    const currentYear = new Date().getFullYear();
+    for (let y = currentYear; y >= 1980; y--) {
+      years.push(<option key={y} value={y}>{y}年度</option>);
+    }
+    return years;
+  };
+
   const containerStyle = {
-    width: '100%', // スマホ対応のため100%に
-    maxWidth: '420px', // PCでの最大幅を維持
+    width: '100%',
+    maxWidth: '420px',
     height: '100%',
-    padding: '24px', // 少しパディングを小さく
+    padding: '24px',
     display: 'flex',
     flexDirection: 'column',
     gap: '20px',
     overflowY: 'auto',
     position: 'relative'
   };
+
 
   const roleColor = getPositionColor(member.position);
   const fullName = `${member.lastName || ''} ${member.firstName || ''}`;
@@ -325,27 +336,31 @@ const MemberProfile = ({ member, unit, units, onUpdate, onClose, isPermanent }) 
             </div>
           )}
 
-          <div style={{ display: 'grid', gridTemplateColumns: '1.5fr 1fr', gap: '12px' }}>
+          <div className="form-row-mobile-stack" style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
             <div className="form-group">
               <label style={{ color: 'var(--text-secondary)' }}>生年月日</label>
               <input name="birthDate" type="date" value={formData.birthDate || ''} onChange={handleChange} className="edit-input" style={{ color: '#ffffff' }} />
             </div>
             <div className="form-group">
               <label style={{ color: 'var(--text-secondary)' }}>年齢</label>
-              <div className="read-only-field" style={{ color: '#ffffff' }}>{calculateAge(formData.birthDate)}</div>
+              <div className="read-only-field" style={{ color: '#ffffff', padding: '10px 14px', background: 'rgba(255,255,255,0.05)', borderRadius: '8px' }}>{calculateAge(formData.birthDate)}</div>
             </div>
           </div>
 
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1.5fr', gap: '12px' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1.5fr', gap: '12px', marginTop: '12px' }}>
             <div className="form-group">
               <label style={{ color: 'var(--text-secondary)' }}>社員番号</label>
               <input name="employeeId" value={formData.employeeId || ''} onChange={handleChange} className="edit-input" style={{ color: '#ffffff' }} />
             </div>
             <div className="form-group">
               <label style={{ color: 'var(--text-secondary)' }}>入社年度</label>
-              <input name="joinDate" type="number" value={formData.joinDate || ''} onChange={handleChange} className="edit-input" placeholder="例: 2024" style={{ color: '#ffffff' }} />
+              <select name="joinDate" value={formData.joinDate || ''} onChange={handleChange} className="edit-input" style={{ color: '#ffffff', background: '#1a202c' }}>
+                <option value="">選択してください</option>
+                {renderYearOptions()}
+              </select>
             </div>
           </div>
+
 
           <div className="form-group">
             <label style={{ color: 'var(--text-secondary)' }}>勤続年数</label>
