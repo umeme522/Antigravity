@@ -44,8 +44,9 @@ export const mockData = {
       firstName: "芳人",
       reading: "ホリウチ ヨシト",
       position: "副支店長",
-      unitId: "u_dept3",
-      additionalUnitIds: [],
+      unitId: "u1",
+      additionalUnitIds: ["u_dept3"],
+
 
       birthDate: "1977-10-15",
       joinDate: "2001",

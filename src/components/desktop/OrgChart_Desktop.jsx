@@ -19,9 +19,9 @@ const getPositionColor = (pos) => {
   return '#a0aec0';
 };
 
-// --- 新しい統合ノード (部署 + リーダー) ---
+// --- 統合ノード (部署 + リーダー達) ---
 const UnitNode = ({ data }) => {
-  const { label, level, leader, isExpanded, onClick, onMemberClick } = data;
+  const { label, level, leaders, isExpanded, onClick, onMemberClick, hasChildren } = data;
   const unitBg = level === 0 ? 'linear-gradient(135deg, #ffd700, #b8860b)' : 'linear-gradient(135deg, #667eea, #764ba2)';
   
   return (
@@ -34,7 +34,7 @@ const UnitNode = ({ data }) => {
         style={{
           padding: '16px 20px',
           background: unitBg,
-          borderRadius: leader ? '16px 16px 0 0' : '16px',
+          borderRadius: leaders && leaders.length > 0 ? '16px 16px 0 0' : '16px',
           color: 'white',
           fontWeight: '900',
           fontSize: '1.1rem',
@@ -50,30 +50,29 @@ const UnitNode = ({ data }) => {
         }}
       >
         <span style={{ flex: 1 }}>{label}</span>
-        {data.hasChildren && (
+        {hasChildren && (
           <div style={{ transform: isExpanded ? 'rotate(180deg)' : 'rotate(0deg)', transition: 'transform 0.4s', opacity: 0.7 }}>
             <ChevronDown size={18} />
           </div>
         )}
       </div>
 
-
-      {/* リーダーカード (隣接・セット) */}
-      {leader && (
+      {/* リーダー達 (大久保・堀内など複数対応) */}
+      {leaders && leaders.map((leader, idx) => (
         <div
+          key={leader.id}
           onClick={() => onMemberClick(leader)}
           className="glass"
           style={{
             padding: '12px 15px',
             background: 'rgba(255, 255, 255, 0.05)',
-            borderRadius: '0 0 16px 16px', // 上を平らにして合体
+            borderRadius: idx === leaders.length - 1 ? '0 0 16px 16px' : '0', // 最後だけ角を丸く
             border: '1px solid rgba(255, 255, 255, 0.1)',
-            borderTop: 'none', // 境界線を消す
+            borderTop: 'none',
             display: 'flex',
             alignItems: 'center',
             gap: '12px',
             cursor: 'pointer',
-            transition: 'background 0.2s',
             backdropFilter: 'blur(10px)',
           }}
         >
@@ -85,7 +84,7 @@ const UnitNode = ({ data }) => {
             <div style={{ fontSize: '0.7rem', color: getPositionColor(leader.position), fontWeight: '900', marginTop: '2px' }}>{leader.position}</div>
           </div>
         </div>
-      )}
+      ))}
 
       <Handle type="source" position={Position.Bottom} style={{ background: 'transparent', border: 'none' }} />
     </div>
@@ -96,8 +95,6 @@ const UnitNode = ({ data }) => {
 const MemberNode = ({ data }) => {
   const { member, onClick } = data;
   const roleColor = getPositionColor(member.position);
-  const fullName = `${member.lastName} ${member.firstName}`;
-
   return (
     <div
       className="glass"
@@ -116,10 +113,10 @@ const MemberNode = ({ data }) => {
     >
       <Handle type="target" position={Position.Top} style={{ background: 'transparent', border: 'none' }} />
       {member.photo && (
-        <img src={member.photo} alt={fullName} style={{ width: '44px', height: '44px', borderRadius: '10px', objectFit: 'cover' }} />
+        <img src={member.photo} alt={member.lastName} style={{ width: '44px', height: '44px', borderRadius: '10px', objectFit: 'cover' }} />
       )}
       <div>
-        <div style={{ fontWeight: '700', fontSize: '0.95rem', color: '#fff' }}>{fullName}</div>
+        <div style={{ fontWeight: '700', fontSize: '0.95rem', color: '#fff' }}>{member.lastName} {member.firstName}</div>
         <div style={{ fontSize: '0.7rem', color: roleColor, fontWeight: '900', marginTop: '2px' }}>{member.position}</div>
       </div>
       <Handle type="source" position={Position.Bottom} style={{ background: 'transparent', border: 'none' }} />
@@ -132,26 +129,25 @@ const nodeTypes = { unit: UnitNode, member: MemberNode };
 const OrgChart_Desktop = ({ units, members, onMemberClick }) => {
   const [nodes, setNodes] = useState([]);
   const [edges, setEdges] = useState([]);
-  const [expandedUnits, setExpandedUnits] = useState(new Set(['u1']));
+  const [expandedUnits, setExpandedUnits] = useState(new Set(['u1', 'u2', 'u_dept2', 'u_dept3']));
 
   const { nodes: visibleNodes, edges: visibleEdges } = useMemo(() => {
     const unitMap = {};
     units.forEach(u => { unitMap[u.id] = { ...u, children: [], members: [] }; });
     
-    // リーダー（最上位役職）を抽出
+    // 役職順にソート
     const sortedMembers = [...members].sort((a, b) => {
       const getPrio = (p) => {
         if (p.includes('支店長')) return 1;
-        if (p.includes('部長')) return 2;
-        if (p.includes('所長') || p.includes('課長')) return 3;
+        if (p.includes('副支店長')) return 2;
+        if (p.includes('部長')) return 3;
+        if (p.includes('所長') || p.includes('課長')) return 4;
         return 100;
       };
       return getPrio(a.position) - getPrio(b.position);
     });
 
-    sortedMembers.forEach(m => {
-      if (unitMap[m.unitId]) unitMap[m.unitId].members.push(m);
-    });
+    sortedMembers.forEach(m => { if (unitMap[m.unitId]) unitMap[m.unitId].members.push(m); });
     units.forEach(u => { if (u.parentId && unitMap[u.parentId]) unitMap[u.parentId].children.push(u.id); });
 
     const vNodes = [];
@@ -166,12 +162,13 @@ const OrgChart_Desktop = ({ units, members, onMemberClick }) => {
       const u = unitMap[unitId];
       const isExpanded = expandedUnits.has(unitId);
       
-      // リーダーを除いた一般メンバーの数を計算
-      const generalMembers = u.members.length > 1 ? u.members.slice(1) : [];
-      const mHeight = isExpanded ? (generalMembers.length * MEMBER_GAP) + 60 : 0;
+      // リーダー（統合される人）と一般メンバーを分離
+      const leadersCount = u.members.length > 0 ? (u.members[0].position.includes('スタッフ') ? 0 : (u.members.length > 1 && (u.members[1].position.includes('副支店長') || u.members[1].position.includes('部長')) ? 2 : 1)) : 0;
+      const leaders = u.members.slice(0, leadersCount);
+      const generalMembers = u.members.slice(leadersCount);
       
-      // 部署カード自体の高さ（リーダーがいる場合は高くなる）
-      const unitNodeHeight = u.members.length > 0 ? 130 : 60;
+      const mHeight = isExpanded ? (generalMembers.length * MEMBER_GAP) + 60 : 0;
+      const unitNodeHeight = 60 + (leaders.length * 68);
 
       if (!isExpanded || u.children.length === 0) {
         subtreeSizeMap[unitId] = { width: 280, height: unitNodeHeight + mHeight };
@@ -189,17 +186,19 @@ const OrgChart_Desktop = ({ units, members, onMemberClick }) => {
       const u = unitMap[unitId];
       const isExpanded = expandedUnits.has(unitId);
       const size = subtreeSizeMap[unitId];
-      const leader = u.members.length > 0 ? u.members[0] : null;
-      const generalMembers = u.members.length > 1 ? u.members.slice(1) : [];
+      
+      // リーダー抽出ロジック（支店長・副支店長・部長などは統合）
+      const leadersCount = u.members.length > 0 ? (u.members[0].position.includes('スタッフ') ? 0 : (u.members.length > 1 && (u.members[1].position.includes('副支店長') || u.members[1].position.includes('部長')) ? 2 : 1)) : 0;
+      const leaders = u.members.slice(0, leadersCount);
+      const generalMembers = u.members.slice(leadersCount);
 
-      // 部署ノードの中央揃え (280px幅)
       vNodes.push({
         id: unitId,
         type: 'unit',
         data: { 
           label: u.name, 
           level, 
-          leader, 
+          leaders, 
           isExpanded, 
           hasChildren: u.children.length > 0 || generalMembers.length > 0,
           onClick: () => toggleUnit(unitId),
@@ -212,20 +211,18 @@ const OrgChart_Desktop = ({ units, members, onMemberClick }) => {
         vEdges.push({ id: `e-${u.parentId}-${unitId}`, source: u.parentId, target: unitId, type: 'smoothstep', style: { strokeDasharray: '5,5' } });
       }
 
-      const unitHeight = leader ? 130 : 60;
+      const unitHeight = 60 + (leaders.length * 68);
       if (isExpanded) {
-        // 一般メンバーの配置 (260px幅を中央に寄せる)
         generalMembers.forEach((m, i) => {
           const mId = `m-${m.id}-at-${unitId}`;
           vNodes.push({
             id: mId,
             type: 'member',
             data: { member: m, onClick: onMemberClick },
-            position: { x: x - 130, y: y + unitHeight + 40 + (i * MEMBER_GAP) }, // x-130で中央揃え
+            position: { x: x - 130, y: y + unitHeight + 40 + (i * MEMBER_GAP) },
           });
           vEdges.push({ id: `e-${unitId}-${mId}`, source: unitId, target: mId, type: 'smoothstep' });
         });
-
 
         const totalMHeight = generalMembers.length * MEMBER_GAP;
         let startX = x - size.width / 2;
