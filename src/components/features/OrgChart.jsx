@@ -277,6 +277,9 @@ const OrgChart = ({ units, members, onMemberClick }) => {
       });
 
       if (u.parentId) {
+        // 親が支店(u1)でない場合は、横への繋がりを強調
+        const isHorizontalEdge = isMobile && u.parentId !== 'u1' && unitMap[u.parentId]?.parentId === 'u1';
+        
         visibleEdges.push({
           id: `e-${u.parentId}-${unitId}`,
           source: u.parentId,
@@ -284,11 +287,12 @@ const OrgChart = ({ units, members, onMemberClick }) => {
           type: 'smoothstep',
           style: { 
             stroke: isMobile ? 'rgba(255,255,255,0.35)' : 'rgba(255,255,255,0.2)', 
-            strokeWidth: isMobile ? 2.5 : 1.5, // スマホではさらに太くして繋がりを強調
-            strokeDasharray: isMobile ? '0' : '4 4' 
+            strokeWidth: isMobile ? 2.5 : 1.5, 
+            strokeDasharray: isMobile && !isHorizontalEdge ? '0' : '4 4' 
           },
         });
       }
+
 
       const unitNodeHeight = isMobile ? 50 : 60;
       let currentOffset = unitNodeHeight + 15;
@@ -303,14 +307,16 @@ const OrgChart = ({ units, members, onMemberClick }) => {
             childY += subtreeHeightMap[childId] + 25;
           });
         } else if (isMobile) {
-          // 【部直下の営業所（武蔵野など）】 -> 右隣に配置
+          // 【部直下の営業所（武蔵野など）】 -> 右隣に配置し、そこから縦に並べる
           const indentOffset = 230; // ユニット幅分だけ右に
-          let childY = y; // 親と同じ高さから開始（水平に並べる）
-          u.children.forEach((childId) => {
+          let childY = y; // 最初の営業所は親（部）と水平に並べる
+          u.children.forEach((childId, index) => {
             layoutNodes(childId, centerX + indentOffset, childY, level + 1);
+            // 2番目以降は下に並べる
             childY += subtreeHeightMap[childId] + 20;
           });
         } else {
+
           // PC版
           let childY = y + currentOffset + VERTICAL_GAP_EXPANDED;
           u.children.forEach((childId) => {
