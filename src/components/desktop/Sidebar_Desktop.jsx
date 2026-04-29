@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Search, Plus } from 'lucide-react';
+import { Search, Users, Plus, Calendar } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 const getPositionColor = (pos) => {
@@ -13,10 +13,11 @@ const getPositionColor = (pos) => {
 };
 
 const Sidebar_Desktop = ({ members, units, searchTerm, setSearchTerm, onMemberClick, onAddMember }) => {
-  const isMobile = false;
-  const [groupBy, setGroupBy] = useState('position');
+  const [activeTab, setActiveTab] = useState('list'); // 'list' or 'search'
+  const [groupBy, setGroupBy] = useState('position'); // 'position' or 'joinDate'
 
   const filteredMembers = members.filter(member => {
+    if (activeTab === 'list') return true; // リストタブでは全員
     const fullName = `${member.lastName} ${member.firstName}`.toLowerCase();
     const pos = (member.position || '').toLowerCase();
     const search = searchTerm.toLowerCase();
@@ -47,171 +48,178 @@ const Sidebar_Desktop = ({ members, units, searchTerm, setSearchTerm, onMemberCl
       initial={{ x: -100, opacity: 0 }}
       animate={{ x: 0, opacity: 1 }}
       className="sidebar"
-      style={{ padding: '24px', height: '100%', display: 'flex', flexDirection: 'column' }}
+      style={{ padding: '0', height: '100%', display: 'flex', flexDirection: 'column' }}
     >
-      <div className="sidebar-header" style={{ marginBottom: '24px' }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
-          <div style={{ display: 'flex', alignItems: 'baseline', gap: '8px' }}>
-            <h2 style={{ fontSize: '1.2rem', fontWeight: '900', color: '#ffffff', margin: 0, letterSpacing: '0.05em' }}>MEMBERS</h2>
-            <span style={{ fontSize: '0.85rem', color: 'rgba(255,255,255,0.4)', fontWeight: '600' }}>全 {members.length} 名</span>
-          </div>
-          <button 
-            onClick={onAddMember}
-            className="save-btn"
-            style={{ 
-              padding: '8px 16px',
-              fontSize: '0.8rem',
-              width: 'auto',
-              flex: 'none'
-            }}
-          >
-            <Plus size={14} style={{ marginRight: '4px' }} /> 追加
-          </button>
-        </div>
-
-        <div className="search-container" style={{ position: 'relative' }}>
-          <Search size={16} style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)', color: 'rgba(255,255,255,0.4)' }} />
-          <input
-            type="text"
-            className="search-input"
-            placeholder="名前、役職、部署..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            style={{ paddingLeft: '36px', height: '40px', fontSize: '0.9rem', width: '100%', color: '#ffffff' }}
-          />
-        </div>
-
-        <div style={{ display: 'flex', gap: '8px', marginTop: '12px' }}>
-          <button 
-            onClick={() => setGroupBy('position')}
-            style={{ flex: 1, padding: '8px', fontSize: '0.8rem', borderRadius: '8px', background: groupBy === 'position' ? 'var(--accent-primary)' : 'rgba(255,255,255,0.1)', color: groupBy === 'position' ? '#000' : '#fff', border: 'none', cursor: 'pointer', fontWeight: 'bold', transition: 'all 0.2s ease' }}
-          >
-            役職別
-          </button>
-          <button 
-            onClick={() => setGroupBy('joinDate')}
-            style={{ flex: 1, padding: '8px', fontSize: '0.8rem', borderRadius: '8px', background: groupBy === 'joinDate' ? 'var(--accent-primary)' : 'rgba(255,255,255,0.1)', color: groupBy === 'joinDate' ? '#000' : '#fff', border: 'none', cursor: 'pointer', fontWeight: 'bold', transition: 'all 0.2s ease' }}
-          >
-            入社年度別
-          </button>
-        </div>
+      {/* プレミアム・タブ・ナビゲーション */}
+      <div style={{ display: 'flex', padding: '24px 24px 0 24px', gap: '20px', borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
+        <button 
+          onClick={() => setActiveTab('list')}
+          style={{ 
+            padding: '0 0 12px 0', 
+            background: 'transparent', 
+            border: 'none', 
+            color: activeTab === 'list' ? 'var(--accent-primary)' : 'rgba(255,255,255,0.4)',
+            fontSize: '1rem',
+            fontWeight: '800',
+            cursor: 'pointer',
+            borderBottom: activeTab === 'list' ? '2px solid var(--accent-primary)' : '2px solid transparent',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '8px',
+            transition: 'all 0.3s ease'
+          }}
+        >
+          <Users size={18} /> メンバー
+        </button>
+        <button 
+          onClick={() => setActiveTab('search')}
+          style={{ 
+            padding: '0 0 12px 0', 
+            background: 'transparent', 
+            border: 'none', 
+            color: activeTab === 'search' ? 'var(--accent-primary)' : 'rgba(255,255,255,0.4)',
+            fontSize: '1rem',
+            fontWeight: '800',
+            cursor: 'pointer',
+            borderBottom: activeTab === 'search' ? '2px solid var(--accent-primary)' : '2px solid transparent',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '8px',
+            transition: 'all 0.3s ease'
+          }}
+        >
+          <Search size={18} /> 検索
+        </button>
       </div>
 
-      <div className="member-list" style={{ flex: 1, overflowY: 'auto', paddingRight: '4px' }}>
-        {Object.entries(
-          filteredMembers.reduce((acc, m) => {
-            let group = groupBy === 'joinDate' ? (m.joinDate && typeof m.joinDate === 'string' ? m.joinDate.split('-')[0] : m.joinDate) + '年' : getGroupTitle(m.position);
-            if (!acc[group]) acc[group] = [];
-            acc[group].push(m);
-            return acc;
-          }, {})
-        )
-        .sort(([groupA], [groupB]) => {
-          if (groupBy === 'joinDate') return groupB.localeCompare(groupA);
-          const posA = filteredMembers.find(m => getGroupTitle(m.position) === groupA)?.position || '';
-          const posB = filteredMembers.find(m => getGroupTitle(m.position) === groupB)?.position || '';
-          return getPriority(posA) - getPriority(posB);
-        })
-        .map(([groupTitle, posMembers]) => (
-          <div key={groupTitle} style={{ marginBottom: '24px' }}>
-            <div style={{ 
-              display: 'flex', 
-              justifyContent: 'space-between',
-              alignItems: 'center', 
-              marginBottom: '12px',
-              borderBottom: `1px solid rgba(255,255,255,0.1)`,
-              paddingBottom: '6px'
-            }}>
-              <h3 style={{ fontSize: '0.9rem', color: 'var(--accent-primary)', fontWeight: '800' }}>
-                {groupTitle}
-              </h3>
-              <span style={{ fontSize: '0.8rem', color: 'rgba(255,255,255,0.4)' }}>
-                {posMembers.length} 名
-              </span>
+      <div style={{ padding: '24px', flex: 1, overflow: 'hidden', display: 'flex', flexDirection: 'column' }}>
+        
+        {/* コンテンツ: 一覧タブ */}
+        {activeTab === 'list' && (
+          <div style={{ flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
+              <div style={{ fontSize: '0.85rem', color: 'rgba(255,255,255,0.4)', fontWeight: '600' }}>全 {members.length} 名</div>
+              <button onClick={onAddMember} className="save-btn" style={{ padding: '8px 16px', fontSize: '0.8rem', width: 'auto' }}>
+                <Plus size={14} style={{ marginRight: '4px' }} /> 追加
+              </button>
             </div>
-            
-            <div style={{ 
-              display: 'grid', 
-              gridTemplateColumns: 'repeat(auto-fill, minmax(110px, 1fr))',
-              gap: '12px' 
-            }}>
-              {posMembers
-                .sort((a, b) => getPriority(a.position) - getPriority(b.position))
-                .map(member => {
-                  const roleColor = getPositionColor(member.position);
-                  const fullName = `${member.lastName} ${member.firstName}`;
-                  return (
-                    <motion.div
-                      key={member.id}
-                      whileHover={{ y: -5, scale: 1.05, backgroundColor: 'rgba(255, 255, 255, 0.08)' }}
-                      onClick={() => onMemberClick(member)}
-                      className="glass member-card-mini"
-                      style={{
-                        padding: '12px 8px',
-                        cursor: 'pointer',
-                        textAlign: 'center',
-                        position: 'relative',
-                        border: '1px solid rgba(255, 255, 255, 0.15)',
-                        borderRadius: '12px',
-                        background: 'rgba(255, 255, 255, 0.04)',
-                        transition: 'all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275)',
-                        minWidth: 0,
-                        boxShadow: '0 4px 15px rgba(0,0,0,0.3)'
-                      }}
-                    >
-                      <div style={{ 
-                        position: 'absolute', 
-                        top: 0, 
-                        left: '0', 
-                        width: '100%', 
-                        height: '3px', 
-                        background: roleColor,
-                        boxShadow: `0 0 12px ${roleColor}66`,
-                        borderRadius: '12px 12px 0 0'
-                      }} />
 
-                      {member.photo && (
-                        <img 
-                          src={member.photo} 
-                          alt={member.lastName} 
-                          style={{ 
-                            width: '48px', 
-                            height: '48px', 
-                            borderRadius: '10px', 
-                            marginBottom: '8px',
-                            objectFit: 'cover'
-                          }} 
-                        />
-                      )}
-                      
-                      <div style={{ 
-                        fontWeight: '700', 
-                        fontSize: '0.85rem',
-                        color: '#ffffff',
-                        lineHeight: '1.2',
-                        overflow: 'hidden',
-                        textOverflow: 'ellipsis',
-                        whiteSpace: 'nowrap',
-                        marginBottom: '6px'
-                      }}>
-                        {fullName}
-                      </div>
-                      <div style={{ 
-                        display: 'inline-block',
-                        fontSize: '0.75rem', 
-                        color: roleColor, 
-                        fontWeight: '900', 
-                        textTransform: 'uppercase',
-                        letterSpacing: '0.02em'
-                      }}>
-                        {member.position}
-                      </div>
-                    </motion.div>
-                  );
-                })}
+            <div style={{ display: 'flex', gap: '8px', marginBottom: '24px' }}>
+              <button 
+                onClick={() => setGroupBy('position')}
+                style={{ flex: 1, padding: '10px', fontSize: '0.8rem', borderRadius: '10px', background: groupBy === 'position' ? 'var(--accent-primary)' : 'rgba(255,255,255,0.05)', color: groupBy === 'position' ? '#000' : '#fff', border: 'none', cursor: 'pointer', fontWeight: '800' }}
+              >
+                役職別
+              </button>
+              <button 
+                onClick={() => setGroupBy('joinDate')}
+                style={{ flex: 1, padding: '10px', fontSize: '0.8rem', borderRadius: '10px', background: groupBy === 'joinDate' ? 'var(--accent-primary)' : 'rgba(255,255,255,0.05)', color: groupBy === 'joinDate' ? '#000' : '#fff', border: 'none', cursor: 'pointer', fontWeight: '800' }}
+              >
+                入社年度別
+              </button>
+            </div>
+
+            <div className="member-list" style={{ flex: 1, overflowY: 'auto' }}>
+              {Object.entries(
+                filteredMembers.reduce((acc, m) => {
+                  let group = groupBy === 'joinDate' ? (m.joinDate && typeof m.joinDate === 'string' ? m.joinDate.split('-')[0] : m.joinDate) + '年' : getGroupTitle(m.position);
+                  if (!acc[group]) acc[group] = [];
+                  acc[group].push(m);
+                  return acc;
+                }, {})
+              )
+              .sort(([groupA], [groupB]) => {
+                if (groupBy === 'joinDate') return groupB.localeCompare(groupA);
+                const posA = filteredMembers.find(m => getGroupTitle(m.position) === groupA)?.position || '';
+                const posB = filteredMembers.find(m => getGroupTitle(m.position) === groupB)?.position || '';
+                return getPriority(posA) - getPriority(posB);
+              })
+              .map(([groupTitle, posMembers]) => (
+                <div key={groupTitle} style={{ marginBottom: '24px' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '12px', borderBottom: '1px solid rgba(255,255,255,0.05)', paddingBottom: '6px' }}>
+                    <h3 style={{ fontSize: '0.9rem', color: 'var(--accent-primary)', fontWeight: '800' }}>{groupTitle}</h3>
+                    <span style={{ fontSize: '0.8rem', color: 'rgba(255,255,255,0.4)' }}>{posMembers.length}名</span>
+                  </div>
+                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(110px, 1fr))', gap: '12px' }}>
+                    {posMembers.map(m => (
+                      <MemberCard key={m.id} m={m} onMemberClick={onMemberClick} />
+                    ))}
+                  </div>
+                </div>
+              ))}
             </div>
           </div>
-        ))}
+        )}
+
+        {/* コンテンツ: 検索タブ */}
+        {activeTab === 'search' && (
+          <div style={{ flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
+            <div className="search-container" style={{ position: 'relative', marginBottom: '24px' }}>
+              <Search size={18} style={{ position: 'absolute', left: '16px', top: '50%', transform: 'translateY(-50%)', color: 'var(--accent-primary)' }} />
+              <input
+                type="text"
+                autoFocus
+                className="search-input"
+                placeholder="名前、役職、部署で検索..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                style={{ paddingLeft: '44px', height: '50px', fontSize: '1rem', width: '100%', color: '#ffffff', borderRadius: '12px' }}
+              />
+            </div>
+
+            <div className="member-list" style={{ flex: 1, overflowY: 'auto' }}>
+              {searchTerm.length > 0 ? (
+                <>
+                  <div style={{ fontSize: '0.85rem', color: 'rgba(255,255,255,0.4)', marginBottom: '16px', fontWeight: '600' }}>検索結果: {filteredMembers.length} 名</div>
+                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(110px, 1fr))', gap: '12px' }}>
+                    {filteredMembers.map(m => (
+                      <MemberCard key={m.id} m={m} onMemberClick={onMemberClick} />
+                    ))}
+                  </div>
+                </>
+              ) : (
+                <div style={{ height: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', opacity: 0.3, textAlign: 'center' }}>
+                  <Search size={48} style={{ marginBottom: '16px' }} />
+                  <p>キーワードを入力して検索してください</p>
+                </div>
+              )}
+            </div>
+          </div>
+        )}
+
+      </div>
+    </motion.div>
+  );
+};
+
+// サブコンポーネント: メンバーカード
+const MemberCard = ({ m, onMemberClick }) => {
+  const roleColor = getPositionColor(m.position);
+  return (
+    <motion.div
+      whileHover={{ y: -5, scale: 1.05, backgroundColor: 'rgba(255, 255, 255, 0.08)' }}
+      onClick={() => onMemberClick(m)}
+      className="glass member-card-mini"
+      style={{
+        padding: '12px 8px',
+        cursor: 'pointer',
+        textAlign: 'center',
+        position: 'relative',
+        border: '1px solid rgba(255, 255, 255, 0.15)',
+        borderRadius: '12px',
+        background: 'rgba(255, 255, 255, 0.04)',
+        boxShadow: '0 4px 15px rgba(0,0,0,0.3)'
+      }}
+    >
+      <div style={{ position: 'absolute', top: 0, left: '0', width: '100%', height: '3px', background: roleColor, borderRadius: '12px 12px 0 0' }} />
+      {m.photo && (
+        <img src={m.photo} alt={m.lastName} style={{ width: '48px', height: '48px', borderRadius: '10px', marginBottom: '8px', objectFit: 'cover' }} />
+      )}
+      <div style={{ fontWeight: '700', fontSize: '0.85rem', color: '#ffffff', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', marginBottom: '6px' }}>
+        {m.lastName} {m.firstName}
+      </div>
+      <div style={{ fontSize: '0.75rem', color: roleColor, fontWeight: '900', textTransform: 'uppercase' }}>
+        {m.position}
       </div>
     </motion.div>
   );
