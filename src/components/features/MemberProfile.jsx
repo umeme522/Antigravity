@@ -443,9 +443,10 @@ const MemberProfile = ({ member, unit, units, onUpdate, onClose, isPermanent }) 
           </div>
 
           <div style={{ display: 'flex', gap: '12px', marginTop: '20px' }}>
-            <button onClick={handleSave} className="save-btn">保存する</button>
+            <button onClick={handleSave} className="save-btn">変更を保存</button>
             <button onClick={() => setIsEditing(false)} className="cancel-btn">キャンセル</button>
           </div>
+
         </div>
       ) : (
         <>
