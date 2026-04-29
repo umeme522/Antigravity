@@ -25,12 +25,15 @@ const getPositionColor = (pos) => {
 const UnitNode = ({ data }) => {
   const { label, level, leaders, isExpanded, onClick, onMemberClick, hasGeneralMembers } = data;
   
-  let unitBg = 'linear-gradient(135deg, #667eea, #764ba2)'; // Default Purple
+  let unitBg = 'linear-gradient(135deg, #667eea, #764ba2)'; // Default Purple (Main Depts)
   let textColor = '#ffffff';
 
-  const isRegional = label.includes('営業所') || label.includes('流通') || label.includes('センター') || label.includes('綾瀬') || label.includes('栃木') || label.includes('武蔵野') || label.includes('安曇野') || label.includes('富士見') || label.includes('白州') || label.includes('南多摩');
+  // 判定ロジックの強化
+  const isHQ = level === 0;
+  const isMainDept = level === 1 && (label.includes('部') && !label.includes('営業所') && !label.includes('流通'));
+  const isRegional = !isHQ && !isMainDept;
 
-  if (level === 0) {
+  if (isHQ) {
     unitBg = 'linear-gradient(135deg, #ffd700, #b8860b)'; // HQ Gold
     textColor = '#000000';
   } else if (isRegional) {
@@ -61,6 +64,7 @@ const UnitNode = ({ data }) => {
           zIndex: 2
         }}
       >
+
 
 
         <span style={{ flex: 1 }}>{label}</span>
@@ -313,9 +317,23 @@ const OrgChart_Desktop = ({ units, members, onMemberClick }) => {
 
   return (
     <div style={{ width: '100%', height: '100%', position: 'relative' }}>
-      <ReactFlow nodes={nodes} edges={edges} nodeTypes={nodeTypes} fitView minZoom={0.1} maxZoom={2} nodesDraggable={false}>
+      <ReactFlow 
+        nodes={nodes} 
+        edges={edges} 
+        nodeTypes={nodeTypes} 
+        fitView 
+        minZoom={0.1} 
+        maxZoom={2} 
+        nodesDraggable={false}
+        defaultEdgeOptions={{
+          type: 'smoothstep',
+          style: { stroke: 'rgba(255, 255, 255, 0.25)', strokeWidth: 3 },
+          animated: true,
+        }}
+      >
         <Background color="#fff" opacity={0.05} />
       </ReactFlow>
+
 
       <div style={{ position: 'absolute', bottom: '24px', right: '24px', display: 'flex', flexDirection: 'column', gap: '8px', zIndex: 1000 }}>
         <ZoomControls />
