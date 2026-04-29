@@ -231,10 +231,13 @@ const OrgChart_Desktop = ({ units, members, onMemberClick }) => {
       const isExpanded = expandedUnits.has(unitId);
       const unitNodeHeight = 60;
       const unitNodeWidth = 250;
-      const membersHeight = isExpanded ? (u.members.length * MEMBER_GAP) + MEMBER_Y_OFFSET : 0;
+      // メンバー全員の高さ（PC版の大きなカード用）
+      const membersHeight = isExpanded && u.members.length > 0 
+        ? (u.members.length * MEMBER_GAP) 
+        : 0;
       
       if (!isExpanded || u.children.length === 0) {
-        subtreeHeightMap[unitId] = unitNodeHeight + membersHeight;
+        subtreeHeightMap[unitId] = unitNodeHeight + membersHeight + 20; // 少し余白
         subtreeWidthMap[unitId] = unitNodeWidth;
         return { height: subtreeHeightMap[unitId], width: subtreeWidthMap[unitId] };
       }
@@ -242,11 +245,14 @@ const OrgChart_Desktop = ({ units, members, onMemberClick }) => {
       const childrenSizes = u.children.map(calculateSubtreeSize);
       const totalWidth = childrenSizes.reduce((acc, s) => acc + s.width, 0) + (u.children.length - 1) * HORIZONTAL_GAP;
       const maxHeight = Math.max(...childrenSizes.map(s => s.height));
+      
       subtreeWidthMap[unitId] = Math.max(unitNodeWidth, totalWidth);
+      // 部署の高さ + メンバー全員の高さ + 間隔 + 子要素の高さ
       subtreeHeightMap[unitId] = unitNodeHeight + membersHeight + VERTICAL_GAP + maxHeight;
       
       return { height: subtreeHeightMap[unitId], width: subtreeWidthMap[unitId] };
     };
+
 
     const layoutNodes = (unitId, x, y, level = 0) => {
       const u = unitMap[unitId];
