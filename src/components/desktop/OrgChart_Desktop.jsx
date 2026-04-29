@@ -77,7 +77,8 @@ const UnitNode = ({ data }) => {
             borderTop: 'none',
             display: 'flex',
             alignItems: 'center',
-            gap: '12px',
+            justifyContent: 'center',
+            gap: '15px',
             cursor: 'pointer',
             backdropFilter: 'blur(10px)',
           }}
@@ -85,7 +86,7 @@ const UnitNode = ({ data }) => {
           {leader.photo && (
             <img src={leader.photo} alt={leader.lastName} style={{ width: '44px', height: '44px', borderRadius: '10px', objectFit: 'cover' }} />
           )}
-          <div style={{ flex: 1 }}>
+          <div style={{ textAlign: 'left' }}>
             <div style={{ fontWeight: '700', fontSize: '0.95rem', color: '#fff' }}>{leader.lastName} {leader.firstName}</div>
             <div style={{ fontSize: '0.7rem', color: getPositionColor(leader.position), fontWeight: '900', marginTop: '2px' }}>{leader.position}</div>
           </div>
@@ -110,7 +111,8 @@ const MemberNode = ({ data }) => {
         border: '1px solid rgba(255, 255, 255, 0.08)',
         display: 'flex',
         alignItems: 'center',
-        gap: '12px',
+        justifyContent: 'center',
+        gap: '15px',
         cursor: 'pointer',
         backdropFilter: 'blur(12px)',
       }}
@@ -119,10 +121,11 @@ const MemberNode = ({ data }) => {
       {member.photo && (
         <img src={member.photo} alt={member.lastName} style={{ width: '44px', height: '44px', borderRadius: '10px', objectFit: 'cover' }} />
       )}
-      <div>
+      <div style={{ textAlign: 'left' }}>
         <div style={{ fontWeight: '700', fontSize: '0.95rem', color: '#fff' }}>{member.lastName} {member.firstName}</div>
         <div style={{ fontSize: '0.7rem', color: roleColor, fontWeight: '900', marginTop: '2px' }}>{member.position}</div>
       </div>
+
       <Handle type="source" position={Position.Bottom} style={{ background: 'transparent', border: 'none' }} />
     </div>
   );
