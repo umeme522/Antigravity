@@ -10,6 +10,26 @@ import ReactFlow, {
 import 'reactflow/dist/style.css';
 import { ChevronDown, ChevronUp } from 'lucide-react';
 
+const getPositionColor = (pos) => {
+  if (!pos) return 'var(--pos-staff)';
+  if (pos.includes('支店長') || pos.includes('副支店長')) return 'var(--pos-executive)';
+  if (pos.includes('部長')) return 'var(--pos-manager)';
+  if (pos.includes('所長') || pos.includes('課長')) return 'var(--pos-director)';
+  if (pos.includes('副長')) return 'var(--pos-subdirector)';
+  if (pos.includes('係長')) return 'var(--pos-lead)';
+  return 'var(--pos-staff)';
+};
+
+const getPositionClass = (pos) => {
+  if (!pos) return 'pos-staff';
+  if (pos.includes('支店長') || pos.includes('副支店長')) return 'pos-executive';
+  if (pos.includes('部長')) return 'pos-manager';
+  if (pos.includes('所長') || pos.includes('課長')) return 'pos-director';
+  if (pos.includes('副長')) return 'pos-subdirector';
+  if (pos.includes('係長')) return 'pos-lead';
+  return 'pos-staff';
+};
+
 const UnitNode = ({ data }) => {
   const isMobile = window.innerWidth < 768;
   const isChild = data.level > 1; // 階層に応じた色分け
@@ -22,8 +42,8 @@ const UnitNode = ({ data }) => {
         width: isMobile ? '220px' : '250px',
         padding: isMobile ? '12px' : '15px 25px',
         background: isChild 
-          ? 'linear-gradient(135deg, #6b46c1, #44337a)' // 子組織（営業所など）は少し落ち着いた色
-          : 'linear-gradient(135deg, var(--accent-secondary), #4b00b3)', // 親組織（業務部など）は鮮やかな紫
+          ? 'linear-gradient(135deg, #6b46c1, #44337a)' 
+          : 'linear-gradient(135deg, var(--accent-secondary), #4b00b3)', 
         border: isChild ? '1px solid rgba(255,255,255,0.2)' : 'none',
         borderRadius: '12px',
         color: 'white',
@@ -39,14 +59,15 @@ const UnitNode = ({ data }) => {
       }}
     >
       <Handle type="target" position={Position.Top} style={{ background: 'transparent', border: 'none' }} />
-      {data.label}
+      <div style={{ flex: 1, textAlign: 'center' }}>{data.label}</div>
       <div style={{ 
-        fontSize: '0.8rem', 
-        opacity: 0.8,
+        opacity: 0.6, 
+        display: 'flex', 
+        alignItems: 'center',
         transition: 'transform 0.3s',
-        transform: data.isExpanded ? 'rotate(90deg)' : 'rotate(0deg)'
+        transform: data.isExpanded ? 'rotate(180deg)' : 'rotate(0deg)'
       }}>
-        ▶
+        <ChevronDown size={18} />
       </div>
       <Handle type="source" position={Position.Bottom} style={{ background: 'transparent', border: 'none' }} />
     </div>
@@ -67,11 +88,11 @@ const MemberNode = ({ data }) => {
       className={`glass member-node ${posClass}`}
       onClick={() => data.onClick(member)}
       style={{
-        borderLeft: `5px solid ${roleColor}`, // 線を太く
+        borderLeft: `5px solid ${roleColor}`,
         background: `linear-gradient(90deg, ${roleColor}${isAdditional ? '08' : '15'} 0%, rgba(255,255,255,0.05) 100%)`,
         opacity: isAdditional ? 0.9 : 1,
-        padding: isMobile ? '12px 16px' : '8px 12px', // モバイルではゆったり
-        width: isMobile ? '230px' : '250px', // カードを一回り大きく (180 -> 230)
+        padding: isMobile ? '12px 16px' : '8px 12px',
+        width: isMobile ? '230px' : '250px',
         minHeight: isMobile ? '65px' : 'auto',
         display: 'flex',
         alignItems: 'center'
@@ -82,7 +103,7 @@ const MemberNode = ({ data }) => {
         <div style={{ flex: 1, minWidth: 0 }}>
           <div style={{ 
             fontWeight: '800', 
-            fontSize: isMobile ? '1.1rem' : '0.95rem', // 名前をかなり大きく
+            fontSize: isMobile ? '1.1rem' : '0.95rem',
             color: roleColor, 
             lineHeight: '1.2',
             wordBreak: 'break-all'
@@ -105,6 +126,7 @@ const MemberNode = ({ data }) => {
     </div>
   );
 };
+
 
 
 
