@@ -253,7 +253,7 @@ const OrgChart_Desktop = ({ units, members, onMemberClick }) => {
 
   useEffect(() => { setNodes(visibleNodes); setEdges(visibleEdges); }, [visibleNodes, visibleEdges]);
 
-  const { fitBounds, getNodes } = useReactFlow();
+  const { fitView, getNodes } = useReactFlow();
   const toggleUnit = (uid) => {
     setExpandedUnits(prev => {
       const n = new Set(prev);
@@ -263,37 +263,29 @@ const OrgChart_Desktop = ({ units, members, onMemberClick }) => {
       return n;
     });
 
-    // 展開時にその「サブツリー全体」が収まるように調整
+    // 展開時にその「所属メンバーと直下の子供たち」にフォーカス
     setTimeout(() => {
       const allNodes = getNodes();
-      const parentNode = allNodes.find(n => n.id === uid);
-      if (!parentNode) return;
-
-      // この部署に属する全てのノード（ユニットとメンバー）を抽出
-      const branchNodes = allNodes.filter(n => {
-        return n.id === uid || n.id.startsWith(`m-${uid}`) || n.id.includes(`at-${uid}`);
+      // この部署自体、およびその部署に属する全メンバー、直下の子供ユニット
+      const targetNodes = allNodes.filter(n => {
+        const isSelf = n.id === uid;
+        const isMemberOfThisUnit = n.id.includes(`at-${uid}`);
+        const isChildUnit = units.find(u => u.id === n.id)?.parentId === uid;
+        return isSelf || isMemberOfThisUnit || isChildUnit;
       });
 
-      // さらに、その部署の直下の子供ユニットも探す（簡易的な1階層チェック）
-      const childUnits = allNodes.filter(n => {
-        const u = units.find(unit => unit.id === n.id);
-        return u && u.parentId === uid;
-      });
-
-      const targets = [...branchNodes, ...childUnits];
-      if (targets.length > 0) {
-        const minX = Math.min(...targets.map(n => n.position.x));
-        const maxX = Math.max(...targets.map(n => n.position.x + 280));
-        const minY = Math.min(...targets.map(n => n.position.y));
-        const maxY = Math.max(...targets.map(n => n.position.y + 200));
-
-        fitBounds(
-          { x: minX, y: minY, width: maxX - minX, height: maxY - minY },
-          { padding: 100, duration: 800 }
-        );
+      if (targetNodes.length > 0) {
+        fitView({
+          nodes: targetNodes,
+          duration: 800,
+          padding: 0.2, // 20% margin
+          minZoom: 0.4,
+          maxZoom: 0.9
+        });
       }
-    }, 100);
+    }, 150); // レイアウト計算の完了を待つために少し長めに設定
   };
+
 
 
   return (
