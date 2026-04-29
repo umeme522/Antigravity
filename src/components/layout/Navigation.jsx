@@ -1,5 +1,5 @@
 import React from 'react';
-import { Network, Users, Download, Upload } from 'lucide-react';
+import { Network, Users, Search, Share2 } from 'lucide-react';
 
 const Navigation = ({ 
   isSidebarOpen, 
@@ -7,48 +7,52 @@ const Navigation = ({
 }) => {
   return (
     <div className="nav-sidebar">
-      <div className="nav-logo" style={{ margin: '0 0 40px 0', color: 'var(--accent-primary)' }}>
+      <div className="nav-logo" style={{ margin: '0 0 40px 0', color: 'var(--accent-primary)', textAlign: 'center' }}>
         <Network size={32} />
       </div>
       
-      <div className="nav-items" style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '24px' }}>
-        <div className="nav-tabs" style={{ display: 'flex', gap: '8px' }}>
+      <div className="nav-items" style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '12px' }}>
+        {/* 組織図ボタン */}
         <button 
           onClick={() => setIsSidebarOpen(false)}
-          className={`nav-tab ${!isSidebarOpen ? 'active' : ''}`}
-          style={{ display: 'flex', alignItems: 'center', gap: '8px' }}
+          className={`nav-btn ${!isSidebarOpen ? 'active' : ''}`}
+          style={{ width: '100%' }}
+          title="組織図"
         >
-          <Share2 size={18} />
-          <span>組織図</span>
+          <Share2 size={24} />
+          <span className="nav-label">組織図</span>
         </button>
+
+        {/* メンバーボタン */}
         <button 
           onClick={() => {
             setIsSidebarOpen(true);
             window.dispatchEvent(new CustomEvent('changeSidebarTab', { detail: 'list' }));
           }}
-          className={`nav-tab ${isSidebarOpen ? 'active' : ''}`}
-          style={{ display: 'flex', alignItems: 'center', gap: '8px' }}
+          className={`nav-btn ${isSidebarOpen ? 'active' : ''}`}
+          style={{ width: '100%' }}
+          title="メンバー"
         >
-          <Users size={18} />
-          <span>メンバー</span>
+          <Users size={24} />
+          <span className="nav-label">メンバー</span>
         </button>
+
+        {/* 検索ボタン */}
         <button 
           onClick={() => {
             setIsSidebarOpen(true);
             window.dispatchEvent(new CustomEvent('changeSidebarTab', { detail: 'search' }));
           }}
-          className={`nav-tab ${isSidebarOpen ? 'active' : ''}`}
-          style={{ display: 'flex', alignItems: 'center', gap: '8px' }}
+          className={`nav-btn ${isSidebarOpen ? 'active' : ''}`}
+          style={{ width: '100%' }}
+          title="検索"
         >
-          <Search size={18} />
-          <span>検索</span>
+          <Search size={24} />
+          <span className="nav-label">検索</span>
         </button>
       </div>
-      </div>
     </div>
-
   );
 };
-
 
 export default Navigation;
