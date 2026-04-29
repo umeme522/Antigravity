@@ -162,7 +162,10 @@ const OrgChart = ({ units, members, onMemberClick }) => {
   };
 
   const { nodes, edges } = useMemo(() => {
+    const isMobile = window.innerWidth < 768;
+
     const positionPriority = {
+
       '支店長': 1,
       '部長': 2,
       '所長': 3,
@@ -218,50 +221,54 @@ const OrgChart = ({ units, members, onMemberClick }) => {
 
     const visibleNodes = [];
     const visibleEdges = [];
-    const isMobile = window.innerWidth < 768;
-    const NODE_WIDTH = isMobile ? 230 : 250;
-    const VERTICAL_GAP_BASE = isMobile ? 30 : 120; // 閉じてる時の間隔
-    const VERTICAL_GAP_EXPANDED = isMobile ? 80 : 120; // 開いてる時の間隔
+    const VERTICAL_GAP_BASE = isMobile ? 30 : 60;
+    const VERTICAL_GAP_EXPANDED = isMobile ? 80 : 120;
+    const VERTICAL_GAP = 120; // PC用
+    const HORIZONTAL_GAP = 50; // PC用
     const MEMBER_GAP = isMobile ? 85 : 100;
     const MEMBER_Y_OFFSET = 65;
 
     const subtreeHeightMap = {};
+    const subtreeWidthMap = {};
 
     const calculateSubtreeSize = (unitId) => {
       const u = unitMap[unitId];
       const isExpanded = expandedUnits.has(unitId);
-      
       const unitNodeHeight = isMobile ? 50 : 60;
+      const unitNodeWidth = isMobile ? 220 : 250;
       const membersHeight = isExpanded ? (u.members.length * MEMBER_GAP) + MEMBER_Y_OFFSET : 0;
       
       if (!isExpanded || u.children.length === 0) {
         subtreeHeightMap[unitId] = unitNodeHeight + membersHeight;
-        return { height: subtreeHeightMap[unitId] };
+        subtreeWidthMap[unitId] = unitNodeWidth;
+        return { height: subtreeHeightMap[unitId], width: subtreeWidthMap[unitId] };
       }
 
       const childrenSizes = u.children.map(calculateSubtreeSize);
       
-      if (isMobile && u.parentId === 'u1') {
-        // 部（業務一部など）：子を真下に並べるので合計値を出す
-        const childrenHeight = childrenSizes.reduce((acc, s) => acc + s.height, 0) + (u.children.length * 25);
-        subtreeHeightMap[unitId] = unitNodeHeight + membersHeight + 35 + childrenHeight;
-      } else if (isMobile) {
-        // 営業所など：子を横に並べる場合、縦方向は最大値だけ考慮する
-        const childrenHeight = childrenSizes.reduce((acc, s) => acc + s.height, 0) + (u.children.length * 20);
-        subtreeHeightMap[unitId] = Math.max(unitNodeHeight + membersHeight, childrenHeight);
+      if (isMobile) {
+        if (u.parentId === 'u1') {
+          const childrenHeight = childrenSizes.reduce((acc, s) => acc + s.height, 0) + (u.children.length * 25);
+          subtreeHeightMap[unitId] = unitNodeHeight + membersHeight + 35 + childrenHeight;
+        } else {
+          const childrenHeight = childrenSizes.reduce((acc, s) => acc + s.height, 0) + (u.children.length * 20);
+          subtreeHeightMap[unitId] = Math.max(unitNodeHeight + membersHeight, childrenHeight);
+        }
+        subtreeWidthMap[unitId] = unitNodeWidth + (u.parentId !== 'u1' ? 180 : 0);
       } else {
-        // PC
-        const gapBetweenChildren = isExpanded ? VERTICAL_GAP_EXPANDED : VERTICAL_GAP_BASE;
-        const childrenHeight = childrenSizes.reduce((acc, s) => acc + s.height, 0) + (u.children.length * gapBetweenChildren);
-        subtreeHeightMap[unitId] = unitNodeHeight + membersHeight + childrenHeight;
+        const totalWidth = childrenSizes.reduce((acc, s) => acc + s.width, 0) + (u.children.length - 1) * HORIZONTAL_GAP;
+        const maxHeight = Math.max(...childrenSizes.map(s => s.height));
+        subtreeWidthMap[unitId] = Math.max(unitNodeWidth, totalWidth);
+        subtreeHeightMap[unitId] = unitNodeHeight + membersHeight + VERTICAL_GAP + maxHeight;
       }
       
-      return { height: subtreeHeightMap[unitId] };
+      return { height: subtreeHeightMap[unitId], width: subtreeWidthMap[unitId] };
     };
 
-    const layoutNodes = (unitId, centerX, y, level = 0) => {
+    const layoutNodes = (unitId, x, y, level = 0) => {
       const u = unitMap[unitId];
       const isExpanded = expandedUnits.has(unitId);
+      const nodeWidth = isMobile ? 230 : 250;
 
       visibleNodes.push({
         id: unitId,
@@ -273,13 +280,10 @@ const OrgChart = ({ units, members, onMemberClick }) => {
           hasChildren: u.children.length > 0 || u.members.length > 0,
           onClick: () => toggleUnit(unitId)
         },
-        position: { x: centerX - (isMobile ? 230 : 250) / 2, y },
+        position: { x: x - nodeWidth / 2, y },
       });
 
       if (u.parentId) {
-        // 親が支店(u1)でない場合は、横への繋がりを強調
-        const isHorizontalEdge = isMobile && u.parentId !== 'u1' && unitMap[u.parentId]?.parentId === 'u1';
-        
         visibleEdges.push({
           id: `e-${u.parentId}-${unitId}`,
           source: u.parentId,
@@ -287,46 +291,38 @@ const OrgChart = ({ units, members, onMemberClick }) => {
           type: 'smoothstep',
           style: { 
             stroke: isMobile ? 'rgba(255,255,255,0.35)' : 'rgba(255,255,255,0.2)', 
-            strokeWidth: isMobile ? 2.5 : 1.5, 
-            strokeDasharray: isMobile && !isHorizontalEdge ? '0' : '4 4' 
+            strokeWidth: isMobile ? 2.5 : 1.5,
+            strokeDasharray: isMobile ? '0' : '4 4' 
           },
         });
       }
 
-
       const unitNodeHeight = isMobile ? 50 : 60;
       let currentOffset = unitNodeHeight + 15;
 
-      // 子組織表示（展開されている時のみ）
-      if (isExpanded && u.children.length > 0) {
-        if (isMobile && u.parentId === 'u1') {
-          // 【支店直下の部（業務一部など）】 -> 真下に配置
+      if (isExpanded && isMobile) {
+        if (u.parentId === 'u1') {
           let childY = y + currentOffset + 35;
           u.children.forEach((childId) => {
-            layoutNodes(childId, centerX, childY, level + 1);
+            layoutNodes(childId, x, childY, level + 1);
             childY += subtreeHeightMap[childId] + 25;
           });
-        } else if (isMobile) {
-          // 【部直下の営業所（武蔵野など）】 -> 右隣に配置し、そこから縦に並べる
-          const indentOffset = 230; // ユニット幅分だけ右に
-          let childY = y; // 最初の営業所は親（部）と水平に並べる
-          u.children.forEach((childId, index) => {
-            layoutNodes(childId, centerX + indentOffset, childY, level + 1);
-            // 2番目以降は下に並べる
+        } else {
+          let childY = y;
+          u.children.forEach((childId) => {
+            layoutNodes(childId, x + 230, childY, level + 1);
             childY += subtreeHeightMap[childId] + 20;
           });
-        } else {
-
-          // PC版
-          let childY = y + currentOffset + VERTICAL_GAP_EXPANDED;
-          u.children.forEach((childId) => {
-            layoutNodes(childId, centerX, childY, level + 1);
-            childY += subtreeHeightMap[childId] + VERTICAL_GAP_BASE;
-          });
         }
+      } else if (isExpanded && !isMobile) {
+        let startX = x - subtreeWidthMap[unitId] / 2;
+        u.children.forEach((childId) => {
+          const childWidth = subtreeWidthMap[childId];
+          layoutNodes(childId, startX + childWidth / 2, y + currentOffset + VERTICAL_GAP, level + 1);
+          startX += childWidth + HORIZONTAL_GAP;
+        });
       }
 
-      // メンバー表示（展開されている時のみ、かつ子組織の計算が終わった後）
       if (isExpanded && u.members.length > 0) {
         u.members.forEach((m, i) => {
           const memberY = y + currentOffset + (i * MEMBER_GAP);
@@ -335,7 +331,7 @@ const OrgChart = ({ units, members, onMemberClick }) => {
             id: nodeId,
             type: 'member',
             data: { member: m, onClick: onMemberClick, currentUnitId: unitId },
-            position: { x: centerX - NODE_WIDTH / 2, y: memberY },
+            position: { x: x - nodeWidth / 2, y: memberY },
           });
 
           visibleEdges.push({
@@ -348,6 +344,7 @@ const OrgChart = ({ units, members, onMemberClick }) => {
         });
       }
     };
+
 
     const roots = units.filter(u => !u.parentId);
     roots.forEach(r => calculateSubtreeSize(r.id));
