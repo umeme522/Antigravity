@@ -52,6 +52,10 @@ export const mockData = {
     { id: 'm11', lastName: '真上', firstName: '将生', reading: 'マガミ マサキ', position: '所長', unitId: 'u7', birthDate: '', joinDate: '', photo: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Magami', employeeId: '' },
     { id: 'm12', lastName: '鈴木', firstName: '大貴', reading: 'スズキ ダイキ', position: '係長', unitId: 'u7', birthDate: '', joinDate: '', photo: 'https://api.dicebear.com/7.x/avataaars/svg?seed=SuzukiD', employeeId: '' },
     { id: 'm13', lastName: '遠藤', firstName: '聖人', reading: 'エンドウ セイト', position: 'スタッフ', unitId: 'u7', birthDate: '', joinDate: '', photo: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Endo', employeeId: '' },
+    
+    // 南多摩営業所
+    { id: 'm_minamitama_1', lastName: '瀧下', firstName: '', reading: 'タキシタ', position: '所長', unitId: 'u8', birthDate: '', joinDate: '', photo: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Takishita', employeeId: '' },
+    { id: 'm_minamitama_2', lastName: '中丸', firstName: '', reading: 'ナカマル', position: 'スタッフ', unitId: 'u8', birthDate: '', joinDate: '', photo: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Nakamaru', employeeId: '' },
 
     // Operations Dept 2
     { id: 'm_dept2_dir', lastName: '藤原', firstName: '邦康', reading: 'フジワラ クニヤス', position: '部長', unitId: 'u_dept2', birthDate: '', joinDate: '', photo: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Fujiwara', employeeId: '' },
