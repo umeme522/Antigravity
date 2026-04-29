@@ -381,12 +381,8 @@ const OrgChart = ({ units, members, onMemberClick }) => {
       >
         <Background color="#333" gap={20} />
         <Controls />
-        <MiniMap
-          nodeColor={(n) => n.type === 'unit' ? 'var(--accent-secondary)' : 'var(--accent-primary)'}
-          maskColor="rgba(0, 0, 0, 0.5)"
-          style={{ background: 'var(--bg-card)', border: '1px solid var(--glass-border)' }}
-        />
       </ReactFlow>
+
     </div>
   );
 };
