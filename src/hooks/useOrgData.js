@@ -18,13 +18,24 @@ export const useOrgData = () => {
     
     // キャッシュ問題の解決: 
     // プログラム側のデータ(mockData)の方がメンバー数が多い場合は、自動で最新版を読み込む
-    if (mockData.members && mockData.members.length > localMembers.length) {
-      console.log('Program data is newer than local storage. Updating...');
+    // ただし、ユーザーが削除した可能性もあるため、基本的にはローカルを優先するが、
+    // 明示的な更新が必要なケースが多いため、不一致がある場合に通知するか、リセット手段を提供する。
+    if (mockData.members && localMembers.length === 0) {
       return mockData.members;
     }
     
     return localMembers.length > 0 ? localMembers : (mockData.members || []);
   });
+
+  // リポジトリのデータ(mockData)に強制的に戻す関数
+  const resetToDefault = () => {
+    if (window.confirm('ブラウザに保存されている変更を破棄して、リポジトリの初期データに戻しますか？')) {
+      setUnits(mockData.units);
+      setMembers(mockData.members);
+      localStorage.removeItem('org-units');
+      localStorage.removeItem('org-members');
+    }
+  };
 
   // データが変更されるたびにブラウザに保存
   useEffect(() => {
@@ -77,6 +88,7 @@ export const useOrgData = () => {
     members,
     setMembers,
     updateMember,
-    createNewMember
+    createNewMember,
+    resetToDefault
   };
 };

@@ -1,11 +1,12 @@
 import React from 'react';
-import { Network, Users, Download, Upload } from 'lucide-react';
+import { Network, Users, Download, Upload, RotateCcw } from 'lucide-react';
 
 const Navigation = ({ 
   isSidebarOpen, 
   setIsSidebarOpen, 
   onBackup, 
-  onRestore 
+  onRestore,
+  onReset
 }) => {
   return (
     <div className="nav-sidebar">
@@ -20,6 +21,18 @@ const Navigation = ({
           title={isSidebarOpen ? "一覧を閉じる" : "メンバー一覧を開く"}
         >
           <Users size={24} />
+        </button>
+      </div>
+
+      {/* 同期・リセットボタン */}
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', marginBottom: '20px' }}>
+        <button
+          onClick={onReset}
+          className="nav-btn"
+          title="リポジトリの最新データに同期（ブラウザの変更をリセット）"
+          style={{ color: '#FF4B4B' }}
+        >
+          <RotateCcw size={20} />
         </button>
       </div>
 
