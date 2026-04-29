@@ -12,6 +12,18 @@ const getPositionColor = (pos) => {
   return '#a0aec0'; // スタッフ（グレー）
 };
 
+// 役職の優先順位を定義
+const getPriority = (pos) => {
+  if (!pos) return 1000;
+  if (pos.includes('支店長')) return 1;
+  if (pos.includes('副支店長')) return 2;
+  if (pos.includes('部長')) return 3;
+  if (pos.includes('所長') || pos.includes('課長')) return 10;
+  if (pos.includes('副長')) return 20;
+  if (pos.includes('係長')) return 30;
+  return 100;
+};
+
 const Sidebar_Desktop = ({ members, units, searchTerm, setSearchTerm, onMemberClick, onAddMember, activeTab, setActiveTab }) => {
   const [groupBy, setGroupBy] = useState('position'); // 'position' or 'joinDate'
 
@@ -23,17 +35,6 @@ const Sidebar_Desktop = ({ members, units, searchTerm, setSearchTerm, onMemberCl
     const unitName = (units.find(u => u.id === member.unitId)?.name || '').toLowerCase();
     return fullName.includes(search) || pos.includes(search) || unitName.includes(search);
   });
-
-  const getPriority = (pos) => {
-    if (!pos) return 1000;
-    if (pos.includes('支店長')) return 1;
-    if (pos.includes('副支店長')) return 2;
-    if (pos.includes('部長')) return 3;
-    if (pos.includes('所長') || pos.includes('課長')) return 10;
-    if (pos.includes('副長')) return 20;
-    if (pos.includes('係長')) return 30;
-    return 100;
-  };
 
   const getGroupTitle = (pos) => {
     if (pos.includes('支店長') || pos.includes('副支店長') || pos.includes('部長')) return '支店長・部長';
@@ -87,7 +88,14 @@ const Sidebar_Desktop = ({ members, units, searchTerm, setSearchTerm, onMemberCl
             <div className="member-list" style={{ flex: 1, overflowY: 'auto' }}>
               {Object.entries(
                 filteredMembers.reduce((acc, m) => {
-                  let group = groupBy === 'joinDate' ? (m.joinDate && typeof m.joinDate === 'string' ? m.joinDate.split('-')[0] : m.joinDate) + '年' : getGroupTitle(m.position);
+                  let group;
+                  if (groupBy === 'joinDate') {
+                    // 「年」だけでなく「不明」と明示
+                    const year = (m.joinDate && typeof m.joinDate === 'string' && m.joinDate.split('-')[0]) || '';
+                    group = year ? `${year}年` : '不明';
+                  } else {
+                    group = getGroupTitle(m.position);
+                  }
                   if (!acc[group]) acc[group] = [];
                   acc[group].push(m);
                   return acc;
@@ -95,10 +103,12 @@ const Sidebar_Desktop = ({ members, units, searchTerm, setSearchTerm, onMemberCl
               )
               .sort(([groupA], [groupB]) => {
                 if (groupBy === 'joinDate') {
-                  if (groupA.includes('不明')) return 1;
-                  if (groupB.includes('不明')) return -1;
-                  return groupB.localeCompare(groupA);
+                  // 「不明」を常に一番下に
+                  if (groupA === '不明') return 1;
+                  if (groupB === '不明') return -1;
+                  return groupB.localeCompare(groupA); // 年度を降順で
                 }
+                // 役職別ソート
                 const posA = filteredMembers.find(m => getGroupTitle(m.position) === groupA)?.position || '';
                 const posB = filteredMembers.find(m => getGroupTitle(m.position) === groupB)?.position || '';
                 return getPriority(posA) - getPriority(posB);
@@ -109,11 +119,12 @@ const Sidebar_Desktop = ({ members, units, searchTerm, setSearchTerm, onMemberCl
                     <h3 style={{ fontSize: '0.9rem', color: 'var(--accent-primary)', fontWeight: '800' }}>{groupTitle}</h3>
                     <span style={{ fontSize: '0.75rem', color: 'rgba(255,255,255,0.3)', fontWeight: '600' }}>{posMembers.length}名</span>
                   </div>
-
                   <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(110px, 1fr))', gap: '12px' }}>
-                    {posMembers.map(m => (
-                      <MemberCard key={m.id} m={m} onMemberClick={onMemberClick} />
-                    ))}
+                    {posMembers
+                      .sort((a, b) => getPriority(a.position) - getPriority(b.position)) // 各グループ内を役職順に
+                      .map(m => (
+                        <MemberCard key={m.id} m={m} onMemberClick={onMemberClick} />
+                      ))}
                   </div>
                 </div>
               ))}
@@ -146,9 +157,11 @@ const Sidebar_Desktop = ({ members, units, searchTerm, setSearchTerm, onMemberCl
                 <>
                   <div style={{ fontSize: '0.85rem', color: 'rgba(255,255,255,0.4)', marginBottom: '16px', fontWeight: '600' }}>検索結果: {filteredMembers.length} 名</div>
                   <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(110px, 1fr))', gap: '12px' }}>
-                    {filteredMembers.map(m => (
-                      <MemberCard key={m.id} m={m} onMemberClick={onMemberClick} />
-                    ))}
+                    {filteredMembers
+                      .sort((a, b) => getPriority(a.position) - getPriority(b.position)) // 検索結果も役職順に
+                      .map(m => (
+                        <MemberCard key={m.id} m={m} onMemberClick={onMemberClick} />
+                      ))}
                   </div>
                 </>
               ) : (
