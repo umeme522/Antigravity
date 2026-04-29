@@ -121,11 +121,21 @@ const Sidebar_Desktop = ({ members, units, searchTerm, setSearchTerm, onMemberCl
                   </div>
                   <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(110px, 1fr))', gap: '12px' }}>
                     {posMembers
-                      .sort((a, b) => getPriority(a.position) - getPriority(b.position)) // 各グループ内を役職順に
+                      .sort((a, b) => {
+                        const prioA = getPriority(a.position);
+                        const prioB = getPriority(b.position);
+                        if (prioA !== prioB) return prioA - prioB;
+                        
+                        // 役職が同じなら入社年度順（古い順）
+                        const yearA = (a.joinDate && typeof a.joinDate === 'string' && a.joinDate.split('-')[0]) || '9999';
+                        const yearB = (b.joinDate && typeof b.joinDate === 'string' && b.joinDate.split('-')[0]) || '9999';
+                        return yearA.localeCompare(yearB);
+                      })
                       .map(m => (
                         <MemberCard key={m.id} m={m} onMemberClick={onMemberClick} />
                       ))}
                   </div>
+
                 </div>
               ))}
             </div>

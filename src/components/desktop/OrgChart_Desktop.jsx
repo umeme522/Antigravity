@@ -26,14 +26,16 @@ const UnitNode = ({ data }) => {
   const { label, level, leaders, isExpanded, onClick, onMemberClick, hasGeneralMembers } = data;
   
   let unitBg = 'linear-gradient(135deg, #667eea, #764ba2)'; // Default Purple
+  let textColor = '#ffffff';
+
   if (level === 0) {
     unitBg = 'linear-gradient(135deg, #ffd700, #b8860b)'; // HQ Gold
-  } else if (label.includes('営業所') || label.includes('流通') || label.includes('センター') || label.includes('綾瀬')) {
+    textColor = '#000000';
+  } else if (label.includes('営業所') || label.includes('流通') || label.includes('センター') || label.includes('綾瀬') || label.includes('栃木') || label.includes('武蔵野')) {
     unitBg = 'linear-gradient(135deg, #00b09b, #96c93d)'; // Unit Emerald
+    textColor = '#000000';
   }
 
-
-  
   return (
     <div style={{ width: '280px', position: 'relative' }}>
       <Handle type="target" position={Position.Top} style={{ background: 'transparent', border: 'none' }} />
@@ -43,7 +45,7 @@ const UnitNode = ({ data }) => {
           padding: '16px 20px',
           background: unitBg,
           borderRadius: leaders && leaders.length > 0 ? '16px 16px 0 0' : '16px',
-          color: 'white',
+          color: textColor,
           fontWeight: '900',
           fontSize: '1.1rem',
           textAlign: 'center',
@@ -57,6 +59,7 @@ const UnitNode = ({ data }) => {
           zIndex: 2
         }}
       >
+
         <span style={{ flex: 1 }}>{label}</span>
         {hasGeneralMembers && (
           <div style={{ transform: isExpanded ? 'rotate(180deg)' : 'rotate(0deg)', transition: 'transform(0.4s)', opacity: 0.7 }}>

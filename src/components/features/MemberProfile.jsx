@@ -46,7 +46,8 @@ const calculateYearsOfService = (joinYear) => {
   return `${Math.max(0, years)} 年`;
 };
 
-const MemberProfile = ({ member, unit, units, onUpdate, onClose, isPermanent }) => {
+const MemberProfile = ({ member, unit, units, onUpdate, onDelete, onClose, isPermanent }) => {
+
   const [isEditing, setIsEditing] = useState(false);
   const [formData, setFormData] = useState(member || {});
   const [showConcurrent, setShowConcurrent] = useState(!!member?.additionalUnitIds?.length);
@@ -445,7 +446,30 @@ const MemberProfile = ({ member, unit, units, onUpdate, onClose, isPermanent }) 
           <div style={{ display: 'flex', gap: '12px', marginTop: '20px' }}>
             <button onClick={handleSave} className="save-btn">変更を保存</button>
             <button onClick={() => setIsEditing(false)} className="cancel-btn">キャンセル</button>
+            <button 
+              onClick={() => {
+                if (window.confirm(`${formData.lastName} ${formData.firstName} さんを削除してもよろしいですか？`)) {
+                  onDelete(formData.id);
+                }
+              }} 
+              style={{ 
+                marginLeft: 'auto',
+                background: 'rgba(255, 75, 75, 0.1)', 
+                border: '1px solid #ff4b4b', 
+                color: '#ff4b4b',
+                padding: '12px 24px',
+                borderRadius: '12px',
+                fontWeight: '900',
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '8px'
+              }}
+            >
+              <Trash2 size={18} /> 削除
+            </button>
           </div>
+
 
         </div>
       ) : (
