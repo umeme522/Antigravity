@@ -210,7 +210,7 @@ const MemberCard = ({ m, onMemberClick }) => {
     >
       <div style={{ position: 'absolute', top: 0, left: '0', width: '100%', height: '3px', background: roleColor, borderRadius: '12px 12px 0 0' }} />
       {m.photo && (
-        <img src={m.photo} alt={m.lastName} style={{ width: '48px', height: '48px', borderRadius: '10px', marginBottom: '8px', objectFit: 'cover' }} />
+        <img src={m.photo} alt={m.lastName} style={{ width: '48px', height: '48px', borderRadius: '10px', marginBottom: '8px', objectFit: 'cover', objectPosition: 'center' }} />
       )}
       <div style={{ fontWeight: '700', fontSize: '0.85rem', color: '#ffffff', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', marginBottom: '6px' }}>
         {m.lastName} {m.firstName}

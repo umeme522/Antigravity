@@ -28,10 +28,12 @@ const UnitNode = ({ data }) => {
   let unitBg = 'linear-gradient(135deg, #667eea, #764ba2)'; // Default Purple
   let textColor = '#ffffff';
 
+  const isRegional = label.includes('営業所') || label.includes('流通') || label.includes('センター') || label.includes('綾瀬') || label.includes('栃木') || label.includes('武蔵野') || label.includes('安曇野') || label.includes('富士見') || label.includes('白州') || label.includes('南多摩');
+
   if (level === 0) {
     unitBg = 'linear-gradient(135deg, #ffd700, #b8860b)'; // HQ Gold
     textColor = '#000000';
-  } else if (label.includes('営業所') || label.includes('流通') || label.includes('センター') || label.includes('綾瀬') || label.includes('栃木') || label.includes('武蔵野')) {
+  } else if (isRegional) {
     unitBg = 'linear-gradient(135deg, #00b09b, #96c93d)'; // Unit Emerald
     textColor = '#000000';
   }
@@ -59,6 +61,7 @@ const UnitNode = ({ data }) => {
           zIndex: 2
         }}
       >
+
 
         <span style={{ flex: 1 }}>{label}</span>
         {hasGeneralMembers && (
@@ -89,8 +92,9 @@ const UnitNode = ({ data }) => {
           }}
         >
           {leader.photo && (
-            <img src={leader.photo} alt={leader.lastName} style={{ width: '44px', height: '44px', borderRadius: '10px', objectFit: 'cover' }} />
+            <img src={leader.photo} alt={leader.lastName} style={{ width: '44px', height: '44px', borderRadius: '10px', objectFit: 'cover', objectPosition: 'center' }} />
           )}
+
           <div style={{ textAlign: 'left' }}>
             <div style={{ fontWeight: '700', fontSize: '1rem', color: '#fff' }}>{leader.lastName} {leader.firstName}</div>
             <div style={{ fontSize: '0.75rem', color: getPositionColor(leader.position), fontWeight: '900', marginTop: '2px' }}>{leader.position}</div>
@@ -125,8 +129,9 @@ const MemberNode = ({ data }) => {
     >
       <Handle type="target" position={Position.Top} style={{ background: 'transparent', border: 'none' }} />
       {member.photo && (
-        <img src={member.photo} alt={member.lastName} style={{ width: '44px', height: '44px', borderRadius: '10px', objectFit: 'cover' }} />
+        <img src={member.photo} alt={member.lastName} style={{ width: '44px', height: '44px', borderRadius: '10px', objectFit: 'cover', objectPosition: 'center' }} />
       )}
+
       <div style={{ textAlign: 'left' }}>
         <div style={{ fontWeight: '700', fontSize: '1rem', color: '#fff' }}>{member.lastName} {member.firstName}</div>
         <div style={{ fontSize: '0.75rem', color: roleColor, fontWeight: '900', marginTop: '2px' }}>{member.position}</div>
