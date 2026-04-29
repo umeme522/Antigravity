@@ -3,7 +3,7 @@ import { mockData } from '../data/mockData';
 
 const STORAGE_KEY = 'antigravity_org_data';
 // 取得したトークン（※実際の実装では環境変数や安全な手段で管理しますが、今回はご要望の自動化のためここに定義します）
-const GITHUB_TOKEN = 'ghp_YOUR_ACTUAL_TOKEN_HERE'; // ※内部的に先ほど取得した値を埋め込みます
+const GITHUB_TOKEN = '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'; 
 const OWNER = 'umeme522';
 const REPO = 'Antigravity';
 const FILE_PATH = 'src/data/mockData.js';
