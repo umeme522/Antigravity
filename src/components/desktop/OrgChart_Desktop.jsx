@@ -258,36 +258,46 @@ const OrgChart_Desktop = ({ units, members, onMemberClick }) => {
 
   const { fitView, getNodes } = useReactFlow();
   const toggleUnit = (uid) => {
+    let isExpanding = false;
     setExpandedUnits(prev => {
       const n = new Set(prev);
-      const isExpanding = !n.has(uid);
+      isExpanding = !n.has(uid);
       if (isExpanding) n.add(uid);
       else n.delete(uid);
       return n;
     });
 
-    // 展開時にその「所属メンバーと直下の子供たち」にフォーカス
+    // 視点調整ロジック
     setTimeout(() => {
       const allNodes = getNodes();
-      // この部署自体、およびその部署に属する全メンバー、直下の子供ユニット
-      const targetNodes = allNodes.filter(n => {
-        const isSelf = n.id === uid;
-        const isMemberOfThisUnit = n.id.includes(`at-${uid}`);
-        const isChildUnit = units.find(u => u.id === n.id)?.parentId === uid;
-        return isSelf || isMemberOfThisUnit || isChildUnit;
-      });
+      let targetNodeIds = [];
 
-      if (targetNodes.length > 0) {
+      if (isExpanding) {
+        // 【展開時】自分と、自分の直下（メンバー・子供ユニット）にフォーカス
+        targetNodeIds = allNodes
+          .filter(n => n.id === uid || n.id.includes(`at-${uid}`) || units.find(u => u.id === n.id)?.parentId === uid)
+          .map(n => n.id);
+      } else {
+        // 【閉じた時】親ユニットとその兄弟たち（親のサブツリー全体）に視点を戻す
+        const unitInfo = units.find(u => u.id === uid);
+        const parentId = unitInfo?.parentId || 'u1'; // 親がいなければトップ
+        targetNodeIds = allNodes
+          .filter(n => n.id === parentId || n.id.includes(`at-${parentId}`) || units.find(u => u.id === n.id)?.parentId === parentId)
+          .map(n => n.id);
+      }
+
+      if (targetNodeIds.length > 0) {
         fitView({
-          nodes: targetNodes,
+          nodes: targetNodeIds.map(id => allNodes.find(n => n.id === id)).filter(Boolean),
           duration: 800,
-          padding: 0.2, // 20% margin
+          padding: 0.2,
           minZoom: 0.4,
           maxZoom: 0.9
         });
       }
-    }, 150); // レイアウト計算の完了を待つために少し長めに設定
+    }, 150);
   };
+
 
 
 
