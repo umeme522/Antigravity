@@ -28,9 +28,10 @@ const UnitNode = ({ data }) => {
   let unitBg = 'linear-gradient(135deg, #667eea, #764ba2)'; // Default Purple
   if (level === 0) {
     unitBg = 'linear-gradient(135deg, #ffd700, #b8860b)'; // HQ Gold
-  } else if (label.includes('営業所') || label.includes('流通') || label.includes('センター')) {
+  } else if (label.includes('営業所') || label.includes('流通') || label.includes('センター') || label.includes('綾瀬')) {
     unitBg = 'linear-gradient(135deg, #00b09b, #96c93d)'; // Unit Emerald
   }
+
 
   
   return (
@@ -71,7 +72,7 @@ const UnitNode = ({ data }) => {
           className="glass"
           style={{
             padding: '12px 15px',
-            paddingLeft: '45px',
+            paddingLeft: '35px',
             background: 'rgba(255, 255, 255, 0.05)',
             borderRadius: idx === leaders.length - 1 ? '0 0 16px 16px' : '0',
             border: '1px solid rgba(255, 255, 255, 0.1)',
@@ -79,7 +80,7 @@ const UnitNode = ({ data }) => {
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'flex-start',
-            gap: '15px',
+            gap: '28px',
             cursor: 'pointer',
             backdropFilter: 'blur(10px)',
           }}
@@ -88,8 +89,8 @@ const UnitNode = ({ data }) => {
             <img src={leader.photo} alt={leader.lastName} style={{ width: '44px', height: '44px', borderRadius: '10px', objectFit: 'cover' }} />
           )}
           <div style={{ textAlign: 'left' }}>
-            <div style={{ fontWeight: '700', fontSize: '0.95rem', color: '#fff' }}>{leader.lastName} {leader.firstName}</div>
-            <div style={{ fontSize: '0.7rem', color: getPositionColor(leader.position), fontWeight: '900', marginTop: '2px' }}>{leader.position}</div>
+            <div style={{ fontWeight: '700', fontSize: '1rem', color: '#fff' }}>{leader.lastName} {leader.firstName}</div>
+            <div style={{ fontSize: '0.75rem', color: getPositionColor(leader.position), fontWeight: '900', marginTop: '2px' }}>{leader.position}</div>
           </div>
         </div>
       ))}
@@ -107,14 +108,14 @@ const MemberNode = ({ data }) => {
       onClick={() => onClick(member)}
       style={{
         padding: '12px 15px',
-        paddingLeft: '35px',
+        paddingLeft: '30px',
         width: '260px',
         borderRadius: '16px',
         border: '1px solid rgba(255, 255, 255, 0.08)',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'flex-start',
-        gap: '15px',
+        gap: '28px',
         cursor: 'pointer',
         backdropFilter: 'blur(12px)',
       }}
@@ -124,8 +125,8 @@ const MemberNode = ({ data }) => {
         <img src={member.photo} alt={member.lastName} style={{ width: '44px', height: '44px', borderRadius: '10px', objectFit: 'cover' }} />
       )}
       <div style={{ textAlign: 'left' }}>
-        <div style={{ fontWeight: '700', fontSize: '0.95rem', color: '#fff' }}>{member.lastName} {member.firstName}</div>
-        <div style={{ fontSize: '0.7rem', color: roleColor, fontWeight: '900', marginTop: '2px' }}>{member.position}</div>
+        <div style={{ fontWeight: '700', fontSize: '1rem', color: '#fff' }}>{member.lastName} {member.firstName}</div>
+        <div style={{ fontSize: '0.75rem', color: roleColor, fontWeight: '900', marginTop: '2px' }}>{member.position}</div>
       </div>
 
       <Handle type="source" position={Position.Bottom} style={{ background: 'transparent', border: 'none' }} />
@@ -148,13 +149,12 @@ const OrgChart_Desktop = ({ units, members, onMemberClick }) => {
       const p = m.position;
       const unitMembers = members.filter(mem => mem.unitId === unit.id);
       
-      // その部署に一人しかいない場合は、その人がリーダー（トップ）
-      if (unitMembers.length === 1 && unitMembers[0].id === m.id) return true;
-
       // 支店長・副支店長は常にリーダー
       if (p.includes('支店長') || p.includes('副支店長')) return true;
 
+      // 兼任している部署のトップ
       if (m.additionalUnitIds && m.additionalUnitIds.includes(unit.id)) return true;
+
       const minPrio = Math.min(...unitMembers.map(mem => {
           const pos = mem.position;
           if (pos.includes('支店長')) return 1;
