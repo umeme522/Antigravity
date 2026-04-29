@@ -4,7 +4,8 @@ import ReactFlow, {
   Handle,
   Position,
   useReactFlow,
-  ReactFlowProvider
+  ReactFlowProvider,
+  useStore
 } from 'reactflow';
 import 'reactflow/dist/style.css';
 import { ChevronDown } from 'lucide-react';
@@ -28,8 +29,6 @@ const UnitNode = ({ data }) => {
   return (
     <div style={{ width: '280px', position: 'relative' }}>
       <Handle type="target" position={Position.Top} style={{ background: 'transparent', border: 'none' }} />
-      
-      {/* 部署カード */}
       <div
         onClick={onClick}
         style={{
@@ -52,13 +51,12 @@ const UnitNode = ({ data }) => {
       >
         <span style={{ flex: 1 }}>{label}</span>
         {hasGeneralMembers && (
-          <div style={{ transform: isExpanded ? 'rotate(180deg)' : 'rotate(0deg)', transition: 'transform 0.4s', opacity: 0.7 }}>
+          <div style={{ transform: isExpanded ? 'rotate(180deg)' : 'rotate(0deg)', transition: 'transform(0.4s)', opacity: 0.7 }}>
             <ChevronDown size={18} />
           </div>
         )}
       </div>
 
-      {/* リーダー達 (大久保・堀内・各部トップなど) */}
       {leaders && leaders.map((leader, idx) => (
         <div
           key={`${leader.id}-${idx}`}
@@ -86,13 +84,11 @@ const UnitNode = ({ data }) => {
           </div>
         </div>
       ))}
-
       <Handle type="source" position={Position.Bottom} style={{ background: 'transparent', border: 'none' }} />
     </div>
   );
 };
 
-// --- 一般メンバーノード ---
 const MemberNode = ({ data }) => {
   const { member, onClick } = data;
   const roleColor = getPositionColor(member.position);
@@ -136,14 +132,10 @@ const OrgChart_Desktop = ({ units, members, onMemberClick }) => {
     const unitMap = {};
     units.forEach(u => { unitMap[u.id] = { ...u, children: [], members: [] }; });
     
-    // リーダー判定
     const isLeader = (m, unit) => {
       const p = m.position;
-      // 支店長・副支店長は常にリーダー
       if (p.includes('支店長') || p.includes('副支店長')) return true;
-      // 兼任している部署のトップ
       if (m.additionalUnitIds && m.additionalUnitIds.includes(unit.id)) return true;
-      // その部署の最上位（部長、または部長がいない場合は課長など）を動的に判断
       const unitMembers = members.filter(mem => mem.unitId === unit.id);
       const minPrio = Math.min(...unitMembers.map(mem => {
           const pos = mem.position;
@@ -153,7 +145,6 @@ const OrgChart_Desktop = ({ units, members, onMemberClick }) => {
           if (pos.includes('所長') || pos.includes('課長')) return 4;
           return 100;
       }));
-      
       const myPrio = p.includes('支店長') ? 1 : (p.includes('副支店長') ? 2 : (p.includes('部長') ? 3 : (p.includes('所長') || p.includes('課長') ? 4 : 100)));
       return myPrio === minPrio && myPrio < 100;
     };
@@ -178,13 +169,11 @@ const OrgChart_Desktop = ({ units, members, onMemberClick }) => {
     const calculateSize = (unitId) => {
       const u = unitMap[unitId];
       const isExpanded = expandedUnits.has(unitId);
-      
       const leaders = u.members.filter(m => isLeader(m, u)).sort((a,b) => {
           const getP = (p) => p.includes('支店長') ? 1 : (p.includes('副支店長') ? 2 : 3);
           return getP(a.position) - getP(b.position);
       });
       const generalMembers = u.members.filter(m => !isLeader(m, u));
-      
       const mHeight = isExpanded ? (generalMembers.length * MEMBER_GAP) + 60 : 0;
       const unitNodeHeight = 60 + (leaders.length * 68);
 
@@ -204,7 +193,6 @@ const OrgChart_Desktop = ({ units, members, onMemberClick }) => {
       const u = unitMap[unitId];
       const isExpanded = expandedUnits.has(unitId);
       const size = subtreeSizeMap[unitId];
-      
       const leaders = u.members.filter(m => isLeader(m, u)).sort((a,b) => {
           const getP = (p) => p.includes('支店長') ? 1 : (p.includes('副支店長') ? 2 : 3);
           return getP(a.position) - getP(b.position);
@@ -214,15 +202,7 @@ const OrgChart_Desktop = ({ units, members, onMemberClick }) => {
       vNodes.push({
         id: unitId,
         type: 'unit',
-        data: { 
-          label: u.name, 
-          level, 
-          leaders, 
-          isExpanded, 
-          hasGeneralMembers: generalMembers.length > 0 || u.children.length > 0,
-          onClick: () => toggleUnit(unitId),
-          onMemberClick
-        },
+        data: { label: u.name, level, leaders, isExpanded, hasGeneralMembers: generalMembers.length > 0 || u.children.length > 0, onClick: () => toggleUnit(unitId), onMemberClick },
         position: { x: x - 140, y },
       });
 
@@ -260,7 +240,7 @@ const OrgChart_Desktop = ({ units, members, onMemberClick }) => {
 
   useEffect(() => { setNodes(visibleNodes); setEdges(visibleEdges); }, [visibleNodes, visibleEdges]);
 
-  const { setCenter, getNodes } = useReactFlow();
+  const { setCenter, getNodes, getZoom } = useReactFlow();
   const toggleUnit = (uid) => {
     setExpandedUnits(prev => {
       const n = new Set(prev);
@@ -270,15 +250,17 @@ const OrgChart_Desktop = ({ units, members, onMemberClick }) => {
       return n;
     });
 
-    // 展開時にそのノードを中央へ移動
+    // 展開時にそのノードを中央へ移動（ズームは現在の倍率を維持、寄りすぎないように調整）
     setTimeout(() => {
       const node = getNodes().find(n => n.id === uid);
       if (node) {
-        setCenter(node.position.x + 140, node.position.y + 100, { duration: 800 });
+        const currentZoom = getZoom();
+        // 1.0(100%)を超える極端な拡大はしないように制限してフォーカス
+        const zoomLevel = Math.min(currentZoom, 0.8); 
+        setCenter(node.position.x + 140, node.position.y + 120, { duration: 800, zoom: zoomLevel });
       }
     }, 50);
   };
-
 
   return (
     <div style={{ width: '100%', height: '100%', position: 'relative' }}>
@@ -295,13 +277,32 @@ const OrgChart_Desktop = ({ units, members, onMemberClick }) => {
 
 const ZoomControls = () => {
   const { zoomIn, zoomOut, fitView } = useReactFlow();
+  // ReactFlowのストアから現在のズーム値を取得
+  const zoom = useStore((s) => s.transform[2]);
+  const zoomPercent = Math.round(zoom * 100);
+
   const btnStyle = { width: '44px', height: '44px', borderRadius: '12px', background: 'rgba(255, 255, 255, 0.05)', border: '1px solid rgba(255, 255, 255, 0.1)', color: 'white', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', backdropFilter: 'blur(10px)', transition: 'all 0.2s ease', boxShadow: '0 4px 15px rgba(0,0,0,0.3)' };
+  
   return (
-    <>
+    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '8px' }}>
+      {/* ズーム倍率表示 */}
+      <div className="glass" style={{ 
+        padding: '6px 10px', 
+        fontSize: '0.75rem', 
+        fontWeight: '900', 
+        color: 'var(--accent-primary)', 
+        borderRadius: '8px', 
+        marginBottom: '4px',
+        minWidth: '50px',
+        textAlign: 'center'
+      }}>
+        {zoomPercent}%
+      </div>
+      
       <motion.button whileHover={{ scale: 1.1, background: 'rgba(255,255,255,0.1)' }} whileTap={{ scale: 0.9 }} onClick={() => zoomIn()} style={btnStyle}>+</motion.button>
       <motion.button whileHover={{ scale: 1.1, background: 'rgba(255,255,255,0.1)' }} whileTap={{ scale: 0.9 }} onClick={() => zoomOut()} style={btnStyle}>-</motion.button>
       <motion.button whileHover={{ scale: 1.1, background: 'rgba(255,255,255,0.1)', color: 'var(--accent-primary)' }} whileTap={{ scale: 0.9 }} onClick={() => fitView({ duration: 800 })} style={{ ...btnStyle, fontSize: '0.7rem', fontWeight: 'bold' }}>RESET</motion.button>
-    </>
+    </div>
   );
 };
 
