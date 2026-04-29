@@ -24,7 +24,14 @@ const getPositionColor = (pos) => {
 // --- 統合ノード (部署 + リーダー達) ---
 const UnitNode = ({ data }) => {
   const { label, level, leaders, isExpanded, onClick, onMemberClick, hasGeneralMembers } = data;
-  const unitBg = level === 0 ? 'linear-gradient(135deg, #ffd700, #b8860b)' : 'linear-gradient(135deg, #667eea, #764ba2)';
+  
+  let unitBg = 'linear-gradient(135deg, #667eea, #764ba2)'; // Default Purple
+  if (level === 0) {
+    unitBg = 'linear-gradient(135deg, #ffd700, #b8860b)'; // HQ Gold
+  } else if (label.includes('営業所') || label.includes('流通') || label.includes('センター')) {
+    unitBg = 'linear-gradient(135deg, #00b09b, #96c93d)'; // Unit Emerald
+  }
+
   
   return (
     <div style={{ width: '280px', position: 'relative' }}>
