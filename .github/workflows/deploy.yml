@@ -26,16 +26,12 @@ jobs:
       - name: Set up Node
         uses: actions/setup-node@v4
         with:
-          node-version: 24
+          node-version: 20
           cache: 'npm'
       - name: Install dependencies
         run: npm install
-        env:
-          FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
       - name: Build
         run: npm run build
-        env:
-          FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
       - name: Setup Pages
         uses: actions/configure-pages@v4
       - name: Upload artifact
@@ -45,5 +41,4 @@ jobs:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
-        env:
-          FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
