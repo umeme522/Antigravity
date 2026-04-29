@@ -77,18 +77,20 @@ const MemberNode = ({ data }) => {
       style={{
         borderLeft: `4px solid ${roleColor}`,
         background: `linear-gradient(90deg, ${roleColor}${isAdditional ? '08' : '15'} 0%, rgba(255,255,255,0.05) 100%)`,
-        opacity: isAdditional ? 0.9 : 1
+        opacity: isAdditional ? 0.9 : 1,
+        padding: '8px 12px', // モバイル向けにパディングを少し詰める
+        minWidth: '180px'   // 最小幅を少し小さく
       }}
     >
       <Handle type="target" position={Position.Top} style={{ background: 'transparent', border: 'none' }} />
-      <div style={{ display: 'flex', alignItems: 'center', gap: '12px', width: '100%' }}>
-        <div style={{ position: 'relative' }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: '8px', width: '100%' }}>
+        <div style={{ position: 'relative', flexShrink: 0 }}>
           <img
             src={member.photo}
             alt={fullName}
             style={{
-              width: '42px',
-              height: '42px',
+              width: '36px', // アイコンを少し小さく (42px -> 36px)
+              height: '36px',
               borderRadius: '50%',
               border: `2px solid ${roleColor}`,
               padding: '2px',
@@ -103,19 +105,36 @@ const MemberNode = ({ data }) => {
               right: '-2px',
               background: 'var(--accent-secondary)',
               color: 'white',
-              fontSize: '0.6rem',
-              padding: '1px 4px',
+              fontSize: '0.55rem',
+              padding: '1px 3px',
               borderRadius: '4px',
-              fontWeight: '800',
-              boxShadow: '0 2px 4px rgba(0,0,0,0.3)'
+              fontWeight: '800'
             }}>
               兼
             </div>
           )}
         </div>
-        <div style={{ flex: 1 }}>
-          <div style={{ fontWeight: '700', fontSize: '1.15rem', color: roleColor, letterSpacing: '0.02em' }}>{fullName}</div>
-          <div style={{ fontSize: '0.8rem', color: roleColor, fontWeight: '800', textTransform: 'uppercase', letterSpacing: '0.05em', marginTop: '2px' }}>
+        <div style={{ flex: 1, minWidth: 0 }}>
+          <div style={{ 
+            fontWeight: '700', 
+            fontSize: '1rem', // 名前を少し小さく (1.15rem -> 1rem)
+            color: roleColor, 
+            whiteSpace: 'nowrap', 
+            overflow: 'hidden', 
+            textOverflow: 'ellipsis' 
+          }}>
+            {fullName}
+          </div>
+          <div style={{ 
+            fontSize: '0.7rem', 
+            color: roleColor, 
+            fontWeight: '800', 
+            textTransform: 'uppercase', 
+            marginTop: '1px',
+            whiteSpace: 'nowrap',
+            overflow: 'hidden',
+            textOverflow: 'ellipsis'
+          }}>
             {displayPosition}
           </div>
         </div>
@@ -182,7 +201,6 @@ const OrgChart = ({ units, members, onMemberClick }) => {
     const sortedMembers = [...members].sort((a, b) => getPriority(a.position) - getPriority(b.position));
 
     sortedMembers.forEach(m => {
-      // Main position
       if (unitMap[m.unitId]) {
         unitMap[m.unitId].members.push({
           ...m,
@@ -191,7 +209,6 @@ const OrgChart = ({ units, members, onMemberClick }) => {
         });
       }
 
-      // Additional positions (Dual roles)
       if (m.additionalUnitIds && Array.isArray(m.additionalUnitIds)) {
         m.additionalUnitIds.forEach(uid => {
           if (unitMap[uid]) {
@@ -211,8 +228,13 @@ const OrgChart = ({ units, members, onMemberClick }) => {
 
     const visibleNodes = [];
     const visibleEdges = [];
-    const NODE_WIDTH = 250;
-    const CHILD_GAP = 50;
+    // モバイル向けに全体的にコンパクトにする
+    const isMobile = window.innerWidth < 768;
+    const NODE_WIDTH = isMobile ? 200 : 250;
+    const CHILD_GAP = isMobile ? 30 : 50;
+    const VERTICAL_GAP = isMobile ? 100 : 120;
+    const MEMBER_Y_OFFSET = isMobile ? 70 : 80;
+    const MEMBER_GAP = isMobile ? 80 : 100;
 
     const subtreeWidthMap = {};
     const calculateWidth = (unitId) => {
@@ -256,8 +278,7 @@ const OrgChart = ({ units, members, onMemberClick }) => {
       }
 
       u.members.forEach((m, i) => {
-        const memberY = y + 80 + (i * 100);
-        // Unique ID for each appearance of the member
+        const memberY = y + MEMBER_Y_OFFSET + (i * MEMBER_GAP);
         const nodeId = `m-${m.id}-at-${unitId}`;
         visibleNodes.push({
           id: nodeId,
@@ -266,7 +287,6 @@ const OrgChart = ({ units, members, onMemberClick }) => {
           position: { x: centerX - NODE_WIDTH / 2, y: memberY },
         });
 
-        // 兼務（サブ表示）のメンバーへの線は描かない
         if (m.isMainRole !== false) {
           visibleEdges.push({
             id: `e-${unitId}-${nodeId}`,
@@ -279,7 +299,7 @@ const OrgChart = ({ units, members, onMemberClick }) => {
         }
       });
 
-      const membersHeight = u.members.length > 0 ? (u.members.length * 100) + 100 : 150;
+      const membersHeight = u.members.length > 0 ? (u.members.length * MEMBER_GAP) + MEMBER_Y_OFFSET : 150;
 
       if (isExpanded && u.children.length > 0) {
         const totalChildrenWidth = u.children.reduce((acc, cid) => acc + subtreeWidthMap[cid], 0) + (u.children.length - 1) * CHILD_GAP;
@@ -288,7 +308,7 @@ const OrgChart = ({ units, members, onMemberClick }) => {
         u.children.forEach((childId) => {
           const childWidth = subtreeWidthMap[childId];
           const childCenterX = currentX + childWidth / 2;
-          layoutNodes(childId, childCenterX, y + membersHeight + 120, level + 1);
+          layoutNodes(childId, childCenterX, y + membersHeight + VERTICAL_GAP, level + 1);
           currentX += childWidth + CHILD_GAP;
         });
       }
@@ -313,6 +333,14 @@ const OrgChart = ({ units, members, onMemberClick }) => {
         nodeTypes={nodeTypes}
         onInit={setRfInstance}
         fitView
+        fitViewOptions={{ padding: 0.2 }}
+        minZoom={0.2}
+        maxZoom={2}
+        // モバイル向けのインタラクション設定
+        zoomOnPinch={true}
+        panOnScroll={false}
+        panOnDrag={true}
+        preventScrolling={true}
         style={{ width: '100%', height: '100%' }}
       >
         <Background color="#333" gap={20} />
@@ -326,5 +354,6 @@ const OrgChart = ({ units, members, onMemberClick }) => {
     </div>
   );
 };
+
 
 export default OrgChart;

@@ -180,13 +180,15 @@ const MemberProfile = ({ member, unit, units, onUpdate, onClose, isPermanent }) 
   };
 
   const containerStyle = {
-    width: '420px', // 中身のコンテンツ幅は固定しつつ
+    width: '100%', // スマホ対応のため100%に
+    maxWidth: '420px', // PCでの最大幅を維持
     height: '100%',
-    padding: '32px',
+    padding: '24px', // 少しパディングを小さく
     display: 'flex',
     flexDirection: 'column',
     gap: '20px',
-    overflowY: 'auto'
+    overflowY: 'auto',
+    position: 'relative'
   };
 
   const roleColor = getPositionColor(member.position);
@@ -198,9 +200,10 @@ const MemberProfile = ({ member, unit, units, onUpdate, onClose, isPermanent }) 
       animate={{ x: 0 }}
       exit={{ x: '100%' }}
       transition={{ type: 'spring', damping: 25, stiffness: 200 }}
-      className={isPermanent ? "" : "glass profile-panel"}
+      className={isPermanent ? "" : "profile-panel"}
       style={containerStyle}
     >
+
       {!isPermanent && (
         <button 
           onClick={onClose}

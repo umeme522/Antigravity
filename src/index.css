@@ -209,3 +209,50 @@ html, body, #root {
   background: rgba(255, 255, 255, 0.15);
   border-radius: 10px;
 }
+
+/* Mobile Optimizations */
+@media screen and (max-width: 768px) {
+  .nav-sidebar {
+    width: 60px;
+    padding: 15px 0;
+  }
+  
+  .sidebar {
+    position: absolute;
+    left: 60px;
+    top: 0;
+    bottom: 0;
+    z-index: 100;
+    width: 260px !important;
+    background: rgba(15, 20, 28, 0.98);
+    box-shadow: 10px 0 30px rgba(0, 0, 0, 0.5);
+  }
+
+  .profile-sidebar {
+    position: absolute;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    width: 100% !important; /* スマホでは全画面 */
+    z-index: 200;
+    border-left: none;
+    box-shadow: -10px 0 30px rgba(0, 0, 0, 0.5);
+  }
+
+  .unit-node {
+    width: 200px;
+    padding: 10px 15px;
+    font-size: 1rem;
+  }
+
+  .member-node {
+    width: 200px;
+    padding: 8px;
+  }
+
+  /* 組織図内のフォント調整 */
+  .react-flow__node {
+    cursor: pointer;
+  }
+}
+
