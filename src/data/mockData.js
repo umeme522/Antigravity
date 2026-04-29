@@ -1,8 +1,6 @@
 export const mockData = {
   units: [
     { id: "u1", name: "東日本支店", parentId: null },
-    { id: "u_admin", name: "支店総務部", parentId: "u1" },
-    { id: "u_innov", name: "営業革新部", parentId: "u1" },
     { id: "u2", name: "業務1部", parentId: "u1" },
     { id: "u3", name: "武蔵野", parentId: "u2" },
     { id: "u4", name: "安曇野", parentId: "u2" },
@@ -23,7 +21,10 @@ export const mockData = {
     { id: "u_kitakanto", name: "北関東流通", parentId: "u_dept3" },
     { id: "u_ayase", name: "神奈川綾瀬", parentId: "u_dept3" },
     { id: "u_kunitachi", name: "国立流通", parentId: "u_dept3" },
-    { id: "u_ome", name: "青梅流通", parentId: "u_dept3" }
+    { id: "u_ome", name: "青梅流通", parentId: "u_dept3" },
+    { id: "u_admin", name: "支店総務部", parentId: "u1" },
+    { id: "u_innov", name: "営業革新部", parentId: "u1" }
+
   ],
   members: [
     {
