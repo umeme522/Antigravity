@@ -65,20 +65,36 @@ html, body, #root {
     width: 100%;
     height: 60px;
     flex-direction: row; /* 横並び */
-    padding: 0 20px;
+    padding: 0;
     border-right: none;
     border-bottom: 1px solid var(--glass-border);
-    justify-content: space-between;
+    justify-content: center;
   }
 
   .nav-sidebar > div:first-child {
-    margin: 0 !important; /* ロゴの余白をリセット */
+    display: none; /* スマホではロゴを消してスペースを稼ぐ */
   }
 
   .nav-sidebar > div:nth-child(2) {
+    flex: 1;
+    display: flex;
     flex-direction: row !important;
-    gap: 32px !important; /* 間隔をさらに広げて押しやすく */
+    gap: 0 !important;
+    justify-content: space-around; /* 4つのタブを均等に配置 */
+    height: 100%;
   }
+
+  .nav-sidebar .nav-btn {
+    flex: 1;
+    height: 100%;
+    border-radius: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+  }
+
 }
 
 
