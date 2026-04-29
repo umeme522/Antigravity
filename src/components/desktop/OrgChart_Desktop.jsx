@@ -134,9 +134,15 @@ const OrgChart_Desktop = ({ units, members, onMemberClick }) => {
     
     const isLeader = (m, unit) => {
       const p = m.position;
-      if (p.includes('支店長') || p.includes('副支店長')) return true;
-      if (m.additionalUnitIds && m.additionalUnitIds.includes(unit.id)) return true;
       const unitMembers = members.filter(mem => mem.unitId === unit.id);
+      
+      // その部署に一人しかいない場合は、その人がリーダー（トップ）
+      if (unitMembers.length === 1 && unitMembers[0].id === m.id) return true;
+
+      // 支店長・副支店長は常にリーダー
+      if (p.includes('支店長') || p.includes('副支店長')) return true;
+
+      if (m.additionalUnitIds && m.additionalUnitIds.includes(unit.id)) return true;
       const minPrio = Math.min(...unitMembers.map(mem => {
           const pos = mem.position;
           if (pos.includes('支店長')) return 1;
