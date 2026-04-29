@@ -22,7 +22,6 @@ const getPositionColor = (pos) => {
   return '#a0aec0'; // スタッフ（グレー）
 };
 
-
 const getPositionClass = (pos) => {
   if (!pos) return 'pos-staff';
   if (pos.includes('支店長') || pos.includes('副支店長')) return 'pos-executive';
@@ -54,7 +53,7 @@ const getUnitColor = (label, level) => {
 };
 
 const UnitNode = ({ data }) => {
-  const isMobile = false; /* Forced desktop layout */
+  const isMobile = false;
   const unitBg = getUnitColor(data.label, data.level);
 
   return (
@@ -102,7 +101,7 @@ const MemberNode = ({ data }) => {
   const roleColor = getPositionColor(displayPosition);
   const posClass = getPositionClass(displayPosition);
   const fullName = `${member.lastName || ''} ${member.firstName || ''}`;
-  const isMobile = false; /* Forced desktop layout */
+  const isMobile = false;
 
   return (
     <div
@@ -171,8 +170,8 @@ const nodeTypes = {
   member: MemberNode
 };
 
-const OrgChart = ({ units, members, onMemberClick }) => {
-  const isMobile = false; /* Forced desktop layout */
+const OrgChart_Desktop = ({ units, members, onMemberClick }) => {
+  const isMobile = false;
   const [nodes, setNodes] = useState([]);
   const [edges, setEdges] = useState([]);
   const [expandedUnits, setExpandedUnits] = useState(new Set(['u1']));
@@ -394,11 +393,10 @@ const OrgChart = ({ units, members, onMemberClick }) => {
   );
 };
 
-
-const OrgChartWrapper = (props) => (
+const OrgChart_DesktopWrapper = (props) => (
   <ReactFlowProvider>
-    <OrgChart {...props} />
+    <OrgChart_Desktop {...props} />
   </ReactFlowProvider>
 );
 
-export default OrgChartWrapper;
+export default OrgChart_DesktopWrapper;

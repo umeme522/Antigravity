@@ -12,12 +12,25 @@ const getPositionColor = (pos) => {
   return '#a0aec0'; // スタッフ（グレー）
 };
 
+const getGroupTitle = (pos) => {
+  if (pos.includes('支店長') || pos.includes('副支店長')) return '経営・支店長';
+  if (pos.includes('部長')) return '部長職';
+  if (pos.includes('所長') || pos.includes('課長')) return '課長・所長';
+  if (pos.includes('副長')) return '副長職';
+  if (pos.includes('係長')) return '係長職';
+  return '一般スタッフ';
+};
 
 const Sidebar_Mobile = ({ members, units, searchTerm, setSearchTerm, onMemberClick, onAddMember }) => {
   const isMobile = true; 
   const [groupBy, setGroupBy] = useState('position'); 
 
-  // ... (その他のロジックは共通) ...
+  const filteredMembers = members.filter(member => {
+    const fullName = `${member.lastName} ${member.firstName}`.toLowerCase();
+    const pos = (member.position || '').toLowerCase();
+    const search = searchTerm.toLowerCase();
+    return fullName.includes(search) || pos.includes(search);
+  });
 
   return (
     <motion.div 
@@ -51,7 +64,7 @@ const Sidebar_Mobile = ({ members, units, searchTerm, setSearchTerm, onMemberCli
           placeholder="検索..."
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
-          style={{ height: '36px', fontSize: '0.85rem', width: '100%' }}
+          style={{ height: '36px', fontSize: '0.85rem', width: '100%', color: '#fff', background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', padding: '0 12px', borderRadius: '6px' }}
         />
       </div>
 
@@ -72,9 +85,9 @@ const Sidebar_Mobile = ({ members, units, searchTerm, setSearchTerm, onMemberCli
               {posMembers.map(member => {
                 const roleColor = getPositionColor(member.position);
                 return (
-                  <div key={member.id} onClick={() => onMemberClick(member)} style={{ textAlign: 'center', position: 'relative' }}>
+                  <div key={member.id} onClick={() => onMemberClick(member)} style={{ textAlign: 'center', position: 'relative', cursor: 'pointer' }}>
                     <div style={{ position: 'absolute', top: 0, width: '100%', height: '2px', background: roleColor }} />
-                    <img src={member.photo} style={{ width: '40px', height: '40px', borderRadius: '6px', border: `1px solid ${roleColor}`, marginTop: '4px' }} />
+                    <img src={member.photo} style={{ width: '40px', height: '40px', borderRadius: '6px', border: `1px solid ${roleColor}`, marginTop: '4px', objectFit: 'cover' }} />
                     <div style={{ fontSize: '0.65rem', fontWeight: '700', color: '#fff', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{member.lastName}</div>
                     <div style={{ fontSize: '0.5rem', background: roleColor, color: '#fff', borderRadius: '2px', padding: '0 2px' }}>{member.position}</div>
                   </div>
@@ -83,12 +96,10 @@ const Sidebar_Mobile = ({ members, units, searchTerm, setSearchTerm, onMemberCli
             </div>
           </div>
         ))}
-        {/* モバイル専用：下部が切れないための余白 */}
         <div style={{ height: '150px' }} />
       </div>
     </motion.div>
   );
 };
 
-
-export default Sidebar;
+export default Sidebar_Mobile;

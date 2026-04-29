@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 
 // Layout & Features (Split into Desktop and Mobile)
@@ -19,7 +19,7 @@ function App() {
   const [selectedMember, setSelectedMember] = useState(null);
   const [isMobile, setIsMobile] = useState(typeof window !== 'undefined' ? window.innerWidth < 768 : false);
 
-  // ウィンドウリサイズ監視（分離を維持するため）
+  // ウィンドウリサイズ監視
   useEffect(() => {
     const handleResize = () => setIsMobile(window.innerWidth < 768);
     window.addEventListener('resize', handleResize);
@@ -56,7 +56,6 @@ function App() {
 
   return (
     <div className={isMobile ? "app-container-mobile" : "app-container"}>
-      {/* 1. ナビゲーション */}
       <Navigation 
         isSidebarOpen={isSidebarOpen}
         setIsSidebarOpen={(val) => {
@@ -67,7 +66,6 @@ function App() {
 
       <div className={isMobile ? "app-content-mobile" : "app-main-layout"}>
         {isMobile ? (
-          /* --- モバイル専用デザイン --- */
           <>
             {isSidebarOpen ? (
               <Sidebar_Mobile 
@@ -89,7 +87,6 @@ function App() {
             )}
           </>
         ) : (
-          /* --- デスクトップ専用デザイン --- */
           <>
             <AnimatePresence onExitComplete={() => window.dispatchEvent(new Event('resize'))}>
               {isSidebarOpen && (
@@ -115,14 +112,12 @@ function App() {
         )}
       </div>
 
-
-      {/* 4. プロフィールパネル (オーバーレイ/サイドバー) */}
       <AnimatePresence initial={false}>
         {selectedMember && (
           <motion.div 
-            initial={{ x: '100%' }}
-            animate={{ x: 0 }}
-            exit={{ x: '100%' }}
+            initial={isMobile ? { y: '100%' } : { x: '100%' }}
+            animate={isMobile ? { y: 0 } : { x: 0 }}
+            exit={isMobile ? { y: '100%' } : { x: '100%' }}
             transition={{ type: 'spring', damping: 25, stiffness: 200 }}
             className="profile-sidebar"
             style={{ 
@@ -130,7 +125,7 @@ function App() {
               right: 0, 
               top: 0, 
               bottom: 0, 
-              width: '420px', 
+              width: isMobile ? '100%' : '420px', 
               zIndex: 20000, 
               backgroundColor: '#0d1117' 
             }}
@@ -149,6 +144,5 @@ function App() {
     </div>
   );
 }
-
 
 export default App;

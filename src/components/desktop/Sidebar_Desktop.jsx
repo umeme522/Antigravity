@@ -12,10 +12,9 @@ const getPositionColor = (pos) => {
   return '#a0aec0'; // スタッフ（グレー）
 };
 
-
-const Sidebar = ({ members, units, searchTerm, setSearchTerm, onMemberClick, onAddMember }) => {
-  const isMobile = false; /* Forced desktop layout */
-  const [groupBy, setGroupBy] = useState('position'); // 'position' or 'joinDate'
+const Sidebar_Desktop = ({ members, units, searchTerm, setSearchTerm, onMemberClick, onAddMember }) => {
+  const isMobile = false;
+  const [groupBy, setGroupBy] = useState('position');
 
   const filteredMembers = members.filter(member => {
     const fullName = `${member.lastName} ${member.firstName}`.toLowerCase();
@@ -238,4 +237,4 @@ const Sidebar = ({ members, units, searchTerm, setSearchTerm, onMemberClick, onA
   );
 };
 
-export default Sidebar;
+export default Sidebar_Desktop;
