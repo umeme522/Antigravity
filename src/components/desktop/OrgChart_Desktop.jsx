@@ -8,6 +8,7 @@ import ReactFlow, {
 } from 'reactflow';
 import 'reactflow/dist/style.css';
 import { ChevronDown } from 'lucide-react';
+import { motion } from 'framer-motion';
 
 const getPositionColor = (pos) => {
   if (!pos) return '#a0aec0';
@@ -51,22 +52,22 @@ const UnitNode = ({ data }) => {
       >
         <span style={{ flex: 1 }}>{label}</span>
         {hasChildren && (
-          <div style={{ transform: isExpanded ? 'rotate(180deg)' : 'rotate(0deg)', transition: 'transform 0.4s', opacity: 0.7 }}>
+          <div style={{ transform: isExpanded ? 'rotate(180deg)' : 'rotate(0deg)', transition: 'transform(0.4s)', opacity: 0.7 }}>
             <ChevronDown size={18} />
           </div>
         )}
       </div>
 
-      {/* リーダー達 (大久保・堀内など複数対応) */}
+      {/* リーダー達 (兼任対応) */}
       {leaders && leaders.map((leader, idx) => (
         <div
-          key={leader.id}
+          key={`${leader.id}-${idx}`}
           onClick={() => onMemberClick(leader)}
           className="glass"
           style={{
             padding: '12px 15px',
             background: 'rgba(255, 255, 255, 0.05)',
-            borderRadius: idx === leaders.length - 1 ? '0 0 16px 16px' : '0', // 最後だけ角を丸く
+            borderRadius: idx === leaders.length - 1 ? '0 0 16px 16px' : '0',
             border: '1px solid rgba(255, 255, 255, 0.1)',
             borderTop: 'none',
             display: 'flex',
@@ -129,33 +130,32 @@ const nodeTypes = { unit: UnitNode, member: MemberNode };
 const OrgChart_Desktop = ({ units, members, onMemberClick }) => {
   const [nodes, setNodes] = useState([]);
   const [edges, setEdges] = useState([]);
-  // 初期展開を主要部署（レベル1）までに制限
   const [expandedUnits, setExpandedUnits] = useState(new Set(['u1', 'u2', 'u_dept2', 'u_dept3', 'u_admin', 'u_innov']));
-
 
   const { nodes: visibleNodes, edges: visibleEdges } = useMemo(() => {
     const unitMap = {};
     units.forEach(u => { unitMap[u.id] = { ...u, children: [], members: [] }; });
     
-    // 役職順にソート
-    const sortedMembers = [...members].sort((a, b) => {
-      const getPrio = (p) => {
-        if (p.includes('支店長')) return 1;
-        if (p.includes('副支店長')) return 2;
-        if (p.includes('部長')) return 3;
-        if (p.includes('所長') || p.includes('課長')) return 4;
-        return 100;
-      };
-      return getPrio(a.position) - getPrio(b.position);
+    // リーダー判定を強化
+    const isLeader = (pos) => pos.includes('支店長') || pos.includes('副支店長') || pos.includes('部長');
+
+    members.forEach(m => {
+      // メイン所属
+      if (unitMap[m.unitId]) unitMap[m.unitId].members.push(m);
+      // 兼任所属 (リーダー格の場合のみ、兼任先のリーダーとしても表示)
+      if (m.additionalUnitIds && isLeader(m.position)) {
+        m.additionalUnitIds.forEach(aid => {
+          if (unitMap[aid]) unitMap[aid].members.push(m);
+        });
+      }
     });
 
-    sortedMembers.forEach(m => { if (unitMap[m.unitId]) unitMap[m.unitId].members.push(m); });
     units.forEach(u => { if (u.parentId && unitMap[u.parentId]) unitMap[u.parentId].children.push(u.id); });
 
     const vNodes = [];
     const vEdges = [];
-    const VERTICAL_GAP = 200;
-    const HORIZONTAL_GAP = 60;
+    const VERTICAL_GAP = 220;
+    const HORIZONTAL_GAP = 70;
     const MEMBER_GAP = 110;
 
     const subtreeSizeMap = {};
@@ -164,10 +164,11 @@ const OrgChart_Desktop = ({ units, members, onMemberClick }) => {
       const u = unitMap[unitId];
       const isExpanded = expandedUnits.has(unitId);
       
-      // リーダー（統合される人）と一般メンバーを分離
-      const leadersCount = u.members.length > 0 ? (u.members[0].position.includes('スタッフ') ? 0 : (u.members.length > 1 && (u.members[1].position.includes('副支店長') || u.members[1].position.includes('部長')) ? 2 : 1)) : 0;
-      const leaders = u.members.slice(0, leadersCount);
-      const generalMembers = u.members.slice(leadersCount);
+      const leaders = u.members.filter(m => isLeader(m.position)).sort((a,b) => {
+          const getP = (p) => p.includes('支店長') ? 1 : (p.includes('副支店長') ? 2 : 3);
+          return getP(a.position) - getP(b.position);
+      });
+      const generalMembers = u.members.filter(m => !isLeader(m.position));
       
       const mHeight = isExpanded ? (generalMembers.length * MEMBER_GAP) + 60 : 0;
       const unitNodeHeight = 60 + (leaders.length * 68);
@@ -189,10 +190,11 @@ const OrgChart_Desktop = ({ units, members, onMemberClick }) => {
       const isExpanded = expandedUnits.has(unitId);
       const size = subtreeSizeMap[unitId];
       
-      // リーダー抽出ロジック（支店長・副支店長・部長などは統合）
-      const leadersCount = u.members.length > 0 ? (u.members[0].position.includes('スタッフ') ? 0 : (u.members.length > 1 && (u.members[1].position.includes('副支店長') || u.members[1].position.includes('部長')) ? 2 : 1)) : 0;
-      const leaders = u.members.slice(0, leadersCount);
-      const generalMembers = u.members.slice(leadersCount);
+      const leaders = u.members.filter(m => isLeader(m.position)).sort((a,b) => {
+          const getP = (p) => p.includes('支店長') ? 1 : (p.includes('副支店長') ? 2 : 3);
+          return getP(a.position) - getP(b.position);
+      });
+      const generalMembers = u.members.filter(m => !isLeader(m.position));
 
       vNodes.push({
         id: unitId,
@@ -257,16 +259,7 @@ const OrgChart_Desktop = ({ units, members, onMemberClick }) => {
         <Background color="#fff" opacity={0.05} />
       </ReactFlow>
 
-      {/* プレミアム・ズームコントロール */}
-      <div style={{ 
-        position: 'absolute', 
-        bottom: '24px', 
-        right: '24px', 
-        display: 'flex', 
-        flexDirection: 'column', 
-        gap: '8px', 
-        zIndex: 1000 
-      }}>
+      <div style={{ position: 'absolute', bottom: '24px', right: '24px', display: 'flex', flexDirection: 'column', gap: '8px', zIndex: 1000 }}>
         <ZoomControls />
       </div>
     </div>
@@ -275,39 +268,15 @@ const OrgChart_Desktop = ({ units, members, onMemberClick }) => {
 
 const ZoomControls = () => {
   const { zoomIn, zoomOut, fitView } = useReactFlow();
-  const btnStyle = {
-    width: '44px',
-    height: '44px',
-    borderRadius: '12px',
-    background: 'rgba(255, 255, 255, 0.05)',
-    border: '1px solid rgba(255, 255, 255, 0.1)',
-    color: 'white',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    cursor: 'pointer',
-    backdropFilter: 'blur(10px)',
-    transition: 'all 0.2s ease',
-    boxShadow: '0 4px 15px rgba(0,0,0,0.3)'
-  };
-
+  const btnStyle = { width: '44px', height: '44px', borderRadius: '12px', background: 'rgba(255, 255, 255, 0.05)', border: '1px solid rgba(255, 255, 255, 0.1)', color: 'white', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', backdropFilter: 'blur(10px)', transition: 'all 0.2s ease', boxShadow: '0 4px 15px rgba(0,0,0,0.3)' };
   return (
     <>
-      <motion.button whileHover={{ scale: 1.1, background: 'rgba(255,255,255,0.1)' }} whileTap={{ scale: 0.9 }} onClick={() => zoomIn()} style={btnStyle} title="拡大">+</motion.button>
-      <motion.button whileHover={{ scale: 1.1, background: 'rgba(255,255,255,0.1)' }} whileTap={{ scale: 0.9 }} onClick={() => zoomOut()} style={btnStyle} title="縮小">-</motion.button>
-      <motion.button 
-        whileHover={{ scale: 1.1, background: 'rgba(255,255,255,0.1)', color: 'var(--accent-primary)' }} 
-        whileTap={{ scale: 0.9 }} 
-        onClick={() => fitView({ duration: 800 })} 
-        style={{ ...btnStyle, fontSize: '0.7rem', fontWeight: 'bold' }} 
-        title="全体を表示"
-      >
-        RESET
-      </motion.button>
+      <motion.button whileHover={{ scale: 1.1, background: 'rgba(255,255,255,0.1)' }} whileTap={{ scale: 0.9 }} onClick={() => zoomIn()} style={btnStyle}>+</motion.button>
+      <motion.button whileHover={{ scale: 1.1, background: 'rgba(255,255,255,0.1)' }} whileTap={{ scale: 0.9 }} onClick={() => zoomOut()} style={btnStyle}>-</motion.button>
+      <motion.button whileHover={{ scale: 1.1, background: 'rgba(255,255,255,0.1)', color: 'var(--accent-primary)' }} whileTap={{ scale: 0.9 }} onClick={() => fitView({ duration: 800 })} style={{ ...btnStyle, fontSize: '0.7rem', fontWeight: 'bold' }}>RESET</motion.button>
     </>
   );
 };
-
 
 const OrgChart_DesktopWrapper = (props) => (
   <ReactFlowProvider><OrgChart_Desktop {...props} /></ReactFlowProvider>
