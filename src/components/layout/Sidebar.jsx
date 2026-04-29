@@ -170,6 +170,7 @@ const Sidebar = ({ members, units, searchTerm, setSearchTerm, onMemberClick, onA
                 .sort((a, b) => getPriority(a.position) - getPriority(b.position))
                 .map(member => {
                   const roleColor = getPositionColor(member.position);
+                  const fullName = `${member.lastName} ${member.firstName}`;
                   return (
                     <motion.div
                       key={member.id}
@@ -230,10 +231,10 @@ const Sidebar = ({ members, units, searchTerm, setSearchTerm, onMemberClick, onA
                       }}>
                         {member.position}
                       </div>
-                    </div>
-                  </div>
-                );
-              })}
+                    </motion.div>
+                  );
+                })}
+
             </div>
           </div>
         ))}
