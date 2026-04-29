@@ -252,13 +252,62 @@ const OrgChart_Desktop = ({ units, members, onMemberClick }) => {
   };
 
   return (
-    <div style={{ width: '100%', height: '100%' }}>
+    <div style={{ width: '100%', height: '100%', position: 'relative' }}>
       <ReactFlow nodes={nodes} edges={edges} nodeTypes={nodeTypes} fitView minZoom={0.1} maxZoom={2} nodesDraggable={false}>
         <Background color="#fff" opacity={0.05} />
       </ReactFlow>
+
+      {/* プレミアム・ズームコントロール */}
+      <div style={{ 
+        position: 'absolute', 
+        bottom: '24px', 
+        right: '24px', 
+        display: 'flex', 
+        flexDirection: 'column', 
+        gap: '8px', 
+        zIndex: 1000 
+      }}>
+        <ZoomControls />
+      </div>
     </div>
   );
 };
+
+const ZoomControls = () => {
+  const { zoomIn, zoomOut, fitView } = useReactFlow();
+  const btnStyle = {
+    width: '44px',
+    height: '44px',
+    borderRadius: '12px',
+    background: 'rgba(255, 255, 255, 0.05)',
+    border: '1px solid rgba(255, 255, 255, 0.1)',
+    color: 'white',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    cursor: 'pointer',
+    backdropFilter: 'blur(10px)',
+    transition: 'all 0.2s ease',
+    boxShadow: '0 4px 15px rgba(0,0,0,0.3)'
+  };
+
+  return (
+    <>
+      <motion.button whileHover={{ scale: 1.1, background: 'rgba(255,255,255,0.1)' }} whileTap={{ scale: 0.9 }} onClick={() => zoomIn()} style={btnStyle} title="拡大">+</motion.button>
+      <motion.button whileHover={{ scale: 1.1, background: 'rgba(255,255,255,0.1)' }} whileTap={{ scale: 0.9 }} onClick={() => zoomOut()} style={btnStyle} title="縮小">-</motion.button>
+      <motion.button 
+        whileHover={{ scale: 1.1, background: 'rgba(255,255,255,0.1)', color: 'var(--accent-primary)' }} 
+        whileTap={{ scale: 0.9 }} 
+        onClick={() => fitView({ duration: 800 })} 
+        style={{ ...btnStyle, fontSize: '0.7rem', fontWeight: 'bold' }} 
+        title="全体を表示"
+      >
+        RESET
+      </motion.button>
+    </>
+  );
+};
+
 
 const OrgChart_DesktopWrapper = (props) => (
   <ReactFlowProvider><OrgChart_Desktop {...props} /></ReactFlowProvider>

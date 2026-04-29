@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Search, Users, Plus, Calendar } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -16,8 +16,17 @@ const Sidebar_Desktop = ({ members, units, searchTerm, setSearchTerm, onMemberCl
   const [activeTab, setActiveTab] = useState('list'); // 'list' or 'search'
   const [groupBy, setGroupBy] = useState('position'); // 'position' or 'joinDate'
 
+  // ナビゲーションからのタブ切り替えイベントを監視
+  useEffect(() => {
+    const handleTabChange = (e) => {
+      if (e.detail) setActiveTab(e.detail);
+    };
+    window.addEventListener('changeSidebarTab', handleTabChange);
+    return () => window.removeEventListener('changeSidebarTab', handleTabChange);
+  }, []);
+
   const filteredMembers = members.filter(member => {
-    if (activeTab === 'list') return true; // リストタブでは全員
+    if (activeTab === 'list') return true;
     const fullName = `${member.lastName} ${member.firstName}`.toLowerCase();
     const pos = (member.position || '').toLowerCase();
     const search = searchTerm.toLowerCase();
@@ -50,55 +59,16 @@ const Sidebar_Desktop = ({ members, units, searchTerm, setSearchTerm, onMemberCl
       className="sidebar"
       style={{ padding: '0', height: '100%', display: 'flex', flexDirection: 'column' }}
     >
-      {/* プレミアム・タブ・ナビゲーション */}
-      <div style={{ display: 'flex', padding: '24px 24px 0 24px', gap: '20px', borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
-        <button 
-          onClick={() => setActiveTab('list')}
-          style={{ 
-            padding: '0 0 12px 0', 
-            background: 'transparent', 
-            border: 'none', 
-            color: activeTab === 'list' ? 'var(--accent-primary)' : 'rgba(255,255,255,0.4)',
-            fontSize: '1rem',
-            fontWeight: '800',
-            cursor: 'pointer',
-            borderBottom: activeTab === 'list' ? '2px solid var(--accent-primary)' : '2px solid transparent',
-            display: 'flex',
-            alignItems: 'center',
-            gap: '8px',
-            transition: 'all 0.3s ease'
-          }}
-        >
-          <Users size={18} /> メンバー
-        </button>
-        <button 
-          onClick={() => setActiveTab('search')}
-          style={{ 
-            padding: '0 0 12px 0', 
-            background: 'transparent', 
-            border: 'none', 
-            color: activeTab === 'search' ? 'var(--accent-primary)' : 'rgba(255,255,255,0.4)',
-            fontSize: '1rem',
-            fontWeight: '800',
-            cursor: 'pointer',
-            borderBottom: activeTab === 'search' ? '2px solid var(--accent-primary)' : '2px solid transparent',
-            display: 'flex',
-            alignItems: 'center',
-            gap: '8px',
-            transition: 'all 0.3s ease'
-          }}
-        >
-          <Search size={18} /> 検索
-        </button>
-      </div>
-
       <div style={{ padding: '24px', flex: 1, overflow: 'hidden', display: 'flex', flexDirection: 'column' }}>
         
-        {/* コンテンツ: 一覧タブ */}
+        {/* コンテンツ: 一覧モード */}
         {activeTab === 'list' && (
           <div style={{ flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
-              <div style={{ fontSize: '0.85rem', color: 'rgba(255,255,255,0.4)', fontWeight: '600' }}>全 {members.length} 名</div>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
+              <div style={{ display: 'flex', alignItems: 'baseline', gap: '8px' }}>
+                <h2 style={{ fontSize: '1.2rem', fontWeight: '900', color: '#ffffff', margin: 0, letterSpacing: '0.05em' }}>MEMBERS</h2>
+                <span style={{ fontSize: '0.85rem', color: 'rgba(255,255,255,0.4)', fontWeight: '600' }}>全 {members.length} 名</span>
+              </div>
               <button onClick={onAddMember} className="save-btn" style={{ padding: '8px 16px', fontSize: '0.8rem', width: 'auto' }}>
                 <Plus size={14} style={{ marginRight: '4px' }} /> 追加
               </button>
@@ -130,16 +100,14 @@ const Sidebar_Desktop = ({ members, units, searchTerm, setSearchTerm, onMemberCl
               )
               .sort(([groupA], [groupB]) => {
                 if (groupBy === 'joinDate') {
-                  // 「不明」を常に一番下に
                   if (groupA.includes('不明')) return 1;
                   if (groupB.includes('不明')) return -1;
-                  return groupB.localeCompare(groupA); // 年度を降順で
+                  return groupB.localeCompare(groupA);
                 }
                 const posA = filteredMembers.find(m => getGroupTitle(m.position) === groupA)?.position || '';
                 const posB = filteredMembers.find(m => getGroupTitle(m.position) === groupB)?.position || '';
                 return getPriority(posA) - getPriority(posB);
               })
-
               .map(([groupTitle, posMembers]) => (
                 <div key={groupTitle} style={{ marginBottom: '24px' }}>
                   <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '12px', borderBottom: '1px solid rgba(255,255,255,0.05)', paddingBottom: '6px' }}>
@@ -157,9 +125,13 @@ const Sidebar_Desktop = ({ members, units, searchTerm, setSearchTerm, onMemberCl
           </div>
         )}
 
-        {/* コンテンツ: 検索タブ */}
+        {/* コンテンツ: 検索モード */}
         {activeTab === 'search' && (
           <div style={{ flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
+            <div style={{ display: 'flex', alignItems: 'baseline', gap: '8px', marginBottom: '24px' }}>
+              <h2 style={{ fontSize: '1.2rem', fontWeight: '900', color: '#ffffff', margin: 0, letterSpacing: '0.05em' }}>SEARCH</h2>
+            </div>
+
             <div className="search-container" style={{ position: 'relative', marginBottom: '24px' }}>
               <Search size={18} style={{ position: 'absolute', left: '16px', top: '50%', transform: 'translateY(-50%)', color: 'var(--accent-primary)' }} />
               <input

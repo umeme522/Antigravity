@@ -12,25 +12,38 @@ const Navigation = ({
       </div>
       
       <div className="nav-items" style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '24px' }}>
-        {/* 組織図タブ */}
+        <div className="nav-tabs" style={{ display: 'flex', gap: '8px' }}>
         <button 
           onClick={() => setIsSidebarOpen(false)}
-          className={`nav-btn ${!isSidebarOpen ? 'active' : ''}`} 
-          title="組織図を表示"
+          className={`nav-tab ${!isSidebarOpen ? 'active' : ''}`}
+          style={{ display: 'flex', alignItems: 'center', gap: '8px' }}
         >
-          <Network size={24} />
-          <span className="nav-label">組織図</span>
+          <Share2 size={18} />
+          <span>組織図</span>
         </button>
-
-        {/* メンバー一覧タブ */}
         <button 
-          onClick={() => setIsSidebarOpen(true)}
-          className={`nav-btn ${isSidebarOpen ? 'active' : ''}`} 
-          title="メンバー一覧を表示"
+          onClick={() => {
+            setIsSidebarOpen(true);
+            window.dispatchEvent(new CustomEvent('changeSidebarTab', { detail: 'list' }));
+          }}
+          className={`nav-tab ${isSidebarOpen ? 'active' : ''}`}
+          style={{ display: 'flex', alignItems: 'center', gap: '8px' }}
         >
-          <Users size={24} />
-          <span className="nav-label">メンバー</span>
+          <Users size={18} />
+          <span>メンバー</span>
         </button>
+        <button 
+          onClick={() => {
+            setIsSidebarOpen(true);
+            window.dispatchEvent(new CustomEvent('changeSidebarTab', { detail: 'search' }));
+          }}
+          className={`nav-tab ${isSidebarOpen ? 'active' : ''}`}
+          style={{ display: 'flex', alignItems: 'center', gap: '8px' }}
+        >
+          <Search size={18} />
+          <span>検索</span>
+        </button>
+      </div>
       </div>
     </div>
 
