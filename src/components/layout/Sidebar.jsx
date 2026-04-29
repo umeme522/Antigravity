@@ -165,8 +165,8 @@ const Sidebar = ({ members, units, searchTerm, setSearchTerm, onMemberClick, onA
             
             <div style={{ 
               display: 'grid', 
-              gridTemplateColumns: isMobile ? 'repeat(4, 1fr)' : 'repeat(auto-fill, minmax(160px, 1fr))',
-              gap: isMobile ? '8px' : '20px' 
+              gridTemplateColumns: isMobile ? 'repeat(4, 1fr)' : 'repeat(auto-fill, minmax(130px, 1fr))',
+              gap: isMobile ? '8px' : '15px' 
             }}>
               {posMembers
                 .sort((a, b) => getPriority(a.position) - getPriority(b.position))
@@ -207,8 +207,8 @@ const Sidebar = ({ members, units, searchTerm, setSearchTerm, onMemberClick, onA
                           src={member.photo} 
                           alt={member.lastName} 
                           style={{ 
-                            width: isMobile ? '36px' : '60px', 
-                            height: isMobile ? '36px' : '60px', 
+                            width: isMobile ? '36px' : '48px', 
+                            height: isMobile ? '36px' : '48px', 
                             borderRadius: '10px', 
                             marginBottom: '6px',
                             border: `1px solid ${roleColor}`,
@@ -219,7 +219,7 @@ const Sidebar = ({ members, units, searchTerm, setSearchTerm, onMemberClick, onA
                       
                       <div style={{ 
                         fontWeight: '700', 
-                        fontSize: isMobile ? '0.7rem' : '1rem',
+                        fontSize: isMobile ? '0.7rem' : '0.85rem',
                         color: '#ffffff',
                         lineHeight: '1.2',
                         overflow: 'hidden',
@@ -229,7 +229,7 @@ const Sidebar = ({ members, units, searchTerm, setSearchTerm, onMemberClick, onA
                         {fullName}
                       </div>
                       <div style={{ 
-                        fontSize: isMobile ? '0.55rem' : '0.75rem', 
+                        fontSize: isMobile ? '0.55rem' : '0.65rem', 
                         color: roleColor, 
                         fontWeight: '800', 
                         textTransform: 'uppercase',
@@ -242,6 +242,7 @@ const Sidebar = ({ members, units, searchTerm, setSearchTerm, onMemberClick, onA
                   );
                 })}
             </div>
+
           </div>
         ))}
       </div>
