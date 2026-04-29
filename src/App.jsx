@@ -44,51 +44,88 @@ function App() {
   const currentMember = selectedMember || members[0];
   const selectedUnit = units.find(u => u.id === currentMember?.unitId);
 
+  const isMobile = typeof window !== 'undefined' && window.innerWidth < 768;
+
   return (
-    <div className="app-container">
+    <div className={isMobile ? "app-container-mobile" : "app-container"}>
       {/* 1. ナビゲーション */}
       <Navigation 
         isSidebarOpen={isSidebarOpen}
-        setIsSidebarOpen={setIsSidebarOpen}
+        setIsSidebarOpen={(val) => {
+          setIsSidebarOpen(val);
+          // タブ切り替え時にリサイズイベントを発火してOrgChartのズレを防ぐ
+          setTimeout(() => window.dispatchEvent(new Event('resize')), 100);
+        }}
       />
 
-
-      {/* 2. サイドバー (メンバー一覧) */}
-      <AnimatePresence onExitComplete={() => window.dispatchEvent(new Event('resize'))}>
-        {isSidebarOpen && (
-          <Sidebar 
-            members={members} 
-            units={units} 
-            searchTerm={searchTerm} 
-            setSearchTerm={setSearchTerm}
-            onMemberClick={handleMemberClick}
-            onAddMember={handleAddMember}
-          />
+      <div className={isMobile ? "app-content-mobile" : "app-main-layout"}>
+        {/* モバイル版：排他的に表示 */}
+        {isMobile ? (
+          <>
+            {isSidebarOpen ? (
+              <Sidebar 
+                members={members} 
+                units={units} 
+                searchTerm={searchTerm} 
+                setSearchTerm={setSearchTerm}
+                onMemberClick={handleMemberClick}
+                onAddMember={handleAddMember}
+              />
+            ) : (
+              <div className="main-area" style={{ flex: 1, position: 'relative', overflow: 'hidden' }}>
+                <OrgChart 
+                  units={units} 
+                  members={members} 
+                  onMemberClick={handleMemberClick}
+                />
+              </div>
+            )}
+          </>
+        ) : (
+          /* デスクトップ版：これまでのレイアウト */
+          <>
+            <AnimatePresence onExitComplete={() => window.dispatchEvent(new Event('resize'))}>
+              {isSidebarOpen && (
+                <Sidebar 
+                  members={members} 
+                  units={units} 
+                  searchTerm={searchTerm} 
+                  setSearchTerm={setSearchTerm}
+                  onMemberClick={handleMemberClick}
+                  onAddMember={handleAddMember}
+                />
+              )}
+            </AnimatePresence>
+            
+            <div className="main-area" style={{ flex: 1, position: 'relative', overflow: 'hidden' }}>
+              <OrgChart 
+                units={units} 
+                members={members} 
+                onMemberClick={handleMemberClick}
+              />
+            </div>
+          </>
         )}
-      </AnimatePresence>
-      
-      {/* 3. メインコンテンツ (組織図) */}
-      <div className="main-area" style={{ position: 'relative', flex: 1, height: '100vh', overflow: 'hidden' }}>
-        <div style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0 }}>
-          <OrgChart 
-            units={units} 
-            members={members} 
-            onMemberClick={handleMemberClick}
-          />
-        </div>
       </div>
 
-      {/* 4. プロフィールパネル */}
-      <AnimatePresence initial={false} onExitComplete={() => window.dispatchEvent(new Event('resize'))}>
+      {/* 4. プロフィールパネル (オーバーレイ/サイドバー) */}
+      <AnimatePresence initial={false}>
         {selectedMember && (
           <motion.div 
-            initial={{ width: 0, opacity: 0 }}
-            animate={{ width: 420, opacity: 1 }}
-            exit={{ width: 0, opacity: 0 }}
+            initial={isMobile ? { y: '100%' } : { x: '100%' }}
+            animate={isMobile ? { y: 0 } : { x: 0 }}
+            exit={isMobile ? { y: '100%' } : { x: '100%' }}
             transition={{ type: 'spring', damping: 25, stiffness: 200 }}
-            onAnimationComplete={() => window.dispatchEvent(new Event('resize'))}
             className="profile-sidebar"
-            style={{ overflow: 'hidden', borderLeft: '1px solid var(--glass-border)', backgroundColor: 'rgba(13, 17, 23, 0.95)' }}
+            style={{ 
+              position: 'fixed', 
+              right: 0, 
+              top: isMobile ? 0 : 0, 
+              bottom: 0, 
+              width: isMobile ? '100%' : '420px', 
+              zIndex: 20000, 
+              backgroundColor: '#0d1117' 
+            }}
           >
             <MemberProfile 
               member={selectedMember}
@@ -104,5 +141,6 @@ function App() {
     </div>
   );
 }
+
 
 export default App;
