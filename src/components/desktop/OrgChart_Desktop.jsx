@@ -130,7 +130,9 @@ const nodeTypes = { unit: UnitNode, member: MemberNode };
 const OrgChart_Desktop = ({ units, members, onMemberClick }) => {
   const [nodes, setNodes] = useState([]);
   const [edges, setEdges] = useState([]);
-  const [expandedUnits, setExpandedUnits] = useState(new Set(['u1', 'u2', 'u_dept2', 'u_dept3', 'u_admin', 'u_innov']));
+  // 初期展開を東日本支店（トップ）のみに制限
+  const [expandedUnits, setExpandedUnits] = useState(new Set(['u1']));
+
 
   const { nodes: visibleNodes, edges: visibleEdges } = useMemo(() => {
     const unitMap = {};
