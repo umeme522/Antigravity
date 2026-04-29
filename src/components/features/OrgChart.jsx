@@ -405,30 +405,67 @@ const OrgChart = ({ units, members, onMemberClick }) => {
     }
 
     return { nodes: visibleNodes, edges: visibleEdges };
-  }, [units, members, onMemberClick, expandedUnits]);
+  }, [units, members, onMemberClick, expandedUnits, isMobile]);
+
+  const { setCenter } = useReactFlow();
+
+  const onUnitClick = (unitId) => {
+    setExpandedUnits(prev => {
+      const newSet = new Set(prev);
+      const isExpanding = !newSet.has(unitId);
+      
+      if (isExpanding) {
+        newSet.add(unitId);
+      } else {
+        newSet.delete(unitId);
+      }
+      
+      setTimeout(() => {
+        const clickedNode = nodes.find(n => n.id === `unit-${unitId}`);
+        if (clickedNode) {
+          setCenter(clickedNode.position.x + 130, clickedNode.position.y + 30, { 
+            zoom: isMobile ? 0.8 : 1, 
+            duration: 800 
+          });
+        }
+      }, 50);
+      
+      return newSet;
+    });
+  };
+
+  const onNodeClick = (event, node) => {
+    if (node.type === 'member') {
+      onMemberClick(node.data.member);
+      setCenter(node.position.x + 130, node.position.y + 40, { 
+        zoom: isMobile ? 0.9 : 1.1, 
+        duration: 800 
+      });
+    }
+  };
 
   return (
-    <div style={{ width: '100%', height: '100%', minHeight: '800px' }}>
+    <div style={{ width: '100%', height: '100%', background: 'transparent' }}>
       <ReactFlow
         nodes={nodes}
         edges={edges}
         nodeTypes={nodeTypes}
-        onInit={setRfInstance}
+        onNodeClick={onNodeClick}
         fitView
         fitViewOptions={{ padding: 0.2 }}
         minZoom={0.2}
         maxZoom={2}
-        // モバイル向けのインタラクション設定
-        zoomOnPinch={true}
+        nodesDraggable={false}
+        nodesConnectable={false}
+        elementsSelectable={true}
         panOnScroll={false}
         panOnDrag={true}
-        preventScrolling={true}
-        style={{ width: '100%', height: '100%' }}
+        zoomOnScroll={true}
+        zoomOnPinch={true}
+        style={{ background: 'transparent' }}
       >
-        <Background color="#333" gap={20} />
-        <Controls />
+        <Background color="#ffffff" opacity={0.05} gap={20} />
       </ReactFlow>
-
     </div>
   );
 };
