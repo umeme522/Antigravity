@@ -29,14 +29,26 @@ export const mockData = {
     {
       id: "m0_1",
       lastName: "大久保",
-      firstName: "祐介",
-      reading: "オオクボ ユウスケ",
+      firstName: "誠一",
+      reading: "オオクボ セイイチ",
       position: "支店長",
       unitId: "u1",
-      birthDate: "",
-      joinDate: "",
-      photo: "https://api.dicebear.com/7.x/avataaars/svg?seed=Okubo",
-      employeeId: ""
+      additionalUnitIds: ["u_innov"],
+      birthDate: "1972-05-20",
+      joinDate: "1995-04-01",
+      photo: "https://images.unsplash.com/photo-1560250097-0b93528c311a?w=150&h=150&fit=crop",
+      employeeId: "E0001"
+    },
+    {
+      id: "m0_3",
+      lastName: "木内",
+      firstName: "窮地",
+      reading: "キウチ キヒト",
+      position: "スタッフ",
+      unitId: "u_innov",
+      joinDate: "2018-04-01",
+      photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop",
+      employeeId: "E0003"
     },
     {
       id: "m0_2",
