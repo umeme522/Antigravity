@@ -3,7 +3,9 @@ import { Network, Users, Search, Share2 } from 'lucide-react';
 
 const Navigation = ({ 
   isSidebarOpen, 
-  setIsSidebarOpen
+  setIsSidebarOpen,
+  sidebarTab,
+  setSidebarTab
 }) => {
   return (
     <div className="nav-sidebar">
@@ -27,9 +29,10 @@ const Navigation = ({
         <button 
           onClick={() => {
             setIsSidebarOpen(true);
+            setSidebarTab('list');
             window.dispatchEvent(new CustomEvent('changeSidebarTab', { detail: 'list' }));
           }}
-          className={`nav-btn ${isSidebarOpen ? 'active' : ''}`}
+          className={`nav-btn ${isSidebarOpen && sidebarTab === 'list' ? 'active' : ''}`}
           style={{ width: '100%' }}
           title="メンバー"
         >
@@ -41,9 +44,10 @@ const Navigation = ({
         <button 
           onClick={() => {
             setIsSidebarOpen(true);
+            setSidebarTab('search');
             window.dispatchEvent(new CustomEvent('changeSidebarTab', { detail: 'search' }));
           }}
-          className={`nav-btn ${isSidebarOpen ? 'active' : ''}`}
+          className={`nav-btn ${isSidebarOpen && sidebarTab === 'search' ? 'active' : ''}`}
           style={{ width: '100%' }}
           title="検索"
         >
@@ -54,5 +58,6 @@ const Navigation = ({
     </div>
   );
 };
+
 
 export default Navigation;

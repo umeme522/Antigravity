@@ -15,7 +15,9 @@ import { backupData, restoreData } from './utils/storage';
 
 function App() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [sidebarTab, setSidebarTab] = useState('list'); // 'list' or 'search'
   const [searchTerm, setSearchTerm] = useState('');
+
   const [selectedMember, setSelectedMember] = useState(null);
   const [isMobile, setIsMobile] = useState(typeof window !== 'undefined' ? window.innerWidth < 768 : false);
 
@@ -62,6 +64,8 @@ function App() {
           setIsSidebarOpen(val);
           setTimeout(() => window.dispatchEvent(new Event('resize')), 100);
         }}
+        sidebarTab={sidebarTab}
+        setSidebarTab={setSidebarTab}
       />
 
       <div className={isMobile ? "app-content-mobile" : "app-main-layout"}>
@@ -97,9 +101,12 @@ function App() {
                   setSearchTerm={setSearchTerm}
                   onMemberClick={handleMemberClick}
                   onAddMember={handleAddMember}
+                  activeTab={sidebarTab}
+                  setActiveTab={setSidebarTab}
                 />
               )}
             </AnimatePresence>
+
             
             <div className="main-area" style={{ flex: 1, position: 'relative', overflow: 'hidden' }}>
               <OrgChart_Desktop 

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Search, Users, Plus, Calendar } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -12,25 +12,16 @@ const getPositionColor = (pos) => {
   return '#a0aec0'; // スタッフ（グレー）
 };
 
-const Sidebar_Desktop = ({ members, units, searchTerm, setSearchTerm, onMemberClick, onAddMember }) => {
-  const [activeTab, setActiveTab] = useState('list'); // 'list' or 'search'
+const Sidebar_Desktop = ({ members, units, searchTerm, setSearchTerm, onMemberClick, onAddMember, activeTab, setActiveTab }) => {
   const [groupBy, setGroupBy] = useState('position'); // 'position' or 'joinDate'
-
-  // ナビゲーションからのタブ切り替えイベントを監視
-  useEffect(() => {
-    const handleTabChange = (e) => {
-      if (e.detail) setActiveTab(e.detail);
-    };
-    window.addEventListener('changeSidebarTab', handleTabChange);
-    return () => window.removeEventListener('changeSidebarTab', handleTabChange);
-  }, []);
 
   const filteredMembers = members.filter(member => {
     if (activeTab === 'list') return true;
     const fullName = `${member.lastName} ${member.firstName}`.toLowerCase();
     const pos = (member.position || '').toLowerCase();
     const search = searchTerm.toLowerCase();
-    return fullName.includes(search) || pos.includes(search);
+    const unitName = (units.find(u => u.id === member.unitId)?.name || '').toLowerCase();
+    return fullName.includes(search) || pos.includes(search) || unitName.includes(search);
   });
 
   const getPriority = (pos) => {
@@ -72,17 +63,7 @@ const Sidebar_Desktop = ({ members, units, searchTerm, setSearchTerm, onMemberCl
               <button 
                 onClick={onAddMember} 
                 className="save-btn" 
-                style={{ 
-                  padding: '6px 14px', 
-                  fontSize: '0.75rem', 
-                  width: 'auto', 
-                  minWidth: '70px',
-                  height: '32px',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  gap: '4px'
-                }}
+                style={{ padding: '6px 14px', fontSize: '0.75rem', width: 'auto', minWidth: '70px', height: '32px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '4px' }}
               >
                 <Plus size={14} /> 追加
               </button>
