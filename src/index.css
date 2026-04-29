@@ -56,6 +56,32 @@ html, body, #root {
   z-index: 100;
 }
 
+@media screen and (max-width: 768px) {
+  .app-container {
+    flex-direction: column; /* スマホでは縦並び（ナビが上、コンテンツが下） */
+  }
+
+  .nav-sidebar {
+    width: 100%;
+    height: 60px;
+    flex-direction: row; /* 横並び */
+    padding: 0 20px;
+    border-right: none;
+    border-bottom: 1px solid var(--glass-border);
+    justify-content: space-between;
+  }
+
+  .nav-sidebar > div:first-child {
+    margin: 0 !important; /* ロゴの余白をリセット */
+  }
+
+  .nav-sidebar > div:nth-child(2) {
+    flex-direction: row !important;
+    gap: 16px !important;
+  }
+}
+
+
 .sidebar {
   height: 100%;
   flex-shrink: 0;
@@ -212,18 +238,13 @@ html, body, #root {
 
 /* Mobile Optimizations */
 @media screen and (max-width: 768px) {
-  .nav-sidebar {
-    width: 60px;
-    padding: 15px 0;
-  }
-  
   .sidebar {
     position: absolute;
-    left: 60px;
-    top: 0;
+    left: 0;
+    top: 60px; /* ナビの下から開始 */
     bottom: 0;
     z-index: 100;
-    width: 260px !important;
+    width: 280px !important;
     background: rgba(15, 20, 28, 0.98);
     box-shadow: 10px 0 30px rgba(0, 0, 0, 0.5);
   }
@@ -231,9 +252,9 @@ html, body, #root {
   .profile-sidebar {
     position: absolute;
     right: 0;
-    top: 0;
+    top: 60px; /* ナビの下から開始 */
     bottom: 0;
-    width: 100% !important; /* スマホでは全画面 */
+    width: 100% !important;
     z-index: 200;
     border-left: none;
     box-shadow: -10px 0 30px rgba(0, 0, 0, 0.5);
@@ -249,10 +270,6 @@ html, body, #root {
     width: 200px;
     padding: 8px;
   }
-
-  /* 組織図内のフォント調整 */
-  .react-flow__node {
-    cursor: pointer;
-  }
 }
+
 
