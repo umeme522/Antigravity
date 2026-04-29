@@ -69,7 +69,14 @@ html, body, #root {
     border-right: none;
     border-bottom: 1px solid var(--glass-border);
     justify-content: center;
+    position: fixed; /* 固定 */
+    top: 0;
+    left: 0;
+    z-index: 10000; /* 最前面へ */
+    background: rgba(13, 17, 23, 0.95); /* 背景をしっかりさせる */
+    backdrop-filter: blur(10px);
   }
+
 
   .nav-sidebar > div:first-child {
     display: none; /* スマホではロゴを消してスペースを稼ぐ */
@@ -95,7 +102,21 @@ html, body, #root {
     padding: 0;
   }
 
+  .main-area, .sidebar, .profile-panel {
+    padding-top: 60px !important; /* ナビバーの高さ分を下げる */
+  }
+
+  .sidebar {
+    width: 85% !important;
+    max-width: 360px !important;
+    position: fixed;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    z-index: 9999;
+  }
 }
+
 
 
 
