@@ -1,0 +1,211 @@
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Noto+Sans+JP:wght@300;400;500;700&display=swap');
+
+:root {
+  --bg-main: #0f111a;
+  --bg-card: rgba(255, 255, 255, 0.07);
+  --bg-sidebar: rgba(20, 24, 33, 0.9);
+  --accent-primary: #00f2ff;
+  --accent-secondary: #8b3dff;
+  --text-primary: #ffffff;
+  --text-secondary: #b0bccd;
+  --glass-border: rgba(255, 255, 255, 0.12);
+  --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+  --font-main: 'Outfit', 'Noto Sans JP', sans-serif;
+  
+  /* Position Colors */
+  --pos-executive: #E6B422;
+  --pos-manager: #FF4B4B;
+  --pos-director: #4B7BFF;
+  --pos-subdirector: #FF9500;
+  --pos-lead: #C0FF00;
+  --pos-staff: #A0AEC0;
+}
+
+html, body, #root {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  background-color: var(--bg-main);
+  color: var(--text-primary);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+.app-container {
+  display: flex;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(circle at 50% 50%, #1c1e2f 0%, #0a0c10 100%);
+}
+
+/* Sidebar & Navigation */
+.nav-sidebar {
+  width: 80px;
+  height: 100%;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 30px 0;
+  background: rgba(13, 17, 23, 0.95);
+  border-right: 1px solid var(--glass-border);
+  z-index: 100;
+}
+
+.sidebar {
+  height: 100%;
+  flex-shrink: 0;
+  background: rgba(15, 20, 28, 0.95);
+  border-right: 1px solid var(--glass-border);
+  transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.main-area {
+  flex: 1;
+  height: 100%;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.profile-sidebar {
+  width: 400px;
+  height: 100%;
+  flex-shrink: 0;
+  background: #11141d;
+  border-left: 1px solid var(--glass-border);
+  z-index: 10;
+  overflow-y: auto;
+}
+
+/* 入力フィールドの視認性維持 */
+.edit-input, .search-input {
+  width: 100%;
+  padding: 10px 14px;
+  background: #1a202c !important;
+  border: 1px solid rgba(255, 255, 255, 0.15) !important;
+  border-radius: 8px;
+  color: #ffffff !important;
+  font-family: var(--font-main);
+  font-size: 0.9rem;
+}
+
+.edit-input:focus, .search-input:focus {
+  outline: none;
+  border-color: var(--accent-primary) !important;
+  box-shadow: 0 0 0 2px rgba(0, 242, 255, 0.2);
+}
+
+.edit-input::placeholder, .search-input::placeholder {
+  color: rgba(255, 255, 255, 0.3) !important;
+}
+
+.unit-node {
+  box-sizing: border-box;
+  padding: 12px 24px;
+  background: linear-gradient(135deg, var(--accent-secondary), #4b00b3);
+  color: white;
+  border-radius: 12px;
+  font-weight: 600;
+  box-shadow: 0 4px 15px rgba(112, 0, 255, 0.3);
+  width: 250px;
+  text-align: center;
+  font-size: 1.15rem;
+}
+
+.member-node {
+  box-sizing: border-box;
+  padding: 10px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 250px;
+  transition: all 0.2s ease;
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.member-node:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+}
+
+/* UI Elements */
+.nav-btn {
+  background: transparent;
+  color: var(--text-secondary);
+  border: none;
+  border-radius: 12px;
+  padding: 12px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.nav-btn.active {
+  background: var(--accent-primary);
+  color: black;
+  box-shadow: 0 0 20px rgba(0, 242, 255, 0.4);
+}
+
+.save-btn {
+  flex: 2;
+  padding: 12px;
+  background: var(--accent-primary);
+  color: #000;
+  border: none;
+  border-radius: 10px;
+  font-weight: 700;
+}
+
+.cancel-btn {
+  flex: 1;
+  padding: 12px;
+  background: rgba(255, 255, 255, 0.1);
+  color: white;
+  border: none;
+  border-radius: 10px;
+}
+
+.glass {
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* React Flow */
+.org-chart-wrapper {
+  flex: 1;
+  width: 100%;
+  height: 100%;
+}
+
+.react-flow__edge-path {
+  stroke: rgba(255, 255, 255, 0.2);
+  stroke-width: 2;
+}
+
+.react-flow__controls {
+  background: rgba(20, 24, 33, 0.8) !important;
+  border: 1px solid var(--glass-border) !important;
+  backdrop-filter: blur(8px);
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 10px;
+}
