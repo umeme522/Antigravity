@@ -42,8 +42,6 @@ const Sidebar_Desktop = ({ members, units, searchTerm, setSearchTerm, onMemberCl
     return 'スタッフ';
   };
 
-
-
   return (
     <motion.div 
       initial={{ x: -100, opacity: 0 }}
@@ -53,24 +51,21 @@ const Sidebar_Desktop = ({ members, units, searchTerm, setSearchTerm, onMemberCl
     >
       <div className="sidebar-header" style={{ marginBottom: '24px' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
-          <h2 style={{ fontSize: '1.2rem', fontWeight: '900', color: '#ffffff', margin: 0, letterSpacing: '0.05em' }}>MEMBERS</h2>
+          <div style={{ display: 'flex', alignItems: 'baseline', gap: '8px' }}>
+            <h2 style={{ fontSize: '1.2rem', fontWeight: '900', color: '#ffffff', margin: 0, letterSpacing: '0.05em' }}>MEMBERS</h2>
+            <span style={{ fontSize: '0.85rem', color: 'rgba(255,255,255,0.4)', fontWeight: '600' }}>全 {members.length} 名</span>
+          </div>
           <button 
             onClick={onAddMember}
+            className="save-btn"
             style={{ 
-              padding: '8px 12px',
-              background: 'var(--accent-primary)',
-              color: '#000',
-              border: 'none',
-              borderRadius: '8px',
-              fontWeight: '700',
-              cursor: 'pointer',
+              padding: '8px 16px',
               fontSize: '0.8rem',
-              display: 'flex',
-              alignItems: 'center',
-              gap: '4px'
+              width: 'auto',
+              flex: 'none'
             }}
           >
-            <Plus size={14} /> 追加
+            <Plus size={14} style={{ marginRight: '4px' }} /> 追加
           </button>
         </div>
 
@@ -105,28 +100,17 @@ const Sidebar_Desktop = ({ members, units, searchTerm, setSearchTerm, onMemberCl
       <div className="member-list" style={{ flex: 1, overflowY: 'auto', paddingRight: '4px' }}>
         {Object.entries(
           filteredMembers.reduce((acc, m) => {
-            let group;
-            if (groupBy === 'joinDate') {
-              const year = (m.joinDate && typeof m.joinDate === 'string') ? m.joinDate.split('-')[0] : m.joinDate;
-              group = year ? `${year}年` : '不明';
-            } else {
-              group = getGroupTitle(m.position || 'Staff');
-            }
+            let group = groupBy === 'joinDate' ? (m.joinDate && typeof m.joinDate === 'string' ? m.joinDate.split('-')[0] : m.joinDate) + '年' : getGroupTitle(m.position);
             if (!acc[group]) acc[group] = [];
             acc[group].push(m);
             return acc;
           }, {})
         )
         .sort(([groupA], [groupB]) => {
-          if (groupBy === 'joinDate') {
-            if (groupA === '不明') return 1;
-            if (groupB === '不明') return -1;
-            return groupB.localeCompare(groupA); 
-          } else {
-            const posA = filteredMembers.find(m => getGroupTitle(m.position) === groupA)?.position || '';
-            const posB = filteredMembers.find(m => getGroupTitle(m.position) === groupB)?.position || '';
-            return getPriority(posA) - getPriority(posB);
-          }
+          if (groupBy === 'joinDate') return groupB.localeCompare(groupA);
+          const posA = filteredMembers.find(m => getGroupTitle(m.position) === groupA)?.position || '';
+          const posB = filteredMembers.find(m => getGroupTitle(m.position) === groupB)?.position || '';
+          return getPriority(posA) - getPriority(posB);
         })
         .map(([groupTitle, posMembers]) => (
           <div key={groupTitle} style={{ marginBottom: '24px' }}>
@@ -215,14 +199,13 @@ const Sidebar_Desktop = ({ members, units, searchTerm, setSearchTerm, onMemberCl
                       <div style={{ 
                         display: 'inline-block',
                         fontSize: '0.75rem', 
-                        color: roleColor, // 文字を役職の色に
+                        color: roleColor, 
                         fontWeight: '900', 
                         textTransform: 'uppercase',
                         letterSpacing: '0.02em'
                       }}>
                         {member.position}
                       </div>
-
                     </motion.div>
                   );
                 })}
