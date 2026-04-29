@@ -686,8 +686,9 @@ export const mockData = {
       position: "係長",
       unitId: "u_ome",
       birthDate: "",
-      joinDate: "",
+      joinDate: "2017",
       photo: "https://api.dicebear.com/7.x/avataaars/svg?seed=Kishikawa",
+
       employeeId: ""
     },
     {

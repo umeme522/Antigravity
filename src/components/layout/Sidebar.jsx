@@ -163,9 +163,10 @@ const Sidebar = ({ members, units, searchTerm, setSearchTerm, onMemberClick, onA
             
             <div style={{ 
               display: 'grid', 
-              gridTemplateColumns: 'repeat(4, 1fr)', // 4人並びに固定
-              gap: '8px' 
+              gridTemplateColumns: 'repeat(3, 1fr)', // 3人並びに戻してゆったり表示
+              gap: '12px' 
             }}>
+
 
               {posMembers
                 .sort((a, b) => getPriority(a.position) - getPriority(b.position))
