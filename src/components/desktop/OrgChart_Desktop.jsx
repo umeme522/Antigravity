@@ -22,7 +22,7 @@ const getPositionColor = (pos) => {
 
 // --- 統合ノード (部署 + リーダー達) ---
 const UnitNode = ({ data }) => {
-  const { label, level, leaders, isExpanded, onClick, onMemberClick, hasChildren } = data;
+  const { label, level, leaders, isExpanded, onClick, onMemberClick, hasGeneralMembers } = data;
   const unitBg = level === 0 ? 'linear-gradient(135deg, #ffd700, #b8860b)' : 'linear-gradient(135deg, #667eea, #764ba2)';
   
   return (
@@ -51,14 +51,14 @@ const UnitNode = ({ data }) => {
         }}
       >
         <span style={{ flex: 1 }}>{label}</span>
-        {hasChildren && (
-          <div style={{ transform: isExpanded ? 'rotate(180deg)' : 'rotate(0deg)', transition: 'transform(0.4s)', opacity: 0.7 }}>
+        {hasGeneralMembers && (
+          <div style={{ transform: isExpanded ? 'rotate(180deg)' : 'rotate(0deg)', transition: 'transform 0.4s', opacity: 0.7 }}>
             <ChevronDown size={18} />
           </div>
         )}
       </div>
 
-      {/* リーダー達 (兼任対応) */}
+      {/* リーダー達 (大久保・堀内・各部トップなど) */}
       {leaders && leaders.map((leader, idx) => (
         <div
           key={`${leader.id}-${idx}`}
@@ -130,25 +130,38 @@ const nodeTypes = { unit: UnitNode, member: MemberNode };
 const OrgChart_Desktop = ({ units, members, onMemberClick }) => {
   const [nodes, setNodes] = useState([]);
   const [edges, setEdges] = useState([]);
-  // 初期展開を東日本支店（トップ）のみに制限
   const [expandedUnits, setExpandedUnits] = useState(new Set(['u1']));
-
 
   const { nodes: visibleNodes, edges: visibleEdges } = useMemo(() => {
     const unitMap = {};
     units.forEach(u => { unitMap[u.id] = { ...u, children: [], members: [] }; });
     
-    // リーダー判定を強化
-    const isLeader = (pos) => pos.includes('支店長') || pos.includes('副支店長') || pos.includes('部長');
+    // リーダー判定
+    const isLeader = (m, unit) => {
+      const p = m.position;
+      // 支店長・副支店長は常にリーダー
+      if (p.includes('支店長') || p.includes('副支店長')) return true;
+      // 兼任している部署のトップ
+      if (m.additionalUnitIds && m.additionalUnitIds.includes(unit.id)) return true;
+      // その部署の最上位（部長、または部長がいない場合は課長など）を動的に判断
+      const unitMembers = members.filter(mem => mem.unitId === unit.id);
+      const minPrio = Math.min(...unitMembers.map(mem => {
+          const pos = mem.position;
+          if (pos.includes('支店長')) return 1;
+          if (pos.includes('副支店長')) return 2;
+          if (pos.includes('部長')) return 3;
+          if (pos.includes('所長') || pos.includes('課長')) return 4;
+          return 100;
+      }));
+      
+      const myPrio = p.includes('支店長') ? 1 : (p.includes('副支店長') ? 2 : (p.includes('部長') ? 3 : (p.includes('所長') || p.includes('課長') ? 4 : 100)));
+      return myPrio === minPrio && myPrio < 100;
+    };
 
     members.forEach(m => {
-      // メイン所属
       if (unitMap[m.unitId]) unitMap[m.unitId].members.push(m);
-      // 兼任所属 (リーダー格の場合のみ、兼任先のリーダーとしても表示)
-      if (m.additionalUnitIds && isLeader(m.position)) {
-        m.additionalUnitIds.forEach(aid => {
-          if (unitMap[aid]) unitMap[aid].members.push(m);
-        });
+      if (m.additionalUnitIds) {
+        m.additionalUnitIds.forEach(aid => { if (unitMap[aid]) unitMap[aid].members.push(m); });
       }
     });
 
@@ -166,11 +179,11 @@ const OrgChart_Desktop = ({ units, members, onMemberClick }) => {
       const u = unitMap[unitId];
       const isExpanded = expandedUnits.has(unitId);
       
-      const leaders = u.members.filter(m => isLeader(m.position)).sort((a,b) => {
+      const leaders = u.members.filter(m => isLeader(m, u)).sort((a,b) => {
           const getP = (p) => p.includes('支店長') ? 1 : (p.includes('副支店長') ? 2 : 3);
           return getP(a.position) - getP(b.position);
       });
-      const generalMembers = u.members.filter(m => !isLeader(m.position));
+      const generalMembers = u.members.filter(m => !isLeader(m, u));
       
       const mHeight = isExpanded ? (generalMembers.length * MEMBER_GAP) + 60 : 0;
       const unitNodeHeight = 60 + (leaders.length * 68);
@@ -192,11 +205,11 @@ const OrgChart_Desktop = ({ units, members, onMemberClick }) => {
       const isExpanded = expandedUnits.has(unitId);
       const size = subtreeSizeMap[unitId];
       
-      const leaders = u.members.filter(m => isLeader(m.position)).sort((a,b) => {
+      const leaders = u.members.filter(m => isLeader(m, u)).sort((a,b) => {
           const getP = (p) => p.includes('支店長') ? 1 : (p.includes('副支店長') ? 2 : 3);
           return getP(a.position) - getP(b.position);
       });
-      const generalMembers = u.members.filter(m => !isLeader(m.position));
+      const generalMembers = u.members.filter(m => !isLeader(m, u));
 
       vNodes.push({
         id: unitId,
@@ -206,7 +219,7 @@ const OrgChart_Desktop = ({ units, members, onMemberClick }) => {
           level, 
           leaders, 
           isExpanded, 
-          hasChildren: u.children.length > 0 || generalMembers.length > 0,
+          hasGeneralMembers: generalMembers.length > 0 || u.children.length > 0,
           onClick: () => toggleUnit(unitId),
           onMemberClick
         },
@@ -247,13 +260,25 @@ const OrgChart_Desktop = ({ units, members, onMemberClick }) => {
 
   useEffect(() => { setNodes(visibleNodes); setEdges(visibleEdges); }, [visibleNodes, visibleEdges]);
 
+  const { setCenter, getNodes } = useReactFlow();
   const toggleUnit = (uid) => {
     setExpandedUnits(prev => {
       const n = new Set(prev);
-      n.has(uid) ? n.delete(uid) : n.add(uid);
+      const isExpanding = !n.has(uid);
+      if (isExpanding) n.add(uid);
+      else n.delete(uid);
       return n;
     });
+
+    // 展開時にそのノードを中央へ移動
+    setTimeout(() => {
+      const node = getNodes().find(n => n.id === uid);
+      if (node) {
+        setCenter(node.position.x + 140, node.position.y + 100, { duration: 800 });
+      }
+    }, 50);
   };
+
 
   return (
     <div style={{ width: '100%', height: '100%', position: 'relative' }}>

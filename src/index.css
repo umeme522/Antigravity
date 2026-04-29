@@ -221,7 +221,6 @@ html, body, #root {
 
 /* アクションボタン（プレミアムスタイル） */
 .save-btn {
-  flex: 2;
   padding: 12px 24px;
   background: linear-gradient(135deg, var(--accent-primary) 0%, #00e6e6 100%);
   color: #000;
@@ -234,7 +233,12 @@ html, body, #root {
   transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
   letter-spacing: 0.05em;
   text-transform: uppercase;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
 }
+
 
 .save-btn:hover {
   transform: translateY(-2px) scale(1.02);

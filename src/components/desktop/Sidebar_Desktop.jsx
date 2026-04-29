@@ -65,12 +65,26 @@ const Sidebar_Desktop = ({ members, units, searchTerm, setSearchTerm, onMemberCl
         {activeTab === 'list' && (
           <div style={{ flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
-              <div style={{ display: 'flex', alignItems: 'baseline', gap: '8px' }}>
-                <h2 style={{ fontSize: '1.2rem', fontWeight: '900', color: '#ffffff', margin: 0, letterSpacing: '0.05em' }}>MEMBERS</h2>
-                <span style={{ fontSize: '0.85rem', color: 'rgba(255,255,255,0.4)', fontWeight: '600' }}>全 {members.length} 名</span>
+              <div style={{ display: 'flex', alignItems: 'baseline', gap: '12px' }}>
+                <h2 style={{ fontSize: '1.1rem', fontWeight: '900', color: '#ffffff', margin: 0, letterSpacing: '0.05em' }}>MEMBERS</h2>
+                <span style={{ fontSize: '0.8rem', color: 'rgba(255,255,255,0.4)', fontWeight: '600' }}>全 {members.length} 名</span>
               </div>
-              <button onClick={onAddMember} className="save-btn" style={{ padding: '8px 16px', fontSize: '0.8rem', width: 'auto' }}>
-                <Plus size={14} style={{ marginRight: '4px' }} /> 追加
+              <button 
+                onClick={onAddMember} 
+                className="save-btn" 
+                style={{ 
+                  padding: '6px 14px', 
+                  fontSize: '0.75rem', 
+                  width: 'auto', 
+                  minWidth: '70px',
+                  height: '32px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: '4px'
+                }}
+              >
+                <Plus size={14} /> 追加
               </button>
             </div>
 
