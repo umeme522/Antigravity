@@ -214,10 +214,11 @@ const OrgChart_Desktop = ({ units, members, onMemberClick }) => {
 
     const visibleNodes = [];
     const visibleEdges = [];
-    const VERTICAL_GAP = 150;
-    const HORIZONTAL_GAP = 50;
-    const MEMBER_GAP = 140;
-    const MEMBER_Y_OFFSET = 100;
+    const VERTICAL_GAP = 180; // 下の部署をさらに押し下げる
+    const HORIZONTAL_GAP = 50; 
+    const MEMBER_GAP = 125; // メンバー同士を少し上に詰める
+    const MEMBER_Y_OFFSET = 100; 
+
 
     const subtreeHeightMap = {};
     const subtreeWidthMap = {};
