@@ -244,10 +244,12 @@ html, body, #root {
     top: 60px; /* ナビの下から開始 */
     bottom: 0;
     z-index: 100;
-    width: 280px !important;
+    width: 85% !important; /* スマホでは画面の85%を使って名前をしっかり見せる */
+    max-width: 360px;
     background: rgba(15, 20, 28, 0.98);
     box-shadow: 10px 0 30px rgba(0, 0, 0, 0.5);
   }
+
 
   .profile-sidebar {
     position: absolute;
