@@ -194,12 +194,14 @@ const MemberProfile = ({ member, unit, units, onUpdate, onClose, isPermanent }) 
     maxWidth: '420px',
     height: '100%',
     padding: '24px',
+    paddingBottom: '80px', // iPhoneのホームバー対策で下部を広くとる
     display: 'flex',
     flexDirection: 'column',
     gap: '20px',
     overflowY: 'auto',
     position: 'relative'
   };
+
 
 
   const roleColor = getPositionColor(member.position);
