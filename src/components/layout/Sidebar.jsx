@@ -13,7 +13,9 @@ const getPositionColor = (pos) => {
 };
 
 const Sidebar = ({ members, units, searchTerm, setSearchTerm, onMemberClick, onAddMember }) => {
+  const isMobile = window.innerWidth < 768;
   const [groupBy, setGroupBy] = useState('position');
+
 
   const filteredMembers = members.filter(m => {
     const fullName = `${m.lastName || ''} ${m.firstName || ''}`.toLowerCase();
