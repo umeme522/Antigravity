@@ -4,17 +4,13 @@ import { motion, AnimatePresence } from 'framer-motion';
 
 const getPositionColor = (pos) => {
   if (!pos) return '#a0aec0';
-  if (pos.includes('支店長') || pos.includes('副支店長')) return '#ffd700'; // 金
-  if (pos.includes('部長')) return '#ff4b4b'; // 赤
-  if (pos.includes('所長') || pos.includes('課長')) return '#4b7bff'; // 青
-  if (pos.includes('副長')) return '#ff9500'; // オレンジ
-  if (pos.includes('係長')) return '#00e676'; // 緑
-  return '#a0aec0'; // スタッフ（グレー）
-};
+  if (pos.includes('支店長') || pos.includes('副支店長')) return '#ffd700'; // 釁E  if (pos.includes('部長')) return '#ff4b4b'; // 赤
+  if (pos.includes('所長') || pos.includes('課長')) return '#4b7bff'; // 靁E  if (pos.includes('副長')) return '#ff9500'; // オレンジ
+  if (pos.includes('係長')) return '#00e676'; // 緁E  return '#a0aec0'; // スタチE���E�グレー�E�E};
 
 
 const Sidebar = ({ members, units, searchTerm, setSearchTerm, onMemberClick, onAddMember }) => {
-  const isMobile = window.innerWidth < 768;
+  const isMobile = false;
   const [groupBy, setGroupBy] = useState('position');
 
 
@@ -27,12 +23,12 @@ const Sidebar = ({ members, units, searchTerm, setSearchTerm, onMemberClick, onA
   });
 
   const getGroupTitle = (pos) => {
-    if (!pos) return 'スタッフ';
+    if (!pos) return 'スタチE��';
     if (pos.includes('支店長') || pos.includes('副支店長') || pos.includes('部長')) return '支店長・副支店長・部長';
     if (pos.includes('所長') || pos.includes('課長')) return '所長・課長';
     if (pos.includes('副長')) return '副長';
     if (pos.includes('係長')) return '係長';
-    return 'スタッフ';
+    return 'スタチE��';
   };
 
   const getPriority = (pos) => {
@@ -97,7 +93,7 @@ const Sidebar = ({ members, units, searchTerm, setSearchTerm, onMemberClick, onA
           <input
             type="text"
             className="search-input"
-            placeholder="名前、役職、部署..."
+            placeholder="名前、役職、E��署..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             style={{ paddingLeft: '36px', height: '40px', fontSize: '0.9rem', width: '100%', color: '#ffffff' }}
@@ -109,14 +105,12 @@ const Sidebar = ({ members, units, searchTerm, setSearchTerm, onMemberClick, onA
             onClick={() => setGroupBy('position')}
             style={{ flex: 1, padding: '6px', fontSize: '0.8rem', borderRadius: '6px', background: groupBy === 'position' ? 'var(--accent-primary)' : 'rgba(255,255,255,0.1)', color: groupBy === 'position' ? '#000' : '#fff', border: 'none', cursor: 'pointer', fontWeight: 'bold', transition: 'all 0.2s ease' }}
           >
-            役職順
-          </button>
+            役職頁E          </button>
           <button 
             onClick={() => setGroupBy('joinDate')}
             style={{ flex: 1, padding: '6px', fontSize: '0.8rem', borderRadius: '6px', background: groupBy === 'joinDate' ? 'var(--accent-primary)' : 'rgba(255,255,255,0.1)', color: groupBy === 'joinDate' ? '#000' : '#fff', border: 'none', cursor: 'pointer', fontWeight: 'bold', transition: 'all 0.2s ease' }}
           >
-            入社年度順
-          </button>
+            入社年度頁E          </button>
         </div>
       </div>
 
@@ -126,7 +120,7 @@ const Sidebar = ({ members, units, searchTerm, setSearchTerm, onMemberClick, onA
             let group;
             if (groupBy === 'joinDate') {
               const year = (m.joinDate && typeof m.joinDate === 'string') ? m.joinDate.split('-')[0] : m.joinDate;
-              group = year ? `${year}年` : '不明';
+              group = year ? `${year}年` : '不�E';
             } else {
               group = getGroupTitle(m.position || 'Staff');
             }
@@ -137,8 +131,8 @@ const Sidebar = ({ members, units, searchTerm, setSearchTerm, onMemberClick, onA
         )
         .sort(([groupA], [groupB]) => {
           if (groupBy === 'joinDate') {
-            if (groupA === '不明') return 1;
-            if (groupB === '不明') return -1;
+            if (groupA === '不�E') return 1;
+            if (groupB === '不�E') return -1;
             return groupB.localeCompare(groupA); 
           } else {
             const posA = filteredMembers.find(m => getGroupTitle(m.position) === groupA)?.position || '';
@@ -152,22 +146,21 @@ const Sidebar = ({ members, units, searchTerm, setSearchTerm, onMemberClick, onA
               display: 'flex', 
               justifyContent: 'space-between',
               alignItems: 'center', 
-              marginBottom: '10px',
+              marginBottom: '12px',
               borderBottom: `1px solid rgba(255,255,255,0.1)`,
-              paddingBottom: '4px'
+              paddingBottom: '6px'
             }}>
-              <h3 style={{ fontSize: '0.8rem', color: 'var(--accent-primary)', fontWeight: '800' }}>
+              <h3 style={{ fontSize: '0.9rem', color: 'var(--accent-primary)', fontWeight: '800' }}>
                 {groupTitle}
               </h3>
-              <span style={{ fontSize: '0.75rem', color: 'rgba(255,255,255,0.4)' }}>
-                {posMembers.length} 名
-              </span>
+              <span style={{ fontSize: '0.8rem', color: 'rgba(255,255,255,0.4)' }}>
+                {posMembers.length} 吁E              </span>
             </div>
             
             <div style={{ 
               display: 'grid', 
-              gridTemplateColumns: isMobile ? 'repeat(4, 1fr)' : 'repeat(auto-fill, minmax(110px, 1fr))',
-              gap: isMobile ? '8px' : '12px' 
+              gridTemplateColumns: 'repeat(auto-fill, minmax(110px, 1fr))',
+              gap: '12px' 
             }}>
               {posMembers
                 .sort((a, b) => getPriority(a.position) - getPriority(b.position))
@@ -181,16 +174,16 @@ const Sidebar = ({ members, units, searchTerm, setSearchTerm, onMemberClick, onA
                       onClick={() => onMemberClick(member)}
                       className="glass member-card-mini"
                       style={{
-                        padding: isMobile ? '8px 4px' : '12px 8px',
+                        padding: '12px 8px',
                         cursor: 'pointer',
                         textAlign: 'center',
                         position: 'relative',
                         border: '1px solid rgba(255, 255, 255, 0.15)',
-                        borderRadius: '10px',
-                        background: 'rgba(255, 255, 255, 0.05)',
-                        transition: 'all 0.3s ease',
+                        borderRadius: '12px',
+                        background: 'rgba(255, 255, 255, 0.04)',
+                        transition: 'all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275)',
                         minWidth: 0,
-                        boxShadow: '0 4px 12px rgba(0,0,0,0.2)'
+                        boxShadow: '0 4px 15px rgba(0,0,0,0.3)'
                       }}
                     >
                       <div style={{ 
@@ -198,9 +191,10 @@ const Sidebar = ({ members, units, searchTerm, setSearchTerm, onMemberClick, onA
                         top: 0, 
                         left: '0', 
                         width: '100%', 
-                        height: '2px', 
+                        height: '3px', 
                         background: roleColor,
-                        boxShadow: `0 0 10px ${roleColor}66`
+                        boxShadow: `0 0 12px ${roleColor}66`,
+                        borderRadius: '12px 12px 0 0'
                       }} />
 
                       {member.photo && (
@@ -208,11 +202,11 @@ const Sidebar = ({ members, units, searchTerm, setSearchTerm, onMemberClick, onA
                           src={member.photo} 
                           alt={member.lastName} 
                           style={{ 
-                            width: isMobile ? '36px' : '44px', 
-                            height: isMobile ? '36px' : '44px', 
-                            borderRadius: '8px', 
-                            marginBottom: '6px',
-                            border: `1.5px solid ${roleColor}`,
+                            width: '48px', 
+                            height: '48px', 
+                            borderRadius: '10px', 
+                            marginBottom: '8px',
+                            border: `2px solid ${roleColor}`,
                             objectFit: 'cover'
                           }} 
                         />
@@ -220,36 +214,46 @@ const Sidebar = ({ members, units, searchTerm, setSearchTerm, onMemberClick, onA
                       
                       <div style={{ 
                         fontWeight: '700', 
-                        fontSize: isMobile ? '0.7rem' : '0.8rem',
+                        fontSize: '0.85rem',
                         color: '#ffffff',
                         lineHeight: '1.2',
                         overflow: 'hidden',
                         textOverflow: 'ellipsis',
                         whiteSpace: 'nowrap',
-                        marginBottom: '4px'
+                        marginBottom: '6px'
                       }}>
                         {fullName}
                       </div>
                       <div style={{ 
                         display: 'inline-block',
-                        fontSize: isMobile ? '0.55rem' : '0.65rem', 
+                        fontSize: '0.65rem', 
                         backgroundColor: roleColor,
-                        color: '#ffffff', // 白文字に変更
+                        color: '#ffffff', 
                         fontWeight: '900', 
                         textTransform: 'uppercase',
-                        padding: '1px 6px',
-                        borderRadius: '3px',
-                        letterSpacing: '0'
+                        padding: '3px 8px',
+                        borderRadius: '4px',
+                        letterSpacing: '0.02em',
+                        boxShadow: `0 2px 8px ${roleColor}40`
                       }}>
                         {member.position}
                       </div>
                     </motion.div>
-
-
                   );
                 })}
             </div>
-            {/* モバイルの下部余白（スクロール切れ防止） */}
+          </div>
+        ))}
+      </div>
+    </motion.div>
+  );
+};
+
+export default Sidebar;          );
+                })}
+
+            </div>
+            {/* モバイルの下部余白�E�スクロール刁E��防止�E�E*/}
             {isMobile && <div style={{ height: '120px' }} />}
           </div>
         ))}

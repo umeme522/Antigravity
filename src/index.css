@@ -1,22 +1,15 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Noto+Sans+JP:wght@300;400;500;700;900&display=swap');
 
-/* --- Premium Theme Tokens --- */
+/* --- Premium Desktop-Only Theme Tokens --- */
 :root {
   --bg-dark: #0a0c12;
-  --bg-card: rgba(23, 28, 41, 0.7);
+  --bg-dark-accent: #11141d;
+  --bg-card: rgba(255, 255, 255, 0.03);
   --accent-primary: #7c4dff;
   --accent-secondary: #00d4ff;
   --glass-border: rgba(255, 255, 255, 0.08);
-  --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.8);
-  --font-main: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  
-  /* Role Colors */
-  --pos-executive: linear-gradient(135deg, #ffd700, #b8860b);
-  --pos-manager: linear-gradient(135deg, #ff4b4b, #8b0000);
-  --pos-director: linear-gradient(135deg, #4b7bff, #00008b);
-  --pos-subdirector: linear-gradient(135deg, #ff9500, #ff4500);
-  --pos-lead: linear-gradient(135deg, #00e676, #006400);
-  --pos-staff: linear-gradient(135deg, #a0aec0, #2d3748);
+  --glass-shadow: 0 12px 40px rgba(0, 0, 0, 0.5);
+  --font-main: 'Inter', 'Noto Sans JP', sans-serif;
 }
 
 html, body, #root {
@@ -28,189 +21,92 @@ html, body, #root {
   background-color: var(--bg-dark);
   color: #ffffff;
   font-family: var(--font-main);
+  -webkit-font-smoothing: antialiased;
 }
 
 * {
   box-sizing: border-box;
 }
 
+/* --- Layout --- */
 .app-container {
   display: flex;
   width: 100vw;
   height: 100vh;
   background-color: var(--bg-dark);
   background-image: 
-    radial-gradient(at 0% 0%, rgba(124, 77, 255, 0.1) 0px, transparent 50%),
-    radial-gradient(at 100% 100%, rgba(0, 212, 255, 0.05) 0px, transparent 50%);
+    radial-gradient(circle at 10% 20%, rgba(124, 77, 255, 0.15) 0%, transparent 40%),
+    radial-gradient(circle at 90% 80%, rgba(0, 212, 255, 0.1) 0%, transparent 40%);
   color: #ffffff;
   overflow: hidden;
-  font-family: var(--font-main);
 }
 
 .nav-sidebar {
-  width: 80px;
-  background: rgba(13, 17, 23, 0.8);
-  backdrop-filter: blur(20px);
+  width: 100px;
+  background: rgba(10, 12, 18, 0.85);
+  backdrop-filter: blur(24px);
   border-right: 1px solid var(--glass-border);
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 30px 0;
-  z-index: 20000 !important; /* コンテンツより常に上 */
+  padding: 40px 0;
+  z-index: 20000;
   transition: all 0.4s ease;
+  box-shadow: 5px 0 30px rgba(0,0,0,0.3);
+}
+
+.nav-logo {
+  margin-bottom: 50px;
+  color: var(--accent-primary);
+  filter: drop-shadow(0 0 15px rgba(124, 77, 255, 0.6));
+}
+
+.nav-items {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+  width: 100%;
+  align-items: center;
 }
 
 .nav-btn {
-  width: 50px;
-  height: 50px;
-  border-radius: 14px;
+  width: 64px;
+  height: 64px;
+  border-radius: 18px;
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
-  color: rgba(255, 255, 255, 0.5);
+  color: rgba(255, 255, 255, 0.4);
   background: transparent;
   border: 1px solid transparent;
   cursor: pointer;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
   position: relative;
-  pointer-events: auto !important; /* 確実にクリック可能に */
+  gap: 6px;
 }
-
 
 .nav-btn:hover {
   color: #ffffff;
   background: rgba(255, 255, 255, 0.05);
-  transform: translateY(-2px);
+  transform: translateY(-3px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .nav-btn.active {
   color: #ffffff;
-  background: var(--accent-primary);
-  box-shadow: 0 0 20px rgba(124, 77, 255, 0.4);
+  background: linear-gradient(145deg, var(--accent-primary), #5a32fa);
+  box-shadow: 0 10px 25px rgba(124, 77, 255, 0.5);
+  border: none;
 }
 
 .nav-label {
-  position: absolute;
-  left: 100%;
-  margin-left: 15px;
-  background: #1a1f2e;
-  padding: 6px 12px;
-  border-radius: 6px;
-  font-size: 0.8rem;
-  white-space: nowrap;
-  opacity: 0;
-  pointer-events: none;
-  transition: all 0.3s ease;
-  border: 1px solid var(--glass-border);
-  box-shadow: var(--glass-shadow);
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
 }
 
-.nav-btn:hover .nav-label {
-  opacity: 1;
-  transform: translateX(5px);
-}
-
-@media screen and (max-width: 768px) {
-  .app-container {
-    flex-direction: column;
-  }
-
-  .nav-sidebar {
-    width: 100% !important;
-    height: 60px !important;
-    flex-direction: row !important;
-    padding: 0 !important;
-    border-right: none !important;
-    border-bottom: 1px solid var(--glass-border) !important;
-    justify-content: center !important;
-    position: fixed !important;
-    top: 0 !important;
-    left: 0 !important;
-    z-index: 30000 !important; /* 最前面へ */
-    background: rgba(13, 17, 23, 0.98) !important;
-    backdrop-filter: blur(20px) !important;
-  }
-
-  .nav-logo {
-    display: none !important;
-  }
-
-  .nav-items {
-    flex: 1 !important;
-    display: flex !important;
-    flex-direction: row !important;
-    gap: 0 !important;
-    justify-content: space-around !important;
-    align-items: center !important;
-    height: 100% !important;
-    margin: 0 !important;
-  }
-
-  .nav-sidebar .nav-btn {
-    flex: 1 !important;
-    height: 100% !important;
-    border-radius: 0 !important;
-    display: flex !important;
-    flex-direction: column !important;
-    align-items: center !important;
-    justify-content: center !important;
-    padding: 0 !important;
-    background: transparent !important;
-    border: none !important;
-    box-shadow: none !important;
-  }
-
-  .nav-label {
-    position: static !important;
-    opacity: 1 !important;
-    background: transparent !important;
-    font-size: 0.6rem !important;
-    margin-left: 0 !important;
-    margin-top: 2px !important;
-    color: inherit !important;
-    border: none !important;
-    box-shadow: none !important;
-    transform: none !important;
-  }
-
-
-  .app-container-mobile {
-    display: flex;
-    flex-direction: column;
-    width: 100vw;
-    height: 100vh;
-    background-color: var(--bg-dark);
-    overflow: hidden;
-  }
-
-  .app-content-mobile {
-    flex: 1;
-    margin-top: 60px;
-    height: calc(100vh - 60px);
-    overflow-y: auto;
-    position: relative;
-    padding-bottom: 150px;
-  }
-
-  .sidebar {
-    width: 100% !important;
-    height: 100% !important;
-    position: relative !important;
-    left: 0 !important;
-    top: 0 !important;
-    z-index: 10;
-    border: none !important;
-    background: var(--bg-dark);
-  }
-
-  .main-area {
-    width: 100% !important;
-    height: 100% !important;
-    padding: 0 !important;
-  }
-}
-
-/* --- Base Structural Styles (Desktop-first or Shared) --- */
 .app-main-layout {
   display: flex;
   flex: 1;
@@ -219,17 +115,19 @@ html, body, #root {
 }
 
 .sidebar {
-  width: 650px;
+  width: 750px;
   height: 100%;
   flex-shrink: 0;
-  background: rgba(15, 20, 28, 0.95);
+  background: rgba(15, 20, 28, 0.7);
+  backdrop-filter: blur(20px);
   border-right: 1px solid var(--glass-border);
   transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   overflow: hidden;
   display: flex;
   flex-direction: column;
+  box-shadow: 10px 0 40px rgba(0,0,0,0.4);
+  z-index: 10;
 }
-
 
 .main-area {
   flex: 1;
@@ -241,112 +139,49 @@ html, body, #root {
 }
 
 .profile-sidebar {
-  width: 400px;
+  width: 450px;
   height: 100%;
   flex-shrink: 0;
-  background: #11141d;
+  background: rgba(17, 20, 29, 0.95);
+  backdrop-filter: blur(30px);
   border-left: 1px solid var(--glass-border);
-  z-index: 10;
+  z-index: 100;
   overflow-y: auto;
+  box-shadow: -10px 0 40px rgba(0,0,0,0.5);
 }
 
+/* --- UI Components --- */
 .edit-input, .search-input {
   width: 100%;
-  padding: 10px 14px;
-  background: #1a202c !important;
-  border: 1px solid rgba(255, 255, 255, 0.15) !important;
-  border-radius: 8px;
+  padding: 14px 18px;
+  background: rgba(0, 0, 0, 0.3) !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  border-radius: 12px;
   color: #ffffff !important;
   font-family: var(--font-main);
-  font-size: 0.9rem;
+  font-size: 1rem;
+  transition: all 0.3s ease;
 }
-
 
 .edit-input:focus, .search-input:focus {
   outline: none;
   border-color: var(--accent-primary) !important;
-  box-shadow: 0 0 0 2px rgba(0, 242, 255, 0.2);
+  box-shadow: 0 0 0 3px rgba(124, 77, 255, 0.25);
+  background: rgba(0, 0, 0, 0.5) !important;
 }
 
 .edit-input::placeholder, .search-input::placeholder {
-  color: rgba(255, 255, 255, 0.3) !important;
-}
-
-.unit-node {
-  box-sizing: border-box;
-  padding: 12px 24px;
-  background: linear-gradient(135deg, var(--accent-secondary), #4b00b3);
-  color: white;
-  border-radius: 12px;
-  font-weight: 600;
-  box-shadow: 0 4px 15px rgba(112, 0, 255, 0.3);
-  width: 250px;
-  text-align: center;
-  font-size: 1.15rem;
-}
-
-.member-node {
-  box-sizing: border-box;
-  padding: 10px;
-  border-radius: 12px;
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  width: 250px;
-  transition: all 0.2s ease;
-  background: rgba(255, 255, 255, 0.05);
-  backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-.member-node:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
-}
-
-/* UI Elements */
-.nav-btn {
-  background: transparent;
-  color: var(--text-secondary);
-  border: none;
-  border-radius: 12px;
-  padding: 12px;
-  cursor: pointer;
-  transition: all 0.3s ease;
-}
-
-.nav-btn.active {
-  background: var(--accent-primary);
-  color: black;
-  box-shadow: 0 0 20px rgba(0, 242, 255, 0.4);
-}
-
-.save-btn {
-  flex: 2;
-  padding: 12px;
-  background: var(--accent-primary);
-  color: #000;
-  border: none;
-  border-radius: 10px;
-  font-weight: 700;
-}
-
-.cancel-btn {
-  flex: 1;
-  padding: 12px;
-  background: rgba(255, 255, 255, 0.1);
-  color: white;
-  border: none;
-  border-radius: 10px;
+  color: rgba(255, 255, 255, 0.2) !important;
 }
 
 .glass {
-  background: rgba(255, 255, 255, 0.05);
-  backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: var(--bg-card);
+  backdrop-filter: blur(16px);
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--glass-shadow);
 }
 
-/* React Flow */
+/* --- React Flow Overrides --- */
 .org-chart-wrapper {
   flex: 1;
   width: 100%;
@@ -354,62 +189,51 @@ html, body, #root {
 }
 
 .react-flow__edge-path {
-  stroke: rgba(255, 255, 255, 0.2);
+  stroke: rgba(255, 255, 255, 0.15);
   stroke-width: 2;
+  transition: stroke 0.3s ease;
+}
+
+.react-flow__edge:hover .react-flow__edge-path {
+  stroke: rgba(255, 255, 255, 0.5);
+  stroke-width: 3;
 }
 
 .react-flow__controls {
-  background: rgba(20, 24, 33, 0.8) !important;
+  background: rgba(10, 12, 18, 0.8) !important;
   border: 1px solid var(--glass-border) !important;
-  backdrop-filter: blur(8px);
+  backdrop-filter: blur(12px);
+  border-radius: 12px !important;
+  overflow: hidden;
+  box-shadow: var(--glass-shadow) !important;
 }
 
-/* Scrollbar */
+.react-flow__controls-button {
+  background: transparent !important;
+  border-bottom: 1px solid rgba(255,255,255,0.05) !important;
+  fill: #fff !important;
+  transition: background 0.2s;
+}
+
+.react-flow__controls-button:hover {
+  background: rgba(255,255,255,0.1) !important;
+}
+
+/* --- Custom Scrollbar --- */
 ::-webkit-scrollbar {
-  width: 6px;
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.15);
-  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 20px;
 }
 
-/* Mobile Optimizations */
-@media screen and (max-width: 768px) {
-  .sidebar {
-    position: absolute;
-    left: 0;
-    top: 60px; /* ナビの下から開始 */
-    bottom: 0;
-    z-index: 100;
-    width: 85% !important; /* スマホでは画面の85%を使って名前をしっかり見せる */
-    max-width: 360px;
-    background: rgba(15, 20, 28, 0.98);
-    box-shadow: 10px 0 30px rgba(0, 0, 0, 0.5);
-  }
-
-
-  .profile-sidebar {
-    position: absolute;
-    right: 0;
-    top: 60px; /* ナビの下から開始 */
-    bottom: 0;
-    width: 100% !important;
-    z-index: 200;
-    border-left: none;
-    box-shadow: -10px 0 30px rgba(0, 0, 0, 0.5);
-  }
-
-  .unit-node {
-    width: 200px;
-    padding: 10px 15px;
-    font-size: 1rem;
-  }
-
-  .member-node {
-    width: 200px;
-    padding: 8px;
-  }
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.2);
 }
-
 
