@@ -5,7 +5,9 @@ import ReactFlow, {
   MiniMap,
   Handle,
   Position,
-  MarkerType
+  MarkerType,
+  useReactFlow,
+  ReactFlowProvider
 } from 'reactflow';
 import 'reactflow/dist/style.css';
 import { ChevronDown, ChevronUp } from 'lucide-react';
@@ -471,4 +473,11 @@ const OrgChart = ({ units, members, onMemberClick }) => {
 };
 
 
-export default OrgChart;
+const OrgChartWrapper = (props) => (
+  <ReactFlowProvider>
+    <OrgChart {...props} />
+  </ReactFlowProvider>
+);
+
+export default OrgChartWrapper;
+
