@@ -71,13 +71,14 @@ const UnitNode = ({ data }) => {
           className="glass"
           style={{
             padding: '12px 15px',
+            paddingLeft: '45px',
             background: 'rgba(255, 255, 255, 0.05)',
             borderRadius: idx === leaders.length - 1 ? '0 0 16px 16px' : '0',
             border: '1px solid rgba(255, 255, 255, 0.1)',
             borderTop: 'none',
             display: 'flex',
             alignItems: 'center',
-            justifyContent: 'center',
+            justifyContent: 'flex-start',
             gap: '15px',
             cursor: 'pointer',
             backdropFilter: 'blur(10px)',
@@ -106,12 +107,13 @@ const MemberNode = ({ data }) => {
       onClick={() => onClick(member)}
       style={{
         padding: '12px 15px',
+        paddingLeft: '35px',
         width: '260px',
         borderRadius: '16px',
         border: '1px solid rgba(255, 255, 255, 0.08)',
         display: 'flex',
         alignItems: 'center',
-        justifyContent: 'center',
+        justifyContent: 'flex-start',
         gap: '15px',
         cursor: 'pointer',
         backdropFilter: 'blur(12px)',
