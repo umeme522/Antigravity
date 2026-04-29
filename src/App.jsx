@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 
-// Layout & Features
+// Layout & Features (Split into Desktop and Mobile)
+import Sidebar_Desktop from './components/desktop/Sidebar_Desktop';
+import OrgChart_Desktop from './components/desktop/OrgChart_Desktop';
+import Sidebar_Mobile from './components/mobile/Sidebar_Mobile';
+import OrgChart_Mobile from './components/mobile/OrgChart_Mobile';
 import Navigation from './components/layout/Navigation';
-import Sidebar from './components/layout/Sidebar';
-import OrgChart from './components/features/OrgChart';
 import MemberProfile from './components/features/MemberProfile';
 
 // Hooks & Utils
@@ -15,6 +17,14 @@ function App() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedMember, setSelectedMember] = useState(null);
+  const [isMobile, setIsMobile] = useState(typeof window !== 'undefined' ? window.innerWidth < 768 : false);
+
+  // ウィンドウリサイズ監視（分離を維持するため）
+  useEffect(() => {
+    const handleResize = () => setIsMobile(window.innerWidth < 768);
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   const {
     units,
@@ -44,26 +54,23 @@ function App() {
   const currentMember = selectedMember || members[0];
   const selectedUnit = units.find(u => u.id === currentMember?.unitId);
 
-  const isMobile = false; /* Forced desktop layout */
-
   return (
-    <div className="app-container">
+    <div className={isMobile ? "app-container-mobile" : "app-container"}>
       {/* 1. ナビゲーション */}
       <Navigation 
         isSidebarOpen={isSidebarOpen}
         setIsSidebarOpen={(val) => {
           setIsSidebarOpen(val);
-          // タブ切り替え時にリサイズイベントを発火してOrgChartのズレを防ぐ
           setTimeout(() => window.dispatchEvent(new Event('resize')), 100);
         }}
       />
 
-      <div className="app-main-layout">
-        {/* デスクトップ版：これまでのレイアウト */}
-        <>
-          <AnimatePresence onExitComplete={() => window.dispatchEvent(new Event('resize'))}>
-            {isSidebarOpen && (
-              <Sidebar 
+      <div className={isMobile ? "app-content-mobile" : "app-main-layout"}>
+        {isMobile ? (
+          /* --- モバイル専用デザイン --- */
+          <>
+            {isSidebarOpen ? (
+              <Sidebar_Mobile 
                 members={members} 
                 units={units} 
                 searchTerm={searchTerm} 
@@ -71,18 +78,43 @@ function App() {
                 onMemberClick={handleMemberClick}
                 onAddMember={handleAddMember}
               />
+            ) : (
+              <div className="main-area" style={{ flex: 1, position: 'relative', overflow: 'hidden' }}>
+                <OrgChart_Mobile 
+                  units={units} 
+                  members={members} 
+                  onMemberClick={handleMemberClick}
+                />
+              </div>
             )}
-          </AnimatePresence>
-          
-          <div className="main-area" style={{ flex: 1, position: 'relative', overflow: 'hidden' }}>
-            <OrgChart 
-              units={units} 
-              members={members} 
-              onMemberClick={handleMemberClick}
-            />
-          </div>
-        </>
+          </>
+        ) : (
+          /* --- デスクトップ専用デザイン --- */
+          <>
+            <AnimatePresence onExitComplete={() => window.dispatchEvent(new Event('resize'))}>
+              {isSidebarOpen && (
+                <Sidebar_Desktop 
+                  members={members} 
+                  units={units} 
+                  searchTerm={searchTerm} 
+                  setSearchTerm={setSearchTerm}
+                  onMemberClick={handleMemberClick}
+                  onAddMember={handleAddMember}
+                />
+              )}
+            </AnimatePresence>
+            
+            <div className="main-area" style={{ flex: 1, position: 'relative', overflow: 'hidden' }}>
+              <OrgChart_Desktop 
+                units={units} 
+                members={members} 
+                onMemberClick={handleMemberClick}
+              />
+            </div>
+          </>
+        )}
       </div>
+
 
       {/* 4. プロフィールパネル (オーバーレイ/サイドバー) */}
       <AnimatePresence initial={false}>
