@@ -11,55 +11,46 @@ import 'reactflow/dist/style.css';
 import { ChevronDown, ChevronUp } from 'lucide-react';
 
 const UnitNode = ({ data }) => {
-  const isLightPurple = data.label === '支店総務部' || data.label === '営業革新部';
-  const customBackground = isLightPurple
-    ? 'linear-gradient(135deg, #c79eff, #9b59b6)' // はっきりと違いがわかる薄紫色
-    : undefined;
+  const isMobile = window.innerWidth < 768;
+  const isChild = data.level > 1; // 階層に応じた色分け
 
   return (
     <div
-      className={`unit-node ${data.isExpanded ? 'expanded' : ''} ${data.hasChildren ? 'has-children' : ''}`}
-      onClick={() => data.hasChildren && data.onClick()}
+      onClick={data.onClick}
+      className={`unit-node ${data.isExpanded ? 'expanded' : ''}`}
       style={{
-        cursor: data.hasChildren ? 'pointer' : 'default',
-        position: 'relative',
+        width: isMobile ? '220px' : '250px',
+        padding: isMobile ? '12px' : '15px 25px',
+        background: isChild 
+          ? 'linear-gradient(135deg, #6b46c1, #44337a)' // 子組織（営業所など）は少し落ち着いた色
+          : 'linear-gradient(135deg, var(--accent-secondary), #4b00b3)', // 親組織（業務部など）は鮮やかな紫
+        border: isChild ? '1px solid rgba(255,255,255,0.2)' : 'none',
+        borderRadius: '12px',
+        color: 'white',
+        fontWeight: '700',
+        fontSize: isMobile ? '1rem' : '1.1rem',
+        cursor: 'pointer',
+        transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
         gap: '8px',
-        backgroundImage: customBackground // 確実に上書きするためにbackgroundImageを使用
+        boxShadow: data.isExpanded ? '0 10px 25px rgba(0,0,0,0.4)' : '0 4px 10px rgba(0,0,0,0.2)'
       }}
     >
       <Handle type="target" position={Position.Top} style={{ background: 'transparent', border: 'none' }} />
-      <div className="unit-label" style={{ flex: 1 }}>
-        {data.label}
+      {data.label}
+      <div style={{ 
+        fontSize: '0.8rem', 
+        opacity: 0.8,
+        transition: 'transform 0.3s',
+        transform: data.isExpanded ? 'rotate(90deg)' : 'rotate(0deg)'
+      }}>
+        ▶
       </div>
-      {data.hasChildren && (
-        <div style={{ opacity: 0.6, display: 'flex', alignItems: 'center' }}>
-          {data.isExpanded ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
-        </div>
-      )}
       <Handle type="source" position={Position.Bottom} style={{ background: 'transparent', border: 'none' }} />
     </div>
   );
-};
-
-const getPositionColor = (pos) => {
-  if (pos.includes('支店長') || pos.includes('副支店長')) return 'var(--pos-executive)';
-  if (pos.includes('部長')) return 'var(--pos-manager)';
-  if (pos.includes('所長') || pos.includes('課長')) return 'var(--pos-director)';
-  if (pos.includes('副長')) return 'var(--pos-subdirector)';
-  if (pos.includes('係長')) return 'var(--pos-lead)';
-  return 'var(--pos-staff)';
-};
-
-const getPositionClass = (pos) => {
-  if (pos.includes('支店長') || pos.includes('副支店長')) return 'pos-executive';
-  if (pos.includes('部長')) return 'pos-manager';
-  if (pos.includes('所長') || pos.includes('課長')) return 'pos-director';
-  if (pos.includes('副長')) return 'pos-subdirector';
-  if (pos.includes('係長')) return 'pos-lead';
-  return 'pos-staff';
 };
 
 const MemberNode = ({ data }) => {
@@ -69,67 +60,41 @@ const MemberNode = ({ data }) => {
   const posClass = getPositionClass(displayPosition);
   const fullName = `${member.lastName || ''} ${member.firstName || ''}`;
   const isAdditional = !member.isMainRole;
+  const isMobile = window.innerWidth < 768;
 
   return (
     <div
       className={`glass member-node ${posClass}`}
       onClick={() => data.onClick(member)}
       style={{
-        borderLeft: `4px solid ${roleColor}`,
+        borderLeft: `5px solid ${roleColor}`, // 線を太く
         background: `linear-gradient(90deg, ${roleColor}${isAdditional ? '08' : '15'} 0%, rgba(255,255,255,0.05) 100%)`,
         opacity: isAdditional ? 0.9 : 1,
-        padding: '8px 12px', // モバイル向けにパディングを少し詰める
-        minWidth: '180px'   // 最小幅を少し小さく
+        padding: isMobile ? '12px 16px' : '8px 12px', // モバイルではゆったり
+        width: isMobile ? '230px' : '250px', // カードを一回り大きく (180 -> 230)
+        minHeight: isMobile ? '65px' : 'auto',
+        display: 'flex',
+        alignItems: 'center'
       }}
     >
       <Handle type="target" position={Position.Top} style={{ background: 'transparent', border: 'none' }} />
-      <div style={{ display: 'flex', alignItems: 'center', gap: '8px', width: '100%' }}>
-        <div style={{ position: 'relative', flexShrink: 0 }}>
-          <img
-            src={member.photo}
-            alt={fullName}
-            style={{
-              width: '36px', // アイコンを少し小さく (42px -> 36px)
-              height: '36px',
-              borderRadius: '50%',
-              border: `2px solid ${roleColor}`,
-              padding: '2px',
-              background: 'rgba(0,0,0,0.2)',
-              filter: isAdditional ? 'grayscale(0.3)' : 'none'
-            }}
-          />
-          {isAdditional && (
-            <div style={{
-              position: 'absolute',
-              bottom: '-2px',
-              right: '-2px',
-              background: 'var(--accent-secondary)',
-              color: 'white',
-              fontSize: '0.55rem',
-              padding: '1px 3px',
-              borderRadius: '4px',
-              fontWeight: '800'
-            }}>
-              兼
-            </div>
-          )}
-        </div>
+      <div style={{ display: 'flex', alignItems: 'center', gap: '12px', width: '100%' }}>
         <div style={{ flex: 1, minWidth: 0 }}>
           <div style={{ 
-            fontWeight: '700', 
-            fontSize: '0.95rem', 
+            fontWeight: '800', 
+            fontSize: isMobile ? '1.1rem' : '0.95rem', // 名前をかなり大きく
             color: roleColor, 
             lineHeight: '1.2',
-            wordBreak: 'break-all' // 長い名前でも強制的に改行して表示
+            wordBreak: 'break-all'
           }}>
             {fullName}
           </div>
           <div style={{ 
-            fontSize: '0.65rem', 
+            fontSize: isMobile ? '0.75rem' : '0.65rem', 
             color: roleColor, 
             fontWeight: '800', 
             textTransform: 'uppercase', 
-            marginTop: '2px',
+            marginTop: '3px',
             lineHeight: '1.2'
           }}>
             {displayPosition}
@@ -140,6 +105,7 @@ const MemberNode = ({ data }) => {
     </div>
   );
 };
+
 
 
 const nodeTypes = {
@@ -231,11 +197,11 @@ const OrgChart = ({ units, members, onMemberClick }) => {
     const visibleNodes = [];
     const visibleEdges = [];
     const isMobile = window.innerWidth < 768;
-    const NODE_WIDTH = isMobile ? 180 : 250;
-    const CHILD_GAP = isMobile ? 20 : 50;
-    const VERTICAL_GAP = isMobile ? 80 : 120;
-    const MEMBER_GAP = isMobile ? 70 : 100;
-    const MEMBER_Y_OFFSET = 60;
+    const NODE_WIDTH = isMobile ? 230 : 250;
+    const VERTICAL_GAP_BASE = isMobile ? 30 : 120; // 閉じてる時の間隔
+    const VERTICAL_GAP_EXPANDED = isMobile ? 80 : 120; // 開いてる時の間隔
+    const MEMBER_GAP = isMobile ? 85 : 100;
+    const MEMBER_Y_OFFSET = 65;
 
     const subtreeHeightMap = {};
 
@@ -243,17 +209,19 @@ const OrgChart = ({ units, members, onMemberClick }) => {
       const u = unitMap[unitId];
       const isExpanded = expandedUnits.has(unitId);
       
-      // メンバーの高さ（展開されている時のみ計上）
+      const unitNodeHeight = isMobile ? 50 : 60;
       const membersHeight = isExpanded ? (u.members.length * MEMBER_GAP) + MEMBER_Y_OFFSET : 0;
       
       if (!isExpanded || u.children.length === 0) {
-        subtreeHeightMap[unitId] = NODE_WIDTH + membersHeight;
+        subtreeHeightMap[unitId] = unitNodeHeight + membersHeight;
         return { height: subtreeHeightMap[unitId] };
       }
 
       const childrenSizes = u.children.map(calculateSubtreeSize);
-      const childrenHeight = childrenSizes.reduce((acc, s) => acc + s.height, 0) + (u.children.length * (isMobile ? 30 : VERTICAL_GAP));
-      subtreeHeightMap[unitId] = NODE_WIDTH + membersHeight + childrenHeight;
+      const gapBetweenChildren = isExpanded ? VERTICAL_GAP_EXPANDED : VERTICAL_GAP_BASE;
+      const childrenHeight = childrenSizes.reduce((acc, s) => acc + s.height, 0) + (u.children.length * gapBetweenChildren);
+      
+      subtreeHeightMap[unitId] = unitNodeHeight + membersHeight + childrenHeight;
       return { height: subtreeHeightMap[unitId] };
     };
 
@@ -266,11 +234,12 @@ const OrgChart = ({ units, members, onMemberClick }) => {
         type: 'unit',
         data: {
           label: u.name,
+          level,
           isExpanded,
           hasChildren: u.children.length > 0 || u.members.length > 0,
           onClick: () => toggleUnit(unitId)
         },
-        position: { x: centerX - NODE_WIDTH / 2, y },
+        position: { x: centerX - (isMobile ? 230 : 250) / 2, y },
       });
 
       if (u.parentId) {
@@ -283,7 +252,8 @@ const OrgChart = ({ units, members, onMemberClick }) => {
         });
       }
 
-      let currentOffset = NODE_WIDTH / 2 + 20;
+      const unitNodeHeight = isMobile ? 50 : 60;
+      let currentOffset = unitNodeHeight + 15;
 
       // メンバー表示（展開されている時のみ）
       if (isExpanded) {
@@ -310,13 +280,14 @@ const OrgChart = ({ units, members, onMemberClick }) => {
 
       // 子組織表示（展開されている時のみ）
       if (isExpanded && u.children.length > 0) {
-        let childY = y + currentOffset + (isMobile ? 40 : VERTICAL_GAP);
+        let childY = y + currentOffset + VERTICAL_GAP_EXPANDED;
         u.children.forEach((childId) => {
           layoutNodes(childId, centerX, childY, level + 1);
-          childY += subtreeHeightMap[childId] + (isMobile ? 40 : VERTICAL_GAP);
+          childY += subtreeHeightMap[childId] + VERTICAL_GAP_BASE;
         });
       }
     };
+
 
 
     const roots = units.filter(u => !u.parentId);
