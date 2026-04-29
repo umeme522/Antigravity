@@ -105,10 +105,11 @@ const Sidebar_Desktop = ({ members, units, searchTerm, setSearchTerm, onMemberCl
               })
               .map(([groupTitle, posMembers]) => (
                 <div key={groupTitle} style={{ marginBottom: '24px' }}>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '12px', borderBottom: '1px solid rgba(255,255,255,0.05)', paddingBottom: '6px' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '12px', borderBottom: '1px solid rgba(255,255,255,0.05)', paddingBottom: '6px' }}>
                     <h3 style={{ fontSize: '0.9rem', color: 'var(--accent-primary)', fontWeight: '800' }}>{groupTitle}</h3>
-                    <span style={{ fontSize: '0.8rem', color: 'rgba(255,255,255,0.4)' }}>{posMembers.length}名</span>
+                    <span style={{ fontSize: '0.75rem', color: 'rgba(255,255,255,0.3)', fontWeight: '600' }}>{posMembers.length}名</span>
                   </div>
+
                   <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(110px, 1fr))', gap: '12px' }}>
                     {posMembers.map(m => (
                       <MemberCard key={m.id} m={m} onMemberClick={onMemberClick} />
