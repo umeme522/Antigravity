@@ -86,8 +86,17 @@ const Sidebar_Desktop = ({ members = [], units = [], searchTerm = '', setSearchT
       priority: getPriority(label) 
     })).sort((a, b) => a.priority - b.priority);
 
-    return { avgAge, avgService, genData, posData };
+    // 男女比
+    const maleCount = safeMembers.filter(m => m.gender === '男性').length;
+    const femaleCount = safeMembers.filter(m => m.gender === '女性').length;
+    const totalWithGender = maleCount + femaleCount;
+    const genderRatio = totalWithGender 
+      ? `${Math.round((maleCount / totalWithGender) * 100)}% / ${Math.round((femaleCount / totalWithGender) * 100)}%`
+      : '不明';
+
+    return { avgAge, avgService, genData, posData, genderRatio };
   }, [members]);
+
 
   const filteredMembers = (members || []).filter(member => {
     if (activeTab === 'members') return true;
@@ -181,11 +190,13 @@ const Sidebar_Desktop = ({ members = [], units = [], searchTerm = '', setSearchT
         {activeTab === 'stats' && (
           <div style={{ flex: 1, overflowY: 'auto', paddingRight: '4px' }}>
             <h2 style={{ fontSize: '1.1rem', fontWeight: '900', color: '#ffffff', marginBottom: '24px' }}>STATISTICS</h2>
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '10px', marginBottom: '24px' }}>
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px', marginBottom: '24px' }}>
               <StatCard label="総人数" value={members.length} unit="名" icon={Users} color="#4b7bff" />
+              <StatCard label="男女比 (男/女)" value={stats.genderRatio} unit="" icon={Users} color="#ff4b4b" />
               <StatCard label="平均年齢" value={stats.avgAge} unit="歳" icon={Clock} color="#00e676" />
               <StatCard label="平均勤続" value={stats.avgService} unit="年" icon={TrendingUp} color="#ff9500" />
             </div>
+
             <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
               <div className="glass" style={{ padding: '20px', borderRadius: '16px', border: '1px solid rgba(255,255,255,0.1)' }}>
                 <h3 style={{ fontSize: '0.85rem', color: 'rgba(255,255,255,0.6)', marginBottom: '16px', fontWeight: 'bold' }}>年代別構成</h3>
