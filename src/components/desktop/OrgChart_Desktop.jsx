@@ -24,7 +24,7 @@ const getPositionColor = (pos) => {
 // --- 統合ノード (部署 + リーダー達) ---
 const UnitNode = ({ data }) => {
   const { label, level, leaders, isExpanded, onClick, onMemberClick, hasGeneralMembers } = data;
-  
+
   let unitBg = 'linear-gradient(135deg, #667eea, #764ba2)'; // Default Purple (Main Depts)
   let textColor = '#ffffff';
 
@@ -156,11 +156,11 @@ const OrgChart_Desktop = ({ units, members, onMemberClick }) => {
   const { nodes: visibleNodes, edges: visibleEdges } = useMemo(() => {
     const unitMap = {};
     units.forEach(u => { unitMap[u.id] = { ...u, children: [], members: [] }; });
-    
+
     const isLeader = (m, unit) => {
       const p = m.position;
       const unitMembers = members.filter(mem => mem.unitId === unit.id);
-      
+
       // 支店長・副支店長は常にリーダー
       if (p.includes('支店長') || p.includes('副支店長')) return true;
 
@@ -168,12 +168,12 @@ const OrgChart_Desktop = ({ units, members, onMemberClick }) => {
       if (m.additionalUnitIds && m.additionalUnitIds.includes(unit.id)) return true;
 
       const minPrio = Math.min(...unitMembers.map(mem => {
-          const pos = mem.position;
-          if (pos.includes('支店長')) return 1;
-          if (pos.includes('副支店長')) return 2;
-          if (pos.includes('部長')) return 3;
-          if (pos.includes('所長') || pos.includes('課長')) return 4;
-          return 100;
+        const pos = mem.position;
+        if (pos.includes('支店長')) return 1;
+        if (pos.includes('副支店長')) return 2;
+        if (pos.includes('部長')) return 3;
+        if (pos.includes('所長') || pos.includes('課長')) return 4;
+        return 100;
       }));
       const myPrio = p.includes('支店長') ? 1 : (p.includes('副支店長') ? 2 : (p.includes('部長') ? 3 : (p.includes('所長') || p.includes('課長') ? 4 : 100)));
       return myPrio === minPrio && myPrio < 100;
@@ -199,9 +199,9 @@ const OrgChart_Desktop = ({ units, members, onMemberClick }) => {
     const calculateSize = (unitId) => {
       const u = unitMap[unitId];
       const isExpanded = expandedUnits.has(unitId);
-      const leaders = u.members.filter(m => isLeader(m, u)).sort((a,b) => {
-          const getP = (p) => p.includes('支店長') ? 1 : (p.includes('副支店長') ? 2 : 3);
-          return getP(a.position) - getP(b.position);
+      const leaders = u.members.filter(m => isLeader(m, u)).sort((a, b) => {
+        const getP = (p) => p.includes('支店長') ? 1 : (p.includes('副支店長') ? 2 : 3);
+        return getP(a.position) - getP(b.position);
       });
       const generalMembers = u.members.filter(m => !isLeader(m, u));
       const mHeight = isExpanded ? (generalMembers.length * MEMBER_GAP) + 60 : 0;
@@ -223,25 +223,23 @@ const OrgChart_Desktop = ({ units, members, onMemberClick }) => {
       const u = unitMap[unitId];
       const isExpanded = expandedUnits.has(unitId);
       const size = subtreeSizeMap[unitId];
-      const leaders = u.members.filter(m => isLeader(m, u)).sort((a,b) => {
-          const getP = (p) => p.includes('支店長') ? 1 : (p.includes('副支店長') ? 2 : 3);
-          return getP(a.position) - getP(b.position);
+      const leaders = u.members.filter(m => isLeader(m, u)).sort((a, b) => {
+        const getP = (p) => p.includes('支店長') ? 1 : (p.includes('副支店長') ? 2 : 3);
+        return getP(a.position) - getP(b.position);
       });
       const generalMembers = u.members
         .filter(m => !isLeader(m, u))
         .sort((a, b) => {
           const getP = (p) => {
-            if (p.includes('所長')) return 9;
-            if (p.includes('課長')) return 10;
+            if (p.includes('所長') || p.includes('課長')) return 10;
             if (p.includes('副長')) return 20;
             if (p.includes('係長')) return 30;
             return 100;
           };
-
           const prioA = getP(a.position);
           const prioB = getP(b.position);
           if (prioA !== prioB) return prioA - prioB;
-          
+
           // 同役職なら入社年度順（古い順）
           return String(a.joinDate || '9999').localeCompare(String(b.joinDate || '9999'));
         });
@@ -335,13 +333,13 @@ const OrgChart_Desktop = ({ units, members, onMemberClick }) => {
 
   return (
     <div style={{ width: '100%', height: '100%', position: 'relative' }}>
-      <ReactFlow 
-        nodes={nodes} 
-        edges={edges} 
-        nodeTypes={nodeTypes} 
-        fitView 
-        minZoom={0.1} 
-        maxZoom={2} 
+      <ReactFlow
+        nodes={nodes}
+        edges={edges}
+        nodeTypes={nodeTypes}
+        fitView
+        minZoom={0.1}
+        maxZoom={2}
         nodesDraggable={false}
         defaultEdgeOptions={{
           type: 'smoothstep',
@@ -367,23 +365,23 @@ const ZoomControls = () => {
   const zoomPercent = Math.round(zoom * 100);
 
   const btnStyle = { width: '44px', height: '44px', borderRadius: '12px', background: 'rgba(255, 255, 255, 0.05)', border: '1px solid rgba(255, 255, 255, 0.1)', color: 'white', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', backdropFilter: 'blur(10px)', transition: 'all 0.2s ease', boxShadow: '0 4px 15px rgba(0,0,0,0.3)' };
-  
+
   return (
     <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '8px' }}>
       {/* ズーム倍率表示 */}
-      <div className="glass" style={{ 
-        padding: '6px 10px', 
-        fontSize: '0.75rem', 
-        fontWeight: '900', 
-        color: 'var(--accent-primary)', 
-        borderRadius: '8px', 
+      <div className="glass" style={{
+        padding: '6px 10px',
+        fontSize: '0.75rem',
+        fontWeight: '900',
+        color: 'var(--accent-primary)',
+        borderRadius: '8px',
         marginBottom: '4px',
         minWidth: '50px',
         textAlign: 'center'
       }}>
         {zoomPercent}%
       </div>
-      
+
       <motion.button whileHover={{ scale: 1.1, background: 'rgba(255,255,255,0.1)' }} whileTap={{ scale: 0.9 }} onClick={() => zoomIn()} style={btnStyle}>+</motion.button>
       <motion.button whileHover={{ scale: 1.1, background: 'rgba(255,255,255,0.1)' }} whileTap={{ scale: 0.9 }} onClick={() => zoomOut()} style={btnStyle}>-</motion.button>
       <motion.button whileHover={{ scale: 1.1, background: 'rgba(255,255,255,0.1)', color: 'var(--accent-primary)' }} whileTap={{ scale: 0.9 }} onClick={() => fitView({ duration: 800 })} style={{ ...btnStyle, fontSize: '0.7rem', fontWeight: 'bold' }}>RESET</motion.button>
