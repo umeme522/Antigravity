@@ -27,13 +27,13 @@ const getPriority = (pos = '') => {
 
 const getGroupTitle = (pos = '') => {
   const p = String(pos);
-  if (p === '支店長' || p === '副支店長') return '支店長・副支店長';
-  if (p.includes('部長')) return '部長';
+  if (p === '支店長' || p === '副支店長' || p.includes('部長')) return '支店長・副支店長・部長';
   if (p.includes('所長') || p.includes('課長')) return '課長・所長';
   if (p.includes('副長')) return '副長';
   if (p.includes('係長')) return '係長';
   return 'スタッフ';
 };
+
 
 const Sidebar_Desktop = ({ members = [], units = [], searchTerm = '', setSearchTerm, onMemberClick, onAddMember, activeTab, setActiveTab }) => {
   const [groupBy, setGroupBy] = useState('position');
@@ -158,13 +158,13 @@ const Sidebar_Desktop = ({ members = [], units = [], searchTerm = '', setSearchT
               ).sort(([a], [b]) => {
                 if (groupBy === 'joinDate') return a === '不明' ? 1 : b === '不明' ? -1 : b.localeCompare(a);
                 const getGroupPriority = (title) => {
-                  if (title === '支店長・副支店長') return 1;
-                  if (title === '部長') return 3;
+                  if (title === '支店長・副支店長・部長') return 1;
                   if (title === '課長・所長') return 10;
                   if (title === '副長') return 20;
                   if (title === '係長') return 30;
                   return 100;
                 };
+
                 return getGroupPriority(a) - getGroupPriority(b);
               }).map(([title, ms]) => (
                 <div key={title} style={{ marginBottom: '24px' }}>
