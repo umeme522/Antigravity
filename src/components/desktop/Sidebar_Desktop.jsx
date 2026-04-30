@@ -99,12 +99,17 @@ const Sidebar_Desktop = ({ members = [], units = [], searchTerm = '', setSearchT
   }, [members]);
 
   const filteredMembers = (members || []).filter(member => {
-    if (activeTab === 'members') return true;
+    const search = (searchTerm || '').toLowerCase();
+    if (!search) return true;
+    
     const fullName = `${member.lastName || ''} ${member.firstName || ''}`.toLowerCase();
     const pos = (member.position || '').toLowerCase();
-    const search = (searchTerm || '').toLowerCase();
-    return fullName.includes(search) || pos.includes(search);
+    const unit = units.find(u => u.id === member.unitId);
+    const unitName = unit ? unit.name.toLowerCase() : '';
+    
+    return fullName.includes(search) || pos.includes(search) || unitName.includes(search);
   });
+
 
   return (
     <motion.div 
