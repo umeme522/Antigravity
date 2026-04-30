@@ -417,17 +417,28 @@ const MemberProfile = ({ member, unit, units, onUpdate, onDelete, onClose, isPer
             <div className="read-only-field" style={{ color: '#ffffff' }}>{calculateYearsOfService(formData.joinDate)}</div>
           </div>
 
-          <div className="form-group">
-            <label style={{ color: 'var(--text-secondary)' }}>出身地</label>
-            <input
-              name="birthplace"
-              value={formData.birthplace || ''}
-              onChange={handleChange}
-              className="edit-input"
-              placeholder="例: 東京都新宿区、大阪府大阪市"
-              style={{ color: '#ffffff' }}
-            />
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px', marginTop: '12px' }}>
+            <div className="form-group">
+              <label style={{ color: 'var(--text-secondary)' }}>性別</label>
+              <select name="gender" value={formData.gender || ''} onChange={handleChange} className="edit-input" style={{ color: '#ffffff', background: '#1a202c' }}>
+                <option value="">未設定</option>
+                <option value="男性">男性</option>
+                <option value="女性">女性</option>
+              </select>
+            </div>
+            <div className="form-group">
+              <label style={{ color: 'var(--text-secondary)' }}>出身地</label>
+              <input
+                name="birthplace"
+                value={formData.birthplace || ''}
+                onChange={handleChange}
+                className="edit-input"
+                placeholder="例: 東京都"
+                style={{ color: '#ffffff' }}
+              />
+            </div>
           </div>
+
 
           <div style={{ marginTop: '20px', borderTop: '1px solid rgba(255,255,255,0.1)', paddingTop: '20px' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
@@ -501,11 +512,15 @@ const MemberProfile = ({ member, unit, units, onUpdate, onDelete, onClose, isPer
                 </div>
               </div>
             </div>
-            <InfoRow icon={Hash} label="社員番号" value={member.employeeId} />
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
+              <InfoRow icon={Hash} label="社員番号" value={member.employeeId} />
+              <InfoRow icon={User} label="性別" value={member.gender} />
+            </div>
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
               <InfoRow icon={User} label="年齢" value={calculateAge(member.birthDate)} />
               <InfoRow icon={Award} label="役職" value={member.position} />
             </div>
+
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
               <InfoRow icon={Clock} label="勤続年数" value={calculateYearsOfService(member.joinDate)} />
               <InfoRow icon={Calendar} label="入社年度" value={member.joinDate ? `${member.joinDate.toString().split('-')[0]} 年度` : '未設定'} />

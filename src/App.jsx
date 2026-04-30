@@ -56,7 +56,7 @@ function App() {
 
   // Excel出力ロジック
   const handleExportData = () => {
-    const headers = ['社員番号', '姓', '名', '部署', '役職', '入社年次', '生年月日', '出身', '経歴'];
+    const headers = ['社員番号', '姓', '名', '性別', '部署', '役職', '入社年次', '生年月日', '出身', '経歴'];
     const rows = members.map(m => {
       const unitName = units.find(u => u.id === m.unitId)?.name || '';
       
@@ -77,7 +77,6 @@ function App() {
           .join(' ').trim();
       };
 
-
       if (Array.isArray(rawCareer)) {
         careerText = rawCareer.map(c => flatten(c)).join(' / ');
       } else {
@@ -88,6 +87,7 @@ function App() {
         m.employeeId || '',
         m.lastName || '',
         m.firstName || '',
+        m.gender || '',
         unitName,
         m.position || '',
         m.joinDate || '',
@@ -98,6 +98,7 @@ function App() {
 
       return rowData.map(val => `"${String(val || '').replace(/"/g, '""')}"`).join(',');
     });
+
 
 
     const csvContent = "\uFEFF" + [headers.map(h => `"${h}"`).join(','), ...rows].join('\n');
