@@ -27,14 +27,14 @@ const getPriority = (pos = '') => {
 
 const getGroupTitle = (pos = '') => {
   const p = String(pos);
-  if (p === '支店長') return '支店長';
-  if (p === '副支店長') return '副支店長';
+  if (p === '支店長' || p === '副支店長') return '支店長・副支店長';
   if (p.includes('部長')) return '部長';
   if (p.includes('所長') || p.includes('課長')) return '課長・所長';
   if (p.includes('副長')) return '副長';
   if (p.includes('係長')) return '係長';
   return 'スタッフ';
 };
+
 
 const Sidebar_Desktop = ({ members = [], units = [], searchTerm = '', setSearchTerm, onMemberClick, onAddMember, activeTab, setActiveTab }) => {
   const [groupBy, setGroupBy] = useState('position');
