@@ -158,11 +158,13 @@ const Sidebar_Desktop = ({ members = [], units = [], searchTerm = '', setSearchT
                 if (groupBy === 'joinDate') return a === '不明' ? 1 : b === '不明' ? -1 : b.localeCompare(a);
                 const getGroupPriority = (title) => {
                   if (title === '支店長・副支店長・部長') return 1;
-                  if (title === '課長・所長') return 10;
-                  if (title === '副長') return 20;
-                  if (title === '係長') return 30;
+                  if (title === '所長・課長') return 10;
+                  if (title === '副長') return 40;
+                  if (title === '係長') return 60;
                   return 100;
                 };
+
+
                 return getGroupPriority(a) - getGroupPriority(b);
               }).map(([title, ms]) => (
                 <div key={title} style={{ marginBottom: '24px' }}>
