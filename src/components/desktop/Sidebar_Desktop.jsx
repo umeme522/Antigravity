@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from 'react';
-import { Search, Users, Plus, Calendar, BarChart3, Clock, Award, TrendingUp } from 'lucide-react';
+import { Search, Users, Plus, Calendar, BarChart3, Clock, Award, TrendingUp, Download } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 const getPositionColor = (pos = '') => {
@@ -35,16 +35,47 @@ const getGroupTitle = (pos = '') => {
   return 'スタッフ';
 };
 
-
 const Sidebar_Desktop = ({ members = [], units = [], searchTerm = '', setSearchTerm, onMemberClick, onAddMember, activeTab, setActiveTab }) => {
   const [groupBy, setGroupBy] = useState('position');
 
-  // 統計計算をメモ化して安定させる
+  // --- Excel (CSV) 出力ロジック ---
+  const handleExportExcel = () => {
+    // ヘッダー定義
+    const headers = ['姓', '名', '部署', '役職', '入社年次', '生年月日', '性別'];
+    
+    // データ行の作成
+    const rows = members.map(m => {
+      const unitName = units.find(u => u.id === m.unitId)?.name || '';
+      return [
+        m.lastName || '',
+        m.firstName || '',
+        unitName,
+        m.position || '',
+        m.joinDate || '',
+        m.birthDate || '',
+        m.gender || ''
+      ].join(',');
+    });
+
+    // BOM付きCSV（Excelでの文字化け防止）
+    const csvContent = "\uFEFF" + [headers.join(','), ...rows].join('\n');
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement("a");
+    const url = URL.createObjectURL(blob);
+    
+    link.setAttribute("href", url);
+    link.setAttribute("download", `東日本支店_プロフデータ_${new Date().toLocaleDateString()}.csv`);
+    link.style.visibility = 'hidden';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
+  // 統計計算
   const stats = useMemo(() => {
     const currentYear = new Date().getFullYear();
     const safeMembers = members || [];
     
-    // 年齢
     const ages = safeMembers.map(m => {
       if (!m.birthDate) return null;
       const birth = new Date(m.birthDate);
@@ -53,14 +84,12 @@ const Sidebar_Desktop = ({ members = [], units = [], searchTerm = '', setSearchT
     
     const avgAge = ages.length ? Math.round(ages.reduce((a, b) => a + b, 0) / ages.length) : 0;
 
-    // 勤続
     const serviceYears = safeMembers.map(m => {
       const year = parseInt(m.joinDate);
       return isNaN(year) ? null : currentYear - year;
     }).filter(y => y !== null);
     const avgService = serviceYears.length ? (serviceYears.reduce((a, b) => a + b, 0) / serviceYears.length).toFixed(1) : 0;
 
-    // 年代 (20, 30, 40, 50)
     const generations = { '20代': 0, '30代': 0, '40代': 0, '50代': 0 };
     ages.forEach(age => {
       if (age < 30) generations['20代']++;
@@ -73,7 +102,6 @@ const Sidebar_Desktop = ({ members = [], units = [], searchTerm = '', setSearchT
       label, count, percent: safeMembers.length ? Math.round((count / safeMembers.length) * 100) : 0
     }));
 
-    // 役職構成比
     const posCounts = safeMembers.reduce((acc, m) => {
       const title = getGroupTitle(m.position);
       acc[title] = (acc[title] || 0) + 1;
@@ -86,17 +114,8 @@ const Sidebar_Desktop = ({ members = [], units = [], searchTerm = '', setSearchT
       priority: getPriority(label) 
     })).sort((a, b) => a.priority - b.priority);
 
-    // 男女比
-    const maleCount = safeMembers.filter(m => m.gender === '男性').length;
-    const femaleCount = safeMembers.filter(m => m.gender === '女性').length;
-    const totalWithGender = maleCount + femaleCount;
-    const genderRatio = totalWithGender 
-      ? `${Math.round((maleCount / totalWithGender) * 100)}% / ${Math.round((femaleCount / totalWithGender) * 100)}%`
-      : '不明';
-
-    return { avgAge, avgService, genData, posData, genderRatio };
+    return { avgAge, avgService, genData, posData };
   }, [members]);
-
 
   const filteredMembers = (members || []).filter(member => {
     if (activeTab === 'members') return true;
@@ -138,7 +157,6 @@ const Sidebar_Desktop = ({ members = [], units = [], searchTerm = '', setSearchT
                 }, {})
               ).sort(([a], [b]) => {
                 if (groupBy === 'joinDate') return a === '不明' ? 1 : b === '不明' ? -1 : b.localeCompare(a);
-                // 役職グループの優先順位でソート
                 const getGroupPriority = (title) => {
                   if (title === '支店長・副支店長') return 1;
                   if (title === '部長') return 3;
@@ -149,7 +167,6 @@ const Sidebar_Desktop = ({ members = [], units = [], searchTerm = '', setSearchT
                 };
                 return getGroupPriority(a) - getGroupPriority(b);
               }).map(([title, ms]) => (
-
                 <div key={title} style={{ marginBottom: '24px' }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '12px', borderBottom: '1px solid rgba(255,255,255,0.05)', paddingBottom: '6px' }}>
                     <h3 style={{ fontSize: '0.9rem', color: 'var(--accent-primary)', fontWeight: '800' }}>{title}</h3>
@@ -189,10 +206,29 @@ const Sidebar_Desktop = ({ members = [], units = [], searchTerm = '', setSearchT
 
         {activeTab === 'stats' && (
           <div style={{ flex: 1, overflowY: 'auto', paddingRight: '4px' }}>
-            <h2 style={{ fontSize: '1.1rem', fontWeight: '900', color: '#ffffff', marginBottom: '24px' }}>STATISTICS</h2>
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px', marginBottom: '24px' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
+              <h2 style={{ fontSize: '1.1rem', fontWeight: '900', color: '#ffffff', margin: 0 }}>STATISTICS</h2>
+              <button 
+                onClick={handleExportExcel}
+                className="save-btn" 
+                style={{ 
+                  padding: '6px 12px', 
+                  height: '32px', 
+                  width: 'auto', 
+                  background: 'rgba(255,255,255,0.1)', 
+                  border: '1px solid rgba(255,255,255,0.2)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '6px',
+                  fontSize: '0.75rem'
+                }}
+              >
+                <Download size={14} /> Excel出力
+              </button>
+            </div>
+
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '10px', marginBottom: '24px' }}>
               <StatCard label="総人数" value={members.length} unit="名" icon={Users} color="#4b7bff" />
-              <StatCard label="男女比 (男/女)" value={stats.genderRatio} unit="" icon={Users} color="#ff4b4b" />
               <StatCard label="平均年齢" value={stats.avgAge} unit="歳" icon={Clock} color="#00e676" />
               <StatCard label="平均勤続" value={stats.avgService} unit="年" icon={TrendingUp} color="#ff9500" />
             </div>
