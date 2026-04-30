@@ -34,42 +34,8 @@ const getGroupTitle = (pos = '') => {
   return 'スタッフ';
 };
 
-
 const Sidebar_Desktop = ({ members = [], units = [], searchTerm = '', setSearchTerm, onMemberClick, onAddMember, activeTab, setActiveTab }) => {
   const [groupBy, setGroupBy] = useState('position');
-
-  // --- Excel (CSV) 出力ロジック ---
-  const handleExportExcel = () => {
-    // ヘッダー定義
-    const headers = ['姓', '名', '部署', '役職', '入社年次', '生年月日', '性別'];
-    
-    // データ行の作成
-    const rows = members.map(m => {
-      const unitName = units.find(u => u.id === m.unitId)?.name || '';
-      return [
-        m.lastName || '',
-        m.firstName || '',
-        unitName,
-        m.position || '',
-        m.joinDate || '',
-        m.birthDate || '',
-        m.gender || ''
-      ].join(',');
-    });
-
-    // BOM付きCSV（Excelでの文字化け防止）
-    const csvContent = "\uFEFF" + [headers.join(','), ...rows].join('\n');
-    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-    const link = document.createElement("a");
-    const url = URL.createObjectURL(blob);
-    
-    link.setAttribute("href", url);
-    link.setAttribute("download", `東日本支店_プロフデータ_${new Date().toLocaleDateString()}.csv`);
-    link.style.visibility = 'hidden';
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-  };
 
   // 統計計算
   const stats = useMemo(() => {
@@ -136,7 +102,6 @@ const Sidebar_Desktop = ({ members = [], units = [], searchTerm = '', setSearchT
                 <h2 style={{ fontSize: '1.1rem', fontWeight: '900', color: '#ffffff', margin: 0 }}>MEMBER</h2>
                 <span style={{ fontSize: '0.8rem', color: 'rgba(255,255,255,0.4)' }}>{members.length}名</span>
               </div>
-
               <button onClick={onAddMember} className="save-btn" style={{ padding: '6px 12px', height: '32px', width: 'auto' }}><Plus size={14} /> 追加</button>
             </div>
 
@@ -165,7 +130,6 @@ const Sidebar_Desktop = ({ members = [], units = [], searchTerm = '', setSearchT
                   if (title === '係長') return 30;
                   return 100;
                 };
-
                 return getGroupPriority(a) - getGroupPriority(b);
               }).map(([title, ms]) => (
                 <div key={title} style={{ marginBottom: '24px' }}>
@@ -220,54 +184,49 @@ const Sidebar_Desktop = ({ members = [], units = [], searchTerm = '', setSearchT
                 <h3 style={{ fontSize: '0.85rem', color: 'rgba(255,255,255,0.6)', marginBottom: '16px', fontWeight: 'bold' }}>年代別構成</h3>
                 {stats.genData.map(gen => (
                   <div key={gen.label} style={{ marginBottom: '12px' }}>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '6px', fontSize: '0.75rem' }}><span style={{ color: 'white' }}>{gen.label}</span><span style={{ color: 'rgba(255,255,255,0.4)' }}>{gen.count}名 ({gen.percent}%)</span></div>
-                    <div style={{ height: '6px', background: 'rgba(255,255,255,0.05)', borderRadius: '3px', overflow: 'hidden' }}><motion.div initial={{ width: 0 }} animate={{ width: `${gen.percent}%` }} transition={{ duration: 1 }} style={{ height: '100%', background: 'var(--accent-primary)', borderRadius: '3px' }} /></div>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '6px', fontSize: '0.75rem' }}>
+                      <span style={{ color: 'white', fontWeight: 'bold' }}>{gen.label}</span>
+                      <span style={{ color: '#ffffff', fontWeight: 'bold' }}>{gen.count}名 ({gen.percent}%)</span>
+                    </div>
+                    <div style={{ height: '6px', background: 'rgba(255,255,255,0.05)', borderRadius: '3px', overflow: 'hidden' }}>
+                      <motion.div initial={{ width: 0 }} animate={{ width: `${gen.percent}%` }} transition={{ duration: 1 }} style={{ height: '100%', background: 'var(--accent-primary)', borderRadius: '3px' }} />
+                    </div>
                   </div>
                 ))}
               </div>
+
               <div className="glass" style={{ padding: '20px', borderRadius: '16px', border: '1px solid rgba(255,255,255,0.1)' }}>
                 <h3 style={{ fontSize: '0.85rem', color: 'rgba(255,255,255,0.6)', marginBottom: '20px', fontWeight: 'bold' }}>役職構成比</h3>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
-                  {/* 円グラフ (CSS Conic Gradient) */}
                   <div style={{ 
-                    width: '100px', 
-                    height: '100px', 
-                    borderRadius: '50%', 
-                    flexShrink: 0,
+                    width: '100px', height: '100px', borderRadius: '50%', flexShrink: 0,
                     background: `conic-gradient(${
                       stats.posData.reduce((acc, pos, idx) => {
                         const prevPercent = stats.posData.slice(0, idx).reduce((sum, p) => sum + p.percent, 0);
-                        const color = getPositionColor(members.find(m => getGroupTitle(m.position) === pos.label)?.position);
+                        const mForColor = members.find(m => getGroupTitle(m.position) === pos.label);
+                        const color = getPositionColor(mForColor?.position);
                         return `${acc}${idx > 0 ? ',' : ''} ${color} ${prevPercent}% ${prevPercent + pos.percent}%`;
                       }, '')
                     })`,
-                    position: 'relative',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    boxShadow: '0 0 20px rgba(0,0,0,0.3)'
+                    position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 0 20px rgba(0,0,0,0.3)'
                   }}>
-                    {/* ドーナツ型にするための中央の円 */}
                     <div style={{ width: '60px', height: '60px', borderRadius: '50%', background: '#0d1117' }} />
                   </div>
 
-                  {/* 凡例 */}
                   <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '8px' }}>
                     {stats.posData.map(pos => (
                       <div key={pos.label} style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '0.7rem' }}>
                         <div style={{ width: '8px', height: '8px', borderRadius: '2px', background: getPositionColor(members.find(m => getGroupTitle(m.position) === pos.label)?.position) }} />
-                        <span style={{ color: 'white', whiteSpace: 'nowrap' }}>{pos.label}</span>
+                        <span style={{ color: 'white', whiteSpace: 'nowrap', fontWeight: 'bold' }}>{pos.label}</span>
                         <div style={{ marginLeft: 'auto', textAlign: 'right' }}>
-                          <span style={{ color: 'rgba(255,255,255,0.4)' }}>{pos.percent}%</span>
-                          <span style={{ color: 'rgba(255,255,255,0.2)', marginLeft: '4px' }}>({pos.count}名)</span>
+                          <span style={{ color: '#ffffff', fontWeight: '900' }}>{pos.percent}%</span>
+                          <span style={{ color: 'rgba(255,255,255,0.7)', marginLeft: '4px', fontWeight: 'bold' }}>({pos.count}名)</span>
                         </div>
                       </div>
                     ))}
                   </div>
-
                 </div>
               </div>
-
             </div>
           </div>
         )}

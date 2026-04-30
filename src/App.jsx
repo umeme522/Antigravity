@@ -60,19 +60,26 @@ function App() {
     const rows = members.map(m => {
       const unitName = units.find(u => u.id === m.unitId)?.name || '';
       
-      // 出身（prefecture）を確実に取得
-      const hometown = m.prefecture || m.hometown || '';
+      // 出身: あらゆるプロパティを結合（確実性重視）
+      const hometown = [m.birthplace, m.prefecture, m.hometown].filter(v => v).join(' ');
       
-      // 経歴（career）を横並び（1つのセル内）に整形
-      const rawCareer = m.career || m.careerHistory || '';
+      // 経歴: あらゆる構造（配列・オブジェクト）を文字列に強制変換（最強のフラットナー）
+      const rawCareer = m.careerHistory || m.career || m.career_history || '';
       let careerText = '';
+      
+      const flatten = (obj) => {
+        if (!obj) return '';
+        if (typeof obj !== 'object') return String(obj);
+        return Object.values(obj).map(v => (typeof v === 'object' ? flatten(v) : String(v))).join(' ').trim();
+      };
+
       if (Array.isArray(rawCareer)) {
-        careerText = rawCareer.join(' / ');
+        careerText = rawCareer.map(c => flatten(c)).join(' / ');
       } else {
-        careerText = String(rawCareer).replace(/[\r\n,]+/g, ' / ');
+        careerText = flatten(rawCareer).replace(/[\r\n,]+/g, ' / ');
       }
       
-      return [
+      const rowData = [
         m.employeeId || '',
         m.lastName || '',
         m.firstName || '',
@@ -82,8 +89,12 @@ function App() {
         m.birthDate || '',
         hometown,
         careerText
-      ].map(val => `"${String(val).replace(/"/g, '""')}"`).join(','); // 全ての値をダブルクォートで囲む
+      ];
+
+      return rowData.map(val => `"${String(val || '').replace(/"/g, '""')}"`).join(',');
     });
+
+
     const csvContent = "\uFEFF" + [headers.map(h => `"${h}"`).join(','), ...rows].join('\n');
 
 
