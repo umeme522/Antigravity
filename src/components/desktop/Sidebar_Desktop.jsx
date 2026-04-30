@@ -226,14 +226,44 @@ const Sidebar_Desktop = ({ members = [], units = [], searchTerm = '', setSearchT
                 ))}
               </div>
               <div className="glass" style={{ padding: '20px', borderRadius: '16px', border: '1px solid rgba(255,255,255,0.1)' }}>
-                <h3 style={{ fontSize: '0.85rem', color: 'rgba(255,255,255,0.6)', marginBottom: '16px', fontWeight: 'bold' }}>役職構成比</h3>
-                {stats.posData.map(pos => (
-                  <div key={pos.label} style={{ marginBottom: '12px' }}>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '6px', fontSize: '0.75rem' }}><span style={{ color: 'white' }}>{pos.label}</span><span style={{ color: 'rgba(255,255,255,0.4)' }}>{pos.count}名 ({pos.percent}%)</span></div>
-                    <div style={{ height: '6px', background: 'rgba(255,255,255,0.05)', borderRadius: '3px', overflow: 'hidden' }}><motion.div initial={{ width: 0 }} animate={{ width: `${pos.percent}%` }} transition={{ duration: 1 }} style={{ height: '100%', background: getPositionColor(pos.label), borderRadius: '3px' }} /></div>
+                <h3 style={{ fontSize: '0.85rem', color: 'rgba(255,255,255,0.6)', marginBottom: '20px', fontWeight: 'bold' }}>役職構成比</h3>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
+                  {/* 円グラフ (CSS Conic Gradient) */}
+                  <div style={{ 
+                    width: '100px', 
+                    height: '100px', 
+                    borderRadius: '50%', 
+                    flexShrink: 0,
+                    background: `conic-gradient(${
+                      stats.posData.reduce((acc, pos, idx) => {
+                        const prevPercent = stats.posData.slice(0, idx).reduce((sum, p) => sum + p.percent, 0);
+                        const color = getPositionColor(members.find(m => getGroupTitle(m.position) === pos.label)?.position);
+                        return `${acc}${idx > 0 ? ',' : ''} ${color} ${prevPercent}% ${prevPercent + pos.percent}%`;
+                      }, '')
+                    })`,
+                    position: 'relative',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    boxShadow: '0 0 20px rgba(0,0,0,0.3)'
+                  }}>
+                    {/* ドーナツ型にするための中央の円 */}
+                    <div style={{ width: '60px', height: '60px', borderRadius: '50%', background: '#0d1117' }} />
                   </div>
-                ))}
+
+                  {/* 凡例 */}
+                  <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                    {stats.posData.map(pos => (
+                      <div key={pos.label} style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '0.7rem' }}>
+                        <div style={{ width: '8px', height: '8px', borderRadius: '2px', background: getPositionColor(members.find(m => getGroupTitle(m.position) === pos.label)?.position) }} />
+                        <span style={{ color: 'white', whiteSpace: 'nowrap' }}>{pos.label}</span>
+                        <span style={{ color: 'rgba(255,255,255,0.4)', marginLeft: 'auto' }}>{pos.percent}%</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
               </div>
+
             </div>
           </div>
         )}
