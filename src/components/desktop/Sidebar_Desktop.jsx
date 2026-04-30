@@ -129,8 +129,18 @@ const Sidebar_Desktop = ({ members = [], units = [], searchTerm = '', setSearchT
                 }, {})
               ).sort(([a], [b]) => {
                 if (groupBy === 'joinDate') return a === '不明' ? 1 : b === '不明' ? -1 : b.localeCompare(a);
-                return getPriority(a) - getPriority(b);
+                // 役職グループの優先順位でソート
+                const getGroupPriority = (title) => {
+                  if (title === '支店長・副支店長') return 1;
+                  if (title === '部長') return 3;
+                  if (title === '課長・所長') return 10;
+                  if (title === '副長') return 20;
+                  if (title === '係長') return 30;
+                  return 100;
+                };
+                return getGroupPriority(a) - getGroupPriority(b);
               }).map(([title, ms]) => (
+
                 <div key={title} style={{ marginBottom: '24px' }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '12px', borderBottom: '1px solid rgba(255,255,255,0.05)', paddingBottom: '6px' }}>
                     <h3 style={{ fontSize: '0.9rem', color: 'var(--accent-primary)', fontWeight: '800' }}>{title}</h3>
