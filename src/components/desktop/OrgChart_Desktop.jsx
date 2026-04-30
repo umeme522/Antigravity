@@ -227,7 +227,23 @@ const OrgChart_Desktop = ({ units, members, onMemberClick }) => {
           const getP = (p) => p.includes('支店長') ? 1 : (p.includes('副支店長') ? 2 : 3);
           return getP(a.position) - getP(b.position);
       });
-      const generalMembers = u.members.filter(m => !isLeader(m, u));
+      const generalMembers = u.members
+        .filter(m => !isLeader(m, u))
+        .sort((a, b) => {
+          const getP = (p) => {
+            if (p.includes('所長') || p.includes('課長')) return 10;
+            if (p.includes('副長')) return 20;
+            if (p.includes('係長')) return 30;
+            return 100;
+          };
+          const prioA = getP(a.position);
+          const prioB = getP(b.position);
+          if (prioA !== prioB) return prioA - prioB;
+          
+          // 同役職なら入社年度順（古い順）
+          return String(a.joinDate || '9999').localeCompare(String(b.joinDate || '9999'));
+        });
+
 
       vNodes.push({
         id: unitId,
