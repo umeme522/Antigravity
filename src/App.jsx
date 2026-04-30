@@ -107,9 +107,11 @@ function App() {
 
     const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
     const link = document.createElement("a");
-    link.href = URL.createObjectURL(blob);
-    link.download = `東日本支店_組織データ_${new Date().toLocaleDateString()}.csv`;
+    const now = new Date();
+    const timestamp = `${now.getFullYear()}-${(now.getMonth() + 1).toString().padStart(2, '0')}-${now.getDate().toString().padStart(2, '0')}_${now.getHours().toString().padStart(2, '0')}${now.getMinutes().toString().padStart(2, '0')}`;
+    link.download = `東日本支店_組織データ_${timestamp}.csv`;
     link.click();
+
   };
 
   const currentMember = selectedMember || members[0];
