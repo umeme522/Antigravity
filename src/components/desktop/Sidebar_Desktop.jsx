@@ -105,7 +105,20 @@ const Sidebar_Desktop = ({ members = [], units = [], searchTerm = '', setSearchT
   });
 
   return (
-    <motion.div initial={{ x: -100, opacity: 0 }} animate={{ x: 0, opacity: 1 }} className="sidebar" style={{ padding: '0', height: '100%', display: 'flex', flexDirection: 'column' }}>
+    <motion.div 
+      initial={{ x: -100, opacity: 0 }} 
+      animate={{ x: 0, opacity: 1 }} 
+      className="sidebar" 
+      style={{ 
+        padding: '0', 
+        height: '100%', 
+        display: 'flex', 
+        flexDirection: 'column',
+        background: 'rgba(10, 12, 18, 0.75)',
+        backdropFilter: 'blur(50px) saturate(200%)',
+        borderRight: '1px solid rgba(255, 255, 255, 0.15)'
+      }}
+    >
       <div style={{ padding: '24px', flex: 1, overflow: 'hidden', display: 'flex', flexDirection: 'column' }}>
 
         {activeTab === 'members' && (
@@ -269,19 +282,30 @@ const StatCard = ({ label, value, unit, icon: Icon, color }) => (
 
 const MemberCard = ({ m, onMemberClick }) => {
   const roleColor = getPositionColor(m.position);
-  const getGlowClass = (pos) => {
-    if (pos === '支店長') return 'glow-gold';
-    if (pos === '副支店長') return 'glow-silver';
-    if (pos.includes('部長')) return 'glow-blue';
-    return '';
+  
+  const getGlowStyle = (pos) => {
+    if (pos === '支店長') return { boxShadow: '0 0 25px rgba(255, 215, 0, 0.25)', border: '1px solid rgba(255, 215, 0, 0.4)' };
+    if (pos === '副支店長') return { boxShadow: '0 0 25px rgba(192, 192, 192, 0.25)', border: '1px solid rgba(192, 192, 192, 0.4)' };
+    if (pos.includes('部長')) return { boxShadow: '0 0 25px rgba(0, 212, 255, 0.25)', border: '1px solid rgba(0, 212, 255, 0.4)' };
+    return { border: '1px solid rgba(255, 255, 255, 0.1)' };
   };
 
   return (
     <motion.div 
       whileHover={{ y: -8, scale: 1.05 }} 
       onClick={() => onMemberClick(m)} 
-      className={`glass ${getGlowClass(m.position)}`} 
-      style={{ padding: '14px 10px', cursor: 'pointer', textAlign: 'center', position: 'relative', borderRadius: '18px', transition: 'var(--transition-premium)' }}
+      className="glass" 
+      style={{ 
+        padding: '14px 10px', 
+        cursor: 'pointer', 
+        textAlign: 'center', 
+        position: 'relative', 
+        borderRadius: '18px', 
+        transition: 'all 0.5s cubic-bezier(0.16, 1, 0.3, 1)',
+        background: 'rgba(255, 255, 255, 0.04)',
+        backdropFilter: 'blur(10px)',
+        ...getGlowStyle(m.position)
+      }}
     >
       <div style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '4px', background: roleColor, borderRadius: '18px 18px 0 0', opacity: 0.8 }} />
       {m.photo && (
@@ -294,6 +318,7 @@ const MemberCard = ({ m, onMemberClick }) => {
     </motion.div>
   );
 };
+
 
 export default Sidebar_Desktop;
 
