@@ -240,9 +240,14 @@ const Sidebar_Desktop = ({ members, units, searchTerm, setSearchTerm, onMemberCl
                         initial={{ width: 0 }} 
                         animate={{ width: `${pos.percent}%` }} 
                         transition={{ duration: 1 }} 
-                        style={{ height: '100%', background: getPositionColor(members.find(m => getGroupTitle(m.position) === pos.label)?.position), borderRadius: '3px' }} 
+                        style={{ 
+                          height: '100%', 
+                          background: getPositionColor(pos.label), // タイトルから直接色を取得（安全）
+                          borderRadius: '3px' 
+                        }} 
                       />
                     </div>
+
                   </div>
                 ))}
               </div>
