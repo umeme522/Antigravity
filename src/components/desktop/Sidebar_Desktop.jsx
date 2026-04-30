@@ -257,10 +257,14 @@ const Sidebar_Desktop = ({ members = [], units = [], searchTerm = '', setSearchT
                       <div key={pos.label} style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '0.7rem' }}>
                         <div style={{ width: '8px', height: '8px', borderRadius: '2px', background: getPositionColor(members.find(m => getGroupTitle(m.position) === pos.label)?.position) }} />
                         <span style={{ color: 'white', whiteSpace: 'nowrap' }}>{pos.label}</span>
-                        <span style={{ color: 'rgba(255,255,255,0.4)', marginLeft: 'auto' }}>{pos.percent}%</span>
+                        <div style={{ marginLeft: 'auto', textAlign: 'right' }}>
+                          <span style={{ color: 'rgba(255,255,255,0.4)' }}>{pos.percent}%</span>
+                          <span style={{ color: 'rgba(255,255,255,0.2)', marginLeft: '4px' }}>({pos.count}名)</span>
+                        </div>
                       </div>
                     ))}
                   </div>
+
                 </div>
               </div>
 
