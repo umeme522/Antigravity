@@ -91,9 +91,11 @@ const Sidebar_Desktop = ({ members = [], units = [], searchTerm = '', setSearchT
 
     const malePercent = safeMembers.length ? Math.round((genderCounts.male / safeMembers.length) * 100) : 0;
     const femalePercent = safeMembers.length ? Math.round((genderCounts.female / safeMembers.length) * 100) : 0;
-    const genderRatio = `${malePercent}:${femalePercent}`;
+    const genderRatioLabel = `男 ${genderCounts.male}名 : 女 ${genderCounts.female}名`;
+    const genderPercentLabel = `(${malePercent}% : ${femalePercent}%)`;
 
-    return { avgAge, avgService, genData, posData, genderRatio };
+    return { avgAge, avgService, genData, posData, genderRatioLabel, genderPercentLabel };
+
   }, [members]);
 
   const filteredMembers = (members || []).filter(member => {
@@ -201,8 +203,9 @@ const Sidebar_Desktop = ({ members = [], units = [], searchTerm = '', setSearchT
 
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px', marginBottom: '10px' }}>
               <StatCard label="総人数" value={members.length} unit="名" icon={Users} color="#4b7bff" />
-              <StatCard label="男女比 (男:女)" value={stats.genderRatio} unit="%" icon={Users} color="#ff4b4b" />
+              <StatCard label="男女比 (人数)" value={stats.genderRatioLabel} unit={stats.genderPercentLabel} icon={Users} color="#ff4b4b" />
             </div>
+
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px', marginBottom: '24px' }}>
               <StatCard label="平均年齢" value={stats.avgAge} unit="歳" icon={Clock} color="#00e676" />
               <StatCard label="平均勤続" value={stats.avgService} unit="年" icon={TrendingUp} color="#ff9500" />
