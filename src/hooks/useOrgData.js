@@ -14,7 +14,14 @@ export const useOrgData = () => {
     if (saved) {
       try {
         const parsed = JSON.parse(saved);
-        if (parsed.members) setMembers(parsed.members);
+        if (parsed.members) {
+          // 未設定の性別を「男性」で強制補完（キャッシュ対策）
+          const updatedMembers = parsed.members.map(m => ({
+            ...m,
+            gender: m.gender || "男性"
+          }));
+          setMembers(updatedMembers);
+        }
         if (parsed.units) setUnits(parsed.units);
       } catch (e) { console.error(e); }
     }

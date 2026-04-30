@@ -82,10 +82,12 @@ const Sidebar_Desktop = ({ members = [], units = [], searchTerm = '', setSearchT
     })).sort((a, b) => a.priority - b.priority);
 
     const genderCounts = safeMembers.reduce((acc, m) => {
-      if (m.gender === '男性') acc.male++;
-      else if (m.gender === '女性') acc.female++;
+      const g = m.gender || '男性'; // 未設定は男性扱い
+      if (g === '男性') acc.male++;
+      else if (g === '女性') acc.female++;
       return acc;
     }, { male: 0, female: 0 });
+
 
     const malePercent = safeMembers.length ? Math.round((genderCounts.male / safeMembers.length) * 100) : 0;
     const femalePercent = safeMembers.length ? Math.round((genderCounts.female / safeMembers.length) * 100) : 0;
