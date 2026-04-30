@@ -1,5 +1,5 @@
 import React from 'react';
-import { Network, Users, Search, Share2 } from 'lucide-react';
+import { Network, Users, Search, Share2, BarChart3 } from 'lucide-react';
 
 const Navigation = ({ 
   isSidebarOpen, 
