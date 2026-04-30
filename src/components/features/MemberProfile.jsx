@@ -444,8 +444,7 @@ const MemberProfile = ({ member, unit, units, onUpdate, onDelete, onClose, isPer
           </div>
 
           <div style={{ display: 'flex', gap: '12px', marginTop: '20px' }}>
-            <button onClick={handleSave} className="save-btn">変更を保存</button>
-            <button onClick={() => setIsEditing(false)} className="cancel-btn">キャンセル</button>
+            <button onClick={handleSave} className="save-btn" style={{ flex: 1 }}>保存</button>
             <button 
               onClick={() => {
                 if (window.confirm(`${formData.lastName} ${formData.firstName} さんを削除してもよろしいですか？`)) {
@@ -469,6 +468,7 @@ const MemberProfile = ({ member, unit, units, onUpdate, onDelete, onClose, isPer
               <Trash2 size={18} /> 削除
             </button>
           </div>
+
 
 
         </div>
