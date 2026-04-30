@@ -56,9 +56,11 @@ function App() {
 
   // Excel出力ロジック
   const handleExportData = () => {
-    const headers = ['姓', '名', '部署', '役職', '入社年次', '生年月日', '性別'];
+    const headers = ['姓', '名', '部署', '役職', '入社年次', '生年月日', '経歴'];
     const rows = members.map(m => {
       const unitName = units.find(u => u.id === m.unitId)?.name || '';
+      // 経歴内のカンマを置換してCSVの崩れを防ぐ
+      const careerText = (m.career || '').replace(/,/g, ' / ');
       return [
         m.lastName || '',
         m.firstName || '',
@@ -66,10 +68,11 @@ function App() {
         m.position || '',
         m.joinDate || '',
         m.birthDate || '',
-        m.gender || ''
+        careerText
       ].join(',');
     });
     const csvContent = "\uFEFF" + [headers.join(','), ...rows].join('\n');
+
     const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
     const link = document.createElement("a");
     link.href = URL.createObjectURL(blob);
