@@ -15,7 +15,8 @@ import { backupData, restoreData } from './utils/storage';
 
 function App() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-  const [sidebarTab, setSidebarTab] = useState('list'); // 'list' or 'search'
+  const [sidebarTab, setSidebarTab] = useState('members'); // 'members', 'search' or 'stats'
+
   const [searchTerm, setSearchTerm] = useState('');
 
   const [selectedMember, setSelectedMember] = useState(null);

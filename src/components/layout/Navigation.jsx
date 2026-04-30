@@ -29,10 +29,9 @@ const Navigation = ({
         <button 
           onClick={() => {
             setIsSidebarOpen(true);
-            setSidebarTab('list');
-            window.dispatchEvent(new CustomEvent('changeSidebarTab', { detail: 'list' }));
+            setSidebarTab('members');
           }}
-          className={`nav-btn ${isSidebarOpen && sidebarTab === 'list' ? 'active' : ''}`}
+          className={`nav-btn ${isSidebarOpen && sidebarTab === 'members' ? 'active' : ''}`}
           style={{ width: '100%' }}
           title="メンバー"
         >
@@ -45,7 +44,6 @@ const Navigation = ({
           onClick={() => {
             setIsSidebarOpen(true);
             setSidebarTab('search');
-            window.dispatchEvent(new CustomEvent('changeSidebarTab', { detail: 'search' }));
           }}
           className={`nav-btn ${isSidebarOpen && sidebarTab === 'search' ? 'active' : ''}`}
           style={{ width: '100%' }}
@@ -54,10 +52,23 @@ const Navigation = ({
           <Search size={24} />
           <span className="nav-label">検索</span>
         </button>
+
+        {/* データ（統計）ボタン */}
+        <button 
+          onClick={() => {
+            setIsSidebarOpen(true);
+            setSidebarTab('stats');
+          }}
+          className={`nav-btn ${isSidebarOpen && sidebarTab === 'stats' ? 'active' : ''}`}
+          style={{ width: '100%' }}
+          title="統計データ"
+        >
+          <BarChart3 size={24} />
+          <span className="nav-label">データ</span>
+        </button>
       </div>
     </div>
   );
 };
-
 
 export default Navigation;
