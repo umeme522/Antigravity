@@ -54,6 +54,29 @@ function App() {
     setSelectedMember(newMember);
   };
 
+  // Excel出力ロジック
+  const handleExportData = () => {
+    const headers = ['姓', '名', '部署', '役職', '入社年次', '生年月日', '性別'];
+    const rows = members.map(m => {
+      const unitName = units.find(u => u.id === m.unitId)?.name || '';
+      return [
+        m.lastName || '',
+        m.firstName || '',
+        unitName,
+        m.position || '',
+        m.joinDate || '',
+        m.birthDate || '',
+        m.gender || ''
+      ].join(',');
+    });
+    const csvContent = "\uFEFF" + [headers.join(','), ...rows].join('\n');
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement("a");
+    link.href = URL.createObjectURL(blob);
+    link.download = `東日本支店_組織データ_${new Date().toLocaleDateString()}.csv`;
+    link.click();
+  };
+
   const currentMember = selectedMember || members[0];
   const selectedUnit = units.find(u => u.id === currentMember?.unitId);
 
@@ -67,6 +90,7 @@ function App() {
         }}
         sidebarTab={sidebarTab}
         setSidebarTab={setSidebarTab}
+        onExport={handleExportData}
       />
 
       <div className={isMobile ? "app-content-mobile" : "app-main-layout"}>
