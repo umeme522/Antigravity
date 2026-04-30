@@ -194,10 +194,14 @@ function App() {
               right: 0, 
               top: 0, 
               bottom: 0, 
-              width: isMobile ? '100%' : '420px', 
+              width: isMobile ? '100%' : '450px', 
               zIndex: 20000, 
-              backgroundColor: '#0d1117' 
+              background: 'rgba(10, 12, 18, 0.8)',
+              backdropFilter: 'blur(50px) saturate(200%)',
+              borderLeft: '1px solid rgba(255,255,255,0.15)',
+              boxShadow: '-20px 0 60px rgba(0,0,0,0.8)'
             }}
+
           >
             <MemberProfile 
               member={selectedMember}

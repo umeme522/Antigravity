@@ -253,22 +253,47 @@ const Sidebar_Desktop = ({ members = [], units = [], searchTerm = '', setSearchT
 };
 
 const StatCard = ({ label, value, unit, icon: Icon, color }) => (
-  <div className="glass" style={{ padding: '16px', borderRadius: '14px', border: '1px solid rgba(255,255,255,0.08)' }}>
-    <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '12px' }}><div style={{ padding: '6px', borderRadius: '8px', background: `${color}20`, color: color }}><Icon size={16} /></div><span style={{ fontSize: '0.7rem', color: 'rgba(255,255,255,0.5)', fontWeight: 'bold' }}>{label}</span></div>
-    <div style={{ display: 'flex', alignItems: 'baseline', gap: '4px' }}><span style={{ fontSize: '1.4rem', fontWeight: '900', color: 'white' }}>{value}</span><span style={{ fontSize: '0.75rem', color: 'rgba(255,255,255,0.3)' }}>{unit}</span></div>
+  <div className="glass" style={{ padding: '20px', borderRadius: '18px', border: '1px solid var(--glass-border)', transition: 'var(--transition-premium)' }}>
+    <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '14px' }}>
+      <div style={{ padding: '8px', borderRadius: '10px', background: `${color}15`, color: color }}>
+        <Icon size={18} />
+      </div>
+      <span style={{ fontSize: '0.75rem', color: 'rgba(255,255,255,0.4)', fontWeight: '800', letterSpacing: '0.05em' }}>{label}</span>
+    </div>
+    <div style={{ display: 'flex', alignItems: 'baseline', gap: '6px' }}>
+      <span style={{ fontSize: '1.6rem', fontWeight: '900', color: 'white', letterSpacing: '-0.02em' }}>{value}</span>
+      <span style={{ fontSize: '0.8rem', color: 'rgba(255,255,255,0.25)', fontWeight: '600' }}>{unit}</span>
+    </div>
   </div>
 );
 
 const MemberCard = ({ m, onMemberClick }) => {
   const roleColor = getPositionColor(m.position);
+  const getGlowClass = (pos) => {
+    if (pos === '支店長') return 'glow-gold';
+    if (pos === '副支店長') return 'glow-silver';
+    if (pos.includes('部長')) return 'glow-blue';
+    return '';
+  };
+
   return (
-    <motion.div whileHover={{ y: -5, scale: 1.05 }} onClick={() => onMemberClick(m)} className="glass" style={{ padding: '12px 8px', cursor: 'pointer', textAlign: 'center', position: 'relative', border: '1px solid rgba(255, 255, 255, 0.1)', borderRadius: '12px' }}>
-      <div style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '3px', background: roleColor, borderRadius: '12px 12px 0 0' }} />
-      {m.photo && <img src={m.photo} alt={m.lastName} style={{ width: '48px', height: '48px', borderRadius: '10px', marginBottom: '8px', objectFit: 'cover', objectPosition: 'center' }} />}
-      <div style={{ fontWeight: '700', fontSize: '0.8rem', color: '#fff', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{m.lastName} {m.firstName}</div>
-      <div style={{ fontSize: '0.65rem', color: roleColor, fontWeight: '900' }}>{m.position}</div>
+    <motion.div 
+      whileHover={{ y: -8, scale: 1.05 }} 
+      onClick={() => onMemberClick(m)} 
+      className={`glass ${getGlowClass(m.position)}`} 
+      style={{ padding: '14px 10px', cursor: 'pointer', textAlign: 'center', position: 'relative', borderRadius: '18px', transition: 'var(--transition-premium)' }}
+    >
+      <div style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '4px', background: roleColor, borderRadius: '18px 18px 0 0', opacity: 0.8 }} />
+      {m.photo && (
+        <div style={{ width: '52px', height: '52px', margin: '0 auto 10px', borderRadius: '14px', overflow: 'hidden', border: '2px solid rgba(255,255,255,0.1)', background: 'rgba(0,0,0,0.2)' }}>
+          <img src={m.photo} alt={m.lastName} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+        </div>
+      )}
+      <div style={{ fontWeight: '800', fontSize: '0.85rem', color: '#fff', marginBottom: '4px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{m.lastName} {m.firstName}</div>
+      <div style={{ fontSize: '0.7rem', color: roleColor, fontWeight: '900', opacity: 0.9 }}>{m.position}</div>
     </motion.div>
   );
 };
 
 export default Sidebar_Desktop;
+
