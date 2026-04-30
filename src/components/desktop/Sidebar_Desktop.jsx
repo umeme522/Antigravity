@@ -14,14 +14,15 @@ const getPositionColor = (pos) => {
 
 const getPriority = (pos) => {
   if (!pos) return 1000;
-  if (pos.includes('支店長')) return 1;
-  if (pos.includes('副支店長')) return 2;
+  if (pos === '支店長') return 1;
+  if (pos === '副支店長') return 2;
   if (pos.includes('部長')) return 3;
   if (pos.includes('所長') || pos.includes('課長')) return 10;
   if (pos.includes('副長')) return 20;
   if (pos.includes('係長')) return 30;
   return 100;
 };
+
 
 // --- 統計計算用ヘルパー ---
 const calculateStats = (members) => {
@@ -80,12 +81,15 @@ const Sidebar_Desktop = ({ members, units, searchTerm, setSearchTerm, onMemberCl
   });
 
   const getGroupTitle = (pos) => {
-    if (pos.includes('支店長') || pos.includes('副支店長') || pos.includes('部長')) return '支店長・部長';
+    if (pos === '支店長') return '支店長';
+    if (pos === '副支店長') return '副支店長';
+    if (pos.includes('部長')) return '部長';
     if (pos.includes('所長') || pos.includes('課長')) return '課長・所長';
     if (pos.includes('副長')) return '副長';
     if (pos.includes('係長')) return '係長';
     return 'スタッフ';
   };
+
 
   return (
     <motion.div 
@@ -101,9 +105,10 @@ const Sidebar_Desktop = ({ members, units, searchTerm, setSearchTerm, onMemberCl
           <div style={{ flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
               <div style={{ display: 'flex', alignItems: 'baseline', gap: '12px' }}>
-                <h2 style={{ fontSize: '1.1rem', fontWeight: '900', color: '#ffffff', margin: 0, letterSpacing: '0.05em' }}>MEMBERS</h2>
+                <h2 style={{ fontSize: '1.1rem', fontWeight: '900', color: '#ffffff', margin: 0, letterSpacing: '0.05em' }}>東日本支店メンバー</h2>
                 <span style={{ fontSize: '0.8rem', color: 'rgba(255,255,255,0.4)', fontWeight: '600' }}>全 {members.length} 名</span>
               </div>
+
               <button onClick={onAddMember} className="save-btn" style={{ padding: '6px 14px', fontSize: '0.75rem', width: 'auto', height: '32px', display: 'flex', alignItems: 'center', gap: '4px' }}>
                 <Plus size={14} /> 追加
               </button>
