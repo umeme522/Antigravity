@@ -206,27 +206,8 @@ const Sidebar_Desktop = ({ members = [], units = [], searchTerm = '', setSearchT
 
         {activeTab === 'stats' && (
           <div style={{ flex: 1, overflowY: 'auto', paddingRight: '4px' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
-              <h2 style={{ fontSize: '1.1rem', fontWeight: '900', color: '#ffffff', margin: 0 }}>STATISTICS</h2>
-              <button 
-                onClick={handleExportExcel}
-                className="save-btn" 
-                style={{ 
-                  padding: '6px 12px', 
-                  height: '32px', 
-                  width: 'auto', 
-                  background: 'rgba(255,255,255,0.1)', 
-                  border: '1px solid rgba(255,255,255,0.2)',
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '6px',
-                  fontSize: '0.75rem'
-                }}
-              >
-                <Download size={14} /> Excel出力
-              </button>
-            </div>
-
+            <h2 style={{ fontSize: '1.1rem', fontWeight: '900', color: '#ffffff', marginBottom: '24px' }}>STATISTICS</h2>
+            
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '10px', marginBottom: '24px' }}>
               <StatCard label="総人数" value={members.length} unit="名" icon={Users} color="#4b7bff" />
               <StatCard label="平均年齢" value={stats.avgAge} unit="歳" icon={Clock} color="#00e676" />
