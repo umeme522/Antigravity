@@ -59,9 +59,18 @@ function App() {
     const headers = ['社員番号', '姓', '名', '部署', '役職', '入社年次', '生年月日', '出身', '経歴'];
     const rows = members.map(m => {
       const unitName = units.find(u => u.id === m.unitId)?.name || '';
-      // 経歴データの取得（career または careerHistory）
+      
+      // 出身（prefecture）を確実に取得
+      const hometown = m.prefecture || m.hometown || '';
+      
+      // 経歴（career）を横並び（1つのセル内）に整形
       const rawCareer = m.career || m.careerHistory || '';
-      const careerText = String(rawCareer).replace(/,/g, ' / ').replace(/\n/g, ' ');
+      let careerText = '';
+      if (Array.isArray(rawCareer)) {
+        careerText = rawCareer.join(' / ');
+      } else {
+        careerText = String(rawCareer).replace(/[\r\n,]+/g, ' / ');
+      }
       
       return [
         m.employeeId || '',
@@ -71,11 +80,12 @@ function App() {
         m.position || '',
         m.joinDate || '',
         m.birthDate || '',
-        m.prefecture || '',
+        hometown,
         careerText
-      ].join(',');
+      ].map(val => `"${String(val).replace(/"/g, '""')}"`).join(','); // 全ての値をダブルクォートで囲む
     });
-    const csvContent = "\uFEFF" + [headers.join(','), ...rows].join('\n');
+    const csvContent = "\uFEFF" + [headers.map(h => `"${h}"`).join(','), ...rows].join('\n');
+
 
 
     const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
