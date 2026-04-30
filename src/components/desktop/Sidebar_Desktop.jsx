@@ -49,13 +49,12 @@ const calculateStats = (members) => {
   const avgService = serviceYears.length ? (serviceYears.reduce((a, b) => a + b, 0) / serviceYears.length).toFixed(1) : 0;
 
   // 年代別構成
-  const generations = { '20代以下': 0, '30代': 0, '40代': 0, '50代': 0, '60代以上': 0 };
+  const generations = { '20代': 0, '30代': 0, '40代': 0, '50代': 0 };
   ages.forEach(age => {
-    if (age < 30) generations['20代以下']++;
+    if (age < 30) generations['20代']++;
     else if (age < 40) generations['30代']++;
     else if (age < 50) generations['40代']++;
     else if (age < 60) generations['50代']++;
-    else generations['60代以上']++;
   });
 
   const genData = Object.entries(generations).map(([label, count]) => ({
@@ -64,8 +63,25 @@ const calculateStats = (members) => {
     percent: members.length ? Math.round((count / members.length) * 100) : 0
   }));
 
-  return { avgAge, avgService, genData };
+  // 役職別構成（指数表）
+  const posCounts = members.reduce((acc, m) => {
+    const title = getGroupTitle(m.position);
+    acc[title] = (acc[title] || 0) + 1;
+    return acc;
+  }, {});
+
+  const posData = Object.entries(posCounts)
+    .map(([label, count]) => ({
+      label,
+      count,
+      percent: members.length ? Math.round((count / members.length) * 100) : 0,
+      priority: getPriority(members.find(m => getGroupTitle(m.position) === label)?.position || '')
+    }))
+    .sort((a, b) => a.priority - b.priority);
+
+  return { avgAge, avgService, genData, posData };
 };
+
 
 const Sidebar_Desktop = ({ members, units, searchTerm, setSearchTerm, onMemberClick, onAddMember, activeTab, setActiveTab }) => {
   const [groupBy, setGroupBy] = useState('position');
@@ -189,29 +205,51 @@ const Sidebar_Desktop = ({ members, units, searchTerm, setSearchTerm, onMemberCl
           <div style={{ flex: 1, overflowY: 'auto', paddingRight: '4px' }}>
             <h2 style={{ fontSize: '1.1rem', fontWeight: '900', color: '#ffffff', marginBottom: '24px' }}>STATISTICS</h2>
             
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px', marginBottom: '24px' }}>
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '10px', marginBottom: '24px' }}>
               <StatCard label="総人数" value={members.length} unit="名" icon={Users} color="#4b7bff" />
               <StatCard label="平均年齢" value={stats.avgAge} unit="歳" icon={Clock} color="#00e676" />
               <StatCard label="平均勤続" value={stats.avgService} unit="年" icon={TrendingUp} color="#ff9500" />
-              <StatCard label="管理職数" value={members.filter(m => getPriority(m.position) < 10).length} unit="名" icon={Award} color="#ffd700" />
             </div>
 
-            <div className="glass" style={{ padding: '20px', borderRadius: '16px', border: '1px solid rgba(255,255,255,0.1)' }}>
-              <h3 style={{ fontSize: '0.9rem', color: 'rgba(255,255,255,0.6)', marginBottom: '20px', fontWeight: 'bold' }}>年代別構成</h3>
-              {stats.genData.map(gen => (
-                <div key={gen.label} style={{ marginBottom: '16px' }}>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '8px', fontSize: '0.8rem' }}>
-                    <span style={{ color: 'white' }}>{gen.label}</span>
-                    <span style={{ color: 'rgba(255,255,255,0.4)' }}>{gen.count}名 ({gen.percent}%)</span>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+              <div className="glass" style={{ padding: '20px', borderRadius: '16px', border: '1px solid rgba(255,255,255,0.1)' }}>
+                <h3 style={{ fontSize: '0.85rem', color: 'rgba(255,255,255,0.6)', marginBottom: '16px', fontWeight: 'bold' }}>年代別構成</h3>
+                {stats.genData.map(gen => (
+                  <div key={gen.label} style={{ marginBottom: '12px' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '6px', fontSize: '0.75rem' }}>
+                      <span style={{ color: 'white' }}>{gen.label}</span>
+                      <span style={{ color: 'rgba(255,255,255,0.4)' }}>{gen.count}名 ({gen.percent}%)</span>
+                    </div>
+                    <div style={{ height: '6px', background: 'rgba(255,255,255,0.05)', borderRadius: '3px', overflow: 'hidden' }}>
+                      <motion.div initial={{ width: 0 }} animate={{ width: `${gen.percent}%` }} transition={{ duration: 1 }} style={{ height: '100%', background: 'var(--accent-primary)', borderRadius: '3px' }} />
+                    </div>
                   </div>
-                  <div style={{ height: '8px', background: 'rgba(255,255,255,0.05)', borderRadius: '4px', overflow: 'hidden' }}>
-                    <motion.div initial={{ width: 0 }} animate={{ width: `${gen.percent}%` }} transition={{ duration: 1 }} style={{ height: '100%', background: 'var(--accent-primary)', borderRadius: '4px' }} />
+                ))}
+              </div>
+
+              <div className="glass" style={{ padding: '20px', borderRadius: '16px', border: '1px solid rgba(255,255,255,0.1)' }}>
+                <h3 style={{ fontSize: '0.85rem', color: 'rgba(255,255,255,0.6)', marginBottom: '16px', fontWeight: 'bold' }}>役職構成比</h3>
+                {stats.posData.map(pos => (
+                  <div key={pos.label} style={{ marginBottom: '12px' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '6px', fontSize: '0.75rem' }}>
+                      <span style={{ color: 'white' }}>{pos.label}</span>
+                      <span style={{ color: 'rgba(255,255,255,0.4)' }}>{pos.count}名 ({pos.percent}%)</span>
+                    </div>
+                    <div style={{ height: '6px', background: 'rgba(255,255,255,0.05)', borderRadius: '3px', overflow: 'hidden' }}>
+                      <motion.div 
+                        initial={{ width: 0 }} 
+                        animate={{ width: `${pos.percent}%` }} 
+                        transition={{ duration: 1 }} 
+                        style={{ height: '100%', background: getPositionColor(members.find(m => getGroupTitle(m.position) === pos.label)?.position), borderRadius: '3px' }} 
+                      />
+                    </div>
                   </div>
-                </div>
-              ))}
+                ))}
+              </div>
             </div>
           </div>
         )}
+
 
       </div>
     </motion.div>
