@@ -42,13 +42,13 @@ const Sidebar_Desktop = ({ members = [], units = [], searchTerm = '', setSearchT
   const stats = useMemo(() => {
     const currentYear = new Date().getFullYear();
     const safeMembers = members || [];
-    
+
     const ages = safeMembers.map(m => {
       if (!m.birthDate) return null;
       const birth = new Date(m.birthDate);
       return isNaN(birth.getTime()) ? null : currentYear - birth.getFullYear();
     }).filter(a => a !== null);
-    
+
     const avgAge = ages.length ? Math.round(ages.reduce((a, b) => a + b, 0) / ages.length) : 0;
 
     const serviceYears = safeMembers.map(m => {
@@ -76,9 +76,9 @@ const Sidebar_Desktop = ({ members = [], units = [], searchTerm = '', setSearchT
     }, {});
 
     const posData = Object.entries(posCounts).map(([label, count]) => ({
-      label, count, 
+      label, count,
       percent: safeMembers.length ? Math.round((count / safeMembers.length) * 100) : 0,
-      priority: getPriority(label) 
+      priority: getPriority(label)
     })).sort((a, b) => a.priority - b.priority);
 
     const genderCounts = safeMembers.reduce((acc, m) => {
@@ -86,7 +86,7 @@ const Sidebar_Desktop = ({ members = [], units = [], searchTerm = '', setSearchT
       else if (m.gender === '女性') acc.female++;
       return acc;
     }, { male: 0, female: 0 });
-    
+
     const malePercent = safeMembers.length ? Math.round((genderCounts.male / safeMembers.length) * 100) : 0;
     const femalePercent = safeMembers.length ? Math.round((genderCounts.female / safeMembers.length) * 100) : 0;
     const genderRatio = `${malePercent}:${femalePercent}`;
@@ -105,7 +105,7 @@ const Sidebar_Desktop = ({ members = [], units = [], searchTerm = '', setSearchT
   return (
     <motion.div initial={{ x: -100, opacity: 0 }} animate={{ x: 0, opacity: 1 }} className="sidebar" style={{ padding: '0', height: '100%', display: 'flex', flexDirection: 'column' }}>
       <div style={{ padding: '24px', flex: 1, overflow: 'hidden', display: 'flex', flexDirection: 'column' }}>
-        
+
         {activeTab === 'members' && (
           <div style={{ flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
@@ -136,12 +136,11 @@ const Sidebar_Desktop = ({ members = [], units = [], searchTerm = '', setSearchT
                 if (groupBy === 'joinDate') return a === '不明' ? 1 : b === '不明' ? -1 : b.localeCompare(a);
                 const getGroupPriority = (title) => {
                   if (title === '支店長・副支店長・部長') return 1;
-                  if (title === '所長・課長') return 10;
+                  if (title === '課長・所長') return 10;
                   if (title === '副長') return 20;
                   if (title === '係長') return 30;
                   return 100;
                 };
-
                 return getGroupPriority(a) - getGroupPriority(b);
               }).map(([title, ms]) => (
                 <div key={title} style={{ marginBottom: '24px' }}>
@@ -150,10 +149,10 @@ const Sidebar_Desktop = ({ members = [], units = [], searchTerm = '', setSearchT
                     <span style={{ fontSize: '0.75rem', color: 'rgba(255,255,255,0.3)' }}>{ms.length}名</span>
                   </div>
                   <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(110px, 1fr))', gap: '12px' }}>
-                    {ms.sort((a,b) => {
+                    {ms.sort((a, b) => {
                       const pA = getPriority(a.position); const pB = getPriority(b.position);
                       if (pA !== pB) return pA - pB;
-                      return (a.joinDate||'9999').localeCompare(b.joinDate||'9999');
+                      return (a.joinDate || '9999').localeCompare(b.joinDate || '9999');
                     }).map(m => <MemberCard key={m.id} m={m} onMemberClick={onMemberClick} />)}
                   </div>
                 </div>
@@ -184,7 +183,7 @@ const Sidebar_Desktop = ({ members = [], units = [], searchTerm = '', setSearchT
         {activeTab === 'stats' && (
           <div style={{ flex: 1, overflowY: 'auto', paddingRight: '4px' }}>
             <h2 style={{ fontSize: '1.1rem', fontWeight: '900', color: '#ffffff', marginBottom: '24px' }}>STATISTICS</h2>
-            
+
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px', marginBottom: '10px' }}>
               <StatCard label="総人数" value={members.length} unit="名" icon={Users} color="#4b7bff" />
               <StatCard label="男女比 (男:女)" value={stats.genderRatio} unit="%" icon={Users} color="#ff4b4b" />
@@ -214,16 +213,15 @@ const Sidebar_Desktop = ({ members = [], units = [], searchTerm = '', setSearchT
               <div className="glass" style={{ padding: '20px', borderRadius: '16px', border: '1px solid rgba(255,255,255,0.1)' }}>
                 <h3 style={{ fontSize: '0.85rem', color: 'rgba(255,255,255,0.6)', marginBottom: '20px', fontWeight: 'bold' }}>役職構成比</h3>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
-                  <div style={{ 
+                  <div style={{
                     width: '100px', height: '100px', borderRadius: '50%', flexShrink: 0,
-                    background: `conic-gradient(${
-                      stats.posData.reduce((acc, pos, idx) => {
-                        const prevPercent = stats.posData.slice(0, idx).reduce((sum, p) => sum + p.percent, 0);
-                        const mForColor = members.find(m => getGroupTitle(m.position) === pos.label);
-                        const color = getPositionColor(mForColor?.position);
-                        return `${acc}${idx > 0 ? ',' : ''} ${color} ${prevPercent}% ${prevPercent + pos.percent}%`;
-                      }, '')
-                    })`,
+                    background: `conic-gradient(${stats.posData.reduce((acc, pos, idx) => {
+                      const prevPercent = stats.posData.slice(0, idx).reduce((sum, p) => sum + p.percent, 0);
+                      const mForColor = members.find(m => getGroupTitle(m.position) === pos.label);
+                      const color = getPositionColor(mForColor?.position);
+                      return `${acc}${idx > 0 ? ',' : ''} ${color} ${prevPercent}% ${prevPercent + pos.percent}%`;
+                    }, '')
+                      })`,
                     position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 0 20px rgba(0,0,0,0.3)'
                   }}>
                     <div style={{ width: '60px', height: '60px', borderRadius: '50%', background: '#0d1117' }} />

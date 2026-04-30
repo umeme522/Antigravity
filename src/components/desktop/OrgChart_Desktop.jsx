@@ -231,11 +231,13 @@ const OrgChart_Desktop = ({ units, members, onMemberClick }) => {
         .filter(m => !isLeader(m, u))
         .sort((a, b) => {
           const getP = (p) => {
-            if (p.includes('所長') || p.includes('課長')) return 10;
+            if (p.includes('所長')) return 9;
+            if (p.includes('課長')) return 10;
             if (p.includes('副長')) return 20;
             if (p.includes('係長')) return 30;
             return 100;
           };
+
           const prioA = getP(a.position);
           const prioB = getP(b.position);
           if (prioA !== prioB) return prioA - prioB;
