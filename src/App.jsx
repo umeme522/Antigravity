@@ -70,8 +70,13 @@ function App() {
       const flatten = (obj) => {
         if (!obj) return '';
         if (typeof obj !== 'object') return String(obj);
-        return Object.values(obj).map(v => (typeof v === 'object' ? flatten(v) : String(v))).join(' ').trim();
+        // idキーを除外して、意味のある値だけを抽出
+        return Object.entries(obj)
+          .filter(([key]) => key !== 'id')
+          .map(([, v]) => (typeof v === 'object' ? flatten(v) : String(v)))
+          .join(' ').trim();
       };
+
 
       if (Array.isArray(rawCareer)) {
         careerText = rawCareer.map(c => flatten(c)).join(' / ');
