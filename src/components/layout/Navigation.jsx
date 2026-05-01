@@ -17,12 +17,28 @@ const Navigation = ({
   return (
     <div className="nav-sidebar">
       <div className="nav-logo" style={{ margin: '0 0 40px 0', textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-        <div className="logo-container">
+        <div className="logo-container" style={{ 
+          width: '56px', 
+          height: '56px', 
+          borderRadius: '50%', 
+          overflow: 'hidden', 
+          display: 'flex', 
+          alignItems: 'center', 
+          justifyContent: 'center',
+          background: 'rgba(0, 255, 204, 0.05)',
+          border: '1px solid rgba(0, 255, 204, 0.2)'
+        }}>
           <img 
             src={logoSrc} 
             alt="Logo" 
             className="app-logo-img"
-            style={{ width: '48px', height: 'auto' }}
+            style={{ 
+              width: '100%', 
+              height: '100%', 
+              objectFit: 'cover',
+              transform: 'scale(1.8)', // 拡大して周りの背景と文字を消す
+              objectPosition: 'center'
+            }}
           />
         </div>
       </div>
@@ -60,11 +76,30 @@ const Navigation = ({
         </button>
 
         <div style={{ marginTop: 'auto', padding: '15px 0', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '6px', borderTop: '1px solid rgba(255,255,255,0.05)' }}>
-          <img 
-            src={logoSrc} 
-            style={{ width: '32px', height: 'auto', marginBottom: '2px' }} 
-            alt="Crescent Logo" 
-          />
+          <div style={{ 
+            width: '32px', 
+            height: '32px', 
+            borderRadius: '50%', 
+            overflow: 'hidden', 
+            display: 'flex', 
+            alignItems: 'center', 
+            justifyContent: 'center',
+            background: 'rgba(0, 255, 204, 0.1)'
+          }}>
+            <img 
+              src={logoSrc} 
+              style={{ 
+                width: '100%', 
+                height: '100%', 
+                objectFit: 'cover', 
+                transform: 'scale(1.8)',
+                objectPosition: 'center'
+              }} 
+              alt="Crescent Logo" 
+            />
+          </div>
+          <span style={{ fontSize: '0.55rem', color: 'var(--accent-primary)', fontWeight: '900', letterSpacing: '0.15em', opacity: 0.8 }}>CRESCENT</span>
+        </div>
           <span style={{ fontSize: '0.55rem', color: 'var(--accent-primary)', fontWeight: '900', letterSpacing: '0.15em', opacity: 0.8 }}>CRESCENT</span>
         </div>
       </div>
