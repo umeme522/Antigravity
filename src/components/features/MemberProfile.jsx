@@ -190,18 +190,7 @@ const MemberProfile = ({ member, unit, units, onUpdate, onDelete, onClose, isPer
     return years;
   };
 
-  const containerStyle = {
-    width: '100%',
-    maxWidth: '420px',
-    height: '100%',
-    padding: '24px',
-    paddingBottom: '80px', // iPhoneのホームバー対策で下部を広くとる
-    display: 'flex',
-    flexDirection: 'column',
-    gap: '20px',
-    overflowY: 'auto',
-    position: 'relative'
-  };
+
 
 
 
@@ -214,8 +203,7 @@ const MemberProfile = ({ member, unit, units, onUpdate, onDelete, onClose, isPer
       animate={{ x: 0 }}
       exit={{ x: '100%' }}
       transition={{ type: 'spring', damping: 25, stiffness: 200 }}
-      className={isPermanent ? "" : "profile-panel"}
-      style={containerStyle}
+      className={isPermanent ? "profile-panel-permanent" : "profile-panel"}
     >
 
       {!isPermanent && (
