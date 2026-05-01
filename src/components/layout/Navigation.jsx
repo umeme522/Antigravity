@@ -73,9 +73,9 @@ const Navigation = ({
               style={{ 
                 width: '100%', 
                 height: '100%', 
-                objectFit: 'contain',
-                transform: 'scale(1.2)',
-                objectPosition: 'center'
+                objectFit: 'cover',
+                transform: 'scale(2.2)',
+                objectPosition: 'center 30%' // 文字を避けて上のシンボルを映す
               }} 
               alt="KONOIKE Logo" 
             />
