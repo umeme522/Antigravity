@@ -95,10 +95,10 @@ const Navigation = ({
                 transform: 'scale(1.8)',
                 objectPosition: 'center'
               }} 
-              alt="Crescent Logo" 
+              alt="KONOIKE Logo" 
             />
           </div>
-          <span style={{ fontSize: '0.55rem', color: 'var(--accent-primary)', fontWeight: '900', letterSpacing: '0.15em', opacity: 0.8 }}>CRESCENT</span>
+          <span style={{ fontSize: '0.65rem', color: 'var(--accent-primary)', fontWeight: '900', letterSpacing: '0.2em', opacity: 0.9 }}>KONOIKE</span>
         </div>
       </div>
     </div>
