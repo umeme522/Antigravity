@@ -176,10 +176,11 @@ function App() {
             top: 0, 
             bottom: 0, 
             width: isMobile ? '100%' : '450px', 
-            zIndex: 20000,
-            background: '#1a1d26',
-            borderLeft: '1px solid rgba(255,255,255,0.1)',
-            overflowY: 'auto'
+            zIndex: 99999,
+            background: '#1f2937', // 少し明るめのグレー（確実に存在がわかるように）
+            borderLeft: '2px solid #4B7BFF', // 左端に青い線を入れて区切りを明確に
+            overflowY: 'auto',
+            boxShadow: '-10px 0 30px rgba(0,0,0,0.5)'
           }}
         >
           <MemberProfile 
