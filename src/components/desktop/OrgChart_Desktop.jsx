@@ -83,7 +83,7 @@ const UnitNode = ({ data }) => {
           style={{
             padding: '12px 15px',
             paddingLeft: '35px',
-            background: 'rgba(255, 255, 255, 0.05)',
+            background: '#1a1d26',
             borderRadius: idx === leaders.length - 1 ? '0 0 16px 16px' : '0',
             border: '1px solid rgba(255, 255, 255, 0.1)',
             borderTop: 'none',
@@ -92,7 +92,6 @@ const UnitNode = ({ data }) => {
             justifyContent: 'flex-start',
             gap: '28px',
             cursor: 'pointer',
-            backdropFilter: 'blur(10px)',
           }}
         >
           {leader.photo && (
@@ -118,9 +117,7 @@ const MemberNode = ({ data }) => {
       className="glass"
       onClick={() => onClick(member)}
       style={{
-        padding: '12px 15px',
-        paddingLeft: '30px',
-        width: '260px',
+        background: '#1a1d26',
         borderRadius: '16px',
         border: '1px solid rgba(255, 255, 255, 0.08)',
         display: 'flex',
@@ -128,7 +125,6 @@ const MemberNode = ({ data }) => {
         justifyContent: 'flex-start',
         gap: '28px',
         cursor: 'pointer',
-        backdropFilter: 'blur(12px)',
       }}
     >
       <Handle type="target" position={Position.Top} style={{ background: 'transparent', border: 'none' }} />
@@ -364,7 +360,7 @@ const ZoomControls = () => {
   const zoom = useStore((s) => s.transform[2]);
   const zoomPercent = Math.round(zoom * 100);
 
-  const btnStyle = { width: '44px', height: '44px', borderRadius: '12px', background: 'rgba(255, 255, 255, 0.05)', border: '1px solid rgba(255, 255, 255, 0.1)', color: 'white', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', backdropFilter: 'blur(10px)', transition: 'all 0.2s ease', boxShadow: '0 4px 15px rgba(0,0,0,0.3)' };
+  const btnStyle = { width: '44px', height: '44px', borderRadius: '12px', background: '#2d3748', border: '1px solid rgba(255, 255, 255, 0.1)', color: 'white', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', transition: 'all 0.2s ease', boxShadow: '0 4px 15px rgba(0,0,0,0.3)' };
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '8px' }}>

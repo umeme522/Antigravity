@@ -202,7 +202,7 @@ const MemberProfile = ({ member, unit, units, onUpdate, onDelete, onClose, isPer
       initial={isPermanent ? false : { x: '100%' }}
       animate={{ x: 0 }}
       exit={{ x: '100%' }}
-      transition={{ type: 'spring', damping: 25, stiffness: 200 }}
+      transition={{ type: 'tween', duration: 0.3, ease: 'easeOut' }}
       className={isPermanent ? "profile-panel-permanent" : "profile-panel"}
     >
 

@@ -151,9 +151,7 @@ html, body, #root {
   width: 450px;
   height: 100%;
   flex-shrink: 0;
-  background: #11141d; /* Fallback for no backdrop-filter */
-  background: rgba(17, 20, 29, 0.95);
-  backdrop-filter: blur(30px) saturate(150%);
+  background: #1a1d26; /* Solid color for maximum compatibility */
   border-left: 1px solid var(--glass-border);
   z-index: 100;
   overflow-y: auto;
@@ -208,8 +206,7 @@ html, body, #root {
 }
 
 .glass {
-  background: rgba(255, 255, 255, 0.03);
-  backdrop-filter: blur(25px) saturate(150%);
+  background: #1e222d;
   border: 1px solid var(--glass-border);
   box-shadow: var(--glass-shadow);
 }

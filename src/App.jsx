@@ -187,7 +187,7 @@ function App() {
             initial={isMobile ? { y: '100%' } : { x: '100%' }}
             animate={isMobile ? { y: 0 } : { x: 0 }}
             exit={isMobile ? { y: '100%' } : { x: '100%' }}
-            transition={{ type: 'spring', damping: 25, stiffness: 200 }}
+            transition={{ type: 'tween', duration: 0.3, ease: 'easeOut' }}
             className="profile-sidebar"
             style={{ 
               position: 'fixed', 
