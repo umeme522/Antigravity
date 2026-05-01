@@ -11,15 +11,15 @@ import 'reactflow/dist/style.css';
 import { ChevronDown } from 'lucide-react';
 import { motion } from 'framer-motion';
 
-const getPositionColor = (pos) => {
-  if (!pos) return '#a0aec0';
+const getPositionColor = (pos = '') => {
+  if (!pos) return '#A0AEC0';
   const p = String(pos);
-  if (p.includes('支店長') || p.includes('副支店長')) return '#ffd700';
-  if (p.includes('部長')) return '#ff4b4b';
-  if (p.includes('所長') || p.includes('課長')) return '#4b7bff';
-  if (p.includes('副長')) return '#ff9500';
-  if (p.includes('係長')) return '#00e676';
-  return '#a0aec0';
+  if (p.includes('支店長') || p.includes('副支店長')) return '#FFD700'; 
+  if (p.includes('部長')) return '#FF4B4B';   
+  if (p.includes('所長') || p.includes('課長')) return '#4B7BFF'; 
+  if (p.includes('副長')) return '#FF9500'; 
+  if (p.includes('係長')) return '#00E676'; 
+  return '#A0AEC0'; 
 };
 
 // --- 統合ノード (部署 + リーダー達) ---

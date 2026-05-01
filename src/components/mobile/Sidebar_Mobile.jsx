@@ -3,14 +3,14 @@ import { Search, Plus } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 const getPositionColor = (pos) => {
-  if (!pos) return '#a0aec0';
+  if (!pos) return '#A0AEC0';
   const p = String(pos);
-  if (p.includes('支店長') || p.includes('副支店長')) return '#ffd700'; // 金
-  if (p.includes('部長')) return '#ff4b4b'; // 赤
-  if (p.includes('所長') || p.includes('課長')) return '#4b7bff'; // 青
-  if (p.includes('副長')) return '#ff9500'; // オレンジ
-  if (p.includes('係長')) return '#00e676'; // 緑
-  return '#a0aec0'; // スタッフ（グレー）
+  if (p.includes('支店長') || p.includes('副支店長')) return '#FFD700'; 
+  if (p.includes('部長')) return '#FF4B4B';   
+  if (p.includes('所長') || p.includes('課長')) return '#4B7BFF'; 
+  if (p.includes('副長')) return '#FF9500'; 
+  if (p.includes('係長')) return '#00E676'; 
+  return '#A0AEC0'; 
 };
 
 const getGroupTitle = (pos) => {
