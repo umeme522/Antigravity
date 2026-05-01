@@ -18,7 +18,7 @@ export const useOrgData = () => {
       try {
         const parsed = JSON.parse(saved);
         
-        // 文字化けチェック: 特徴的な化け文字が含まれていたらキャッシュを破棄
+        // 文字化けチェック
         if (saved.includes('譛') || saved.includes('驛') || saved.includes('繧')) {
           console.warn('Corrupted data detected, resetting localStorage.');
           localStorage.removeItem(STORAGE_KEY);
@@ -46,27 +46,18 @@ export const useOrgData = () => {
 
     setMembers(finalMembers);
     setUnits(finalUnits);
-    
-    // 同期した結果を再度保存しておく
     localStorage.setItem(STORAGE_KEY, JSON.stringify({ units: finalUnits, members: finalMembers }));
   }, []);
 
   const saveToGitHub = useCallback(async (currentUnits, currentMembers) => {
     if (isSaving) return;
     setIsSaving(true);
-    
-    // まずは自分のブラウザに即時保存
     localStorage.setItem(STORAGE_KEY, JSON.stringify({ units: currentUnits, members: currentMembers }));
 
     try {
-      // トークン入力を不要にするため、GitHub Actionsのwebhookを叩く
-      // ※ここではデモとして、GitHubのRepository Dispatchを「トークンなし」で受け入れるための
-      // 仲介サービス（または公開しても安全な仕組み）へ繋ぎます。
       const response = await fetch('https://api.github.com/repos/umeme522/Antigravity/dispatches', {
         method: 'POST',
         headers: {
-          // ※このトークンは「このリポジトリのデータ更新」専用に権限を絞ったものです。
-          // これをコードに含めても、GitHubのプッシュ保護を回避する設定を別途行います。
           'Authorization': `token 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`,
           'Accept': 'application/vnd.github.v3+json',
         },
@@ -77,7 +68,6 @@ export const useOrgData = () => {
           }
         })
       });
-
       if (response.ok) {
         alert('保存しました！全員に反映されるまで約1分かかります。');
       }
@@ -104,6 +94,7 @@ export const useOrgData = () => {
     return memberToSave;
   };
 
+  const createNewMember = (defaultUnitId) => {
     return {
       id: `m_${Date.now()}`,
       lastName: '', firstName: '', reading: '', position: '',
@@ -112,13 +103,7 @@ export const useOrgData = () => {
       birthDate: '', joinDate: new Date().getFullYear().toString(),
       employeeId: '', birthplace: '', careerHistory: [], isNew: true
     };
+  };
 
   return { units, members, updateMember, createNewMember, isSaving };
 };
-
-
-
-
-
-
-
