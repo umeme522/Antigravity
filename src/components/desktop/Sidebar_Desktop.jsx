@@ -324,16 +324,24 @@ const StatCard = ({ label, value, unit, total, icon: Icon, color, isSummary }) =
   }
 
   return (
-    <div className="glass" style={{ padding: '20px', borderRadius: '18px', border: '1px solid var(--glass-border)', transition: 'var(--transition-premium)' }}>
-      <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '14px' }}>
-        <div style={{ padding: '8px', borderRadius: '10px', background: `${color}15`, color: color }}>
-          <Icon size={18} />
+    <div className="glass" style={{ 
+      padding: '12px 16px', 
+      borderRadius: '14px', 
+      border: '1px solid var(--glass-border)',
+      display: 'flex', 
+      alignItems: 'center', 
+      justifyContent: 'space-between',
+      gap: '12px'
+    }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+        <div style={{ padding: '6px', borderRadius: '8px', background: `${color}15`, color: color, display: 'flex' }}>
+          <Icon size={14} />
         </div>
-        <span style={{ fontSize: '0.75rem', color: 'rgba(255,255,255,0.4)', fontWeight: '800', letterSpacing: '0.05em' }}>{label}</span>
+        <span style={{ fontSize: '0.7rem', color: 'rgba(255,255,255,0.4)', fontWeight: '800', whiteSpace: 'nowrap' }}>{label}</span>
       </div>
-      <div style={{ display: 'flex', alignItems: 'baseline', gap: '6px' }}>
-        <span style={{ fontSize: '1.6rem', fontWeight: '900', color: 'white', letterSpacing: '-0.02em' }}>{value}</span>
-        <span style={{ fontSize: '0.8rem', color: 'rgba(255,255,255,0.25)', fontWeight: '600' }}>{unit}</span>
+      <div style={{ display: 'flex', alignItems: 'baseline', gap: '4px' }}>
+        <span style={{ fontSize: '1.1rem', fontWeight: '900', color: 'white' }}>{value}</span>
+        <span style={{ fontSize: '0.65rem', color: 'rgba(255,255,255,0.25)', fontWeight: '600' }}>{unit}</span>
       </div>
     </div>
   );
