@@ -39,14 +39,14 @@ const getPlaceholderPhoto = (id) => {
   const base = import.meta.env.BASE_URL || '/';
   const b = base.endsWith('/') ? base : `${base}/`;
   const placeholders = [
-    `${b}placeholder_1.png`,
-    `${b}placeholder_2.png`,
-    `${b}placeholder_3.png`,
-    `${b}placeholder_4.png`
+    `${b}placeholders/placeholder_einstein.png`,
+    `${b}placeholders/placeholder_ryoma.png`,
+    `${b}placeholders/placeholder_nobunaga.png`,
+    `${b}placeholders/placeholder_curie.png`
   ];
   const sId = String(id || '0');
   const index = Math.abs(sId.split('').reduce((a, b) => a + b.charCodeAt(0), 0)) % placeholders.length;
-  return placeholders[index];
+  return placeholders[index].replace('//', '/');
 };
 
 
@@ -373,12 +373,13 @@ const StatCard = ({ label, value, unit, total, icon: Icon, color, isSummary }) =
 
   return (
     <div className="glass" style={{ 
-      padding: '20px', 
+      padding: '16px 20px', 
       borderRadius: '20px', 
       border: '1px solid rgba(255,255,255,0.08)', 
       background: 'rgba(255,255,255,0.02)',
       display: 'flex',
-      flexDirection: 'column',
+      alignItems: 'center',
+      justifyContent: 'space-between',
       gap: '12px',
       position: 'relative'
     }}>
@@ -388,7 +389,7 @@ const StatCard = ({ label, value, unit, total, icon: Icon, color, isSummary }) =
         </div>
         <span style={{ fontSize: '0.75rem', color: 'rgba(255,255,255,0.5)', fontWeight: '800', letterSpacing: '0.02em' }}>{label}</span>
       </div>
-      <div style={{ display: 'flex', alignItems: 'baseline', gap: '4px', marginLeft: '2px' }}>
+      <div style={{ display: 'flex', alignItems: 'baseline', gap: '4px' }}>
         <span style={{ fontSize: '1.6rem', fontWeight: '900', color: '#fff', lineHeight: 1 }}>{value}</span>
         <span style={{ fontSize: '0.75rem', color: 'rgba(255,255,255,0.4)', fontWeight: '800' }}>{unit}</span>
       </div>
