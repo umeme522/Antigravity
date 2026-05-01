@@ -26,7 +26,7 @@ export const mockData = {
     { id: "u_innov", name: "営業革新部", parentId: "u1" }
   ],
   members: [
-    { id: "m0_1", lastName: "大久保", firstName: "祐介", reading: "オオクボ ユウスケ", position: "支店長", unitId: "u1", additionalUnitIds: ["u_innov"], birthDate: "1972-05-20", joinDate: "1995-04-01", photo: "https://images.unsplash.com/photo-1560250097-0b93528c311a?w=150&h=150&fit=crop", employeeId: "E0001", gender: "男性" },
+    { id: "m0_1", lastName: "大久保", firstName: "祐介", reading: "オオクボ ユウスケ", position: "支店長", unitId: "u1", additionalUnitIds: ["u_innov"], birthDate: "1972-05-20", joinDate: "1995-04-01", photo: "https://api.dicebear.com/7.x/avataaars/svg?seed=Okubo", employeeId: "E0001", gender: "男性" },
     { id: "m0_3", lastName: "木内", firstName: "窮地", reading: "キウチ キヒト", position: "スタッフ", unitId: "u_innov", joinDate: "2018-04-01", photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop", employeeId: "E0003", gender: "男性" },
     { id: "m0_2", lastName: "堀内", firstName: "芳人", reading: "ホリウチ ヨシト", position: "副支店長", unitId: "u1", additionalUnitIds: ["u_dept3"], birthDate: "1977-10-15", joinDate: "2001", photo: "https://api.dicebear.com/7.x/avataaars/svg?seed=Horiuchi", employeeId: "", additionalPosition: "部長", birthplace: "静岡県磐田市", careerHistory: [{ id: "career_1", period: "2001-2010", department: "営業部 営業一課" }, { id: "career_2", period: "2010-2020", department: "業務部 課長" }], gender: "男性" },
     { id: "m_admin_1", lastName: "松村", firstName: "結花", reading: "マツムラ ユイカ", position: "課長", unitId: "u_admin", birthDate: "1985-06-10", joinDate: "2008-04-01", photo: "https://api.dicebear.com/7.x/avataaars/svg?seed=Matsumura", employeeId: "B015", gender: "女性" },
