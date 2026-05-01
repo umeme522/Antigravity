@@ -12,32 +12,37 @@ const Navigation = ({
     return base.endsWith('/') ? `${base}logo.png` : `${base}/logo.png`;
   };
   
+  const getIconSrc = () => {
+    const base = import.meta.env.BASE_URL || '/';
+    return base.endsWith('/') ? `${base}logo_icon.png` : `${base}/logo_icon.png`;
+  };
+  
   const logoSrc = getLogoSrc();
+  const iconSrc = getIconSrc();
   
   return (
     <div className="nav-sidebar">
-      <div className="nav-logo" style={{ margin: '0 0 40px 0', textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+      <div className="nav-logo" style={{ margin: '10px 0 40px 0', textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
         <div className="logo-container" style={{ 
-          width: '56px', 
-          height: '56px', 
+          width: '72px', 
+          height: '72px', 
           borderRadius: '50%', 
           overflow: 'hidden', 
           display: 'flex', 
           alignItems: 'center', 
           justifyContent: 'center',
           background: 'rgba(0, 255, 204, 0.05)',
-          border: '1px solid rgba(0, 255, 204, 0.2)'
+          border: '1px solid rgba(0, 255, 204, 0.3)',
+          boxShadow: 'none'
         }}>
           <img 
-            src={logoSrc} 
+            src={iconSrc} 
             alt="Logo" 
             className="app-logo-img"
             style={{ 
-              width: '100%', 
-              height: '100%', 
-              objectFit: 'cover',
-              transform: 'scale(1.8)', // 拡大して周りの背景と文字を消す
-              objectPosition: 'center'
+              width: '105%', 
+              height: '105%', 
+              objectFit: 'cover'
             }}
           />
         </div>
@@ -75,30 +80,29 @@ const Navigation = ({
           <span className="nav-label">出力</span>
         </button>
 
-        <div style={{ marginTop: 'auto', padding: '15px 0', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '6px', borderTop: '1px solid rgba(255,255,255,0.05)' }}>
+        <div style={{ marginTop: 'auto', padding: '15px 0', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '8px', borderTop: '1px solid rgba(255,255,255,0.05)' }}>
           <div style={{ 
-            width: '32px', 
-            height: '32px', 
+            width: '44px', 
+            height: '44px', 
             borderRadius: '50%', 
             overflow: 'hidden', 
             display: 'flex', 
             alignItems: 'center', 
             justifyContent: 'center',
-            background: 'rgba(0, 255, 204, 0.1)'
+            background: 'rgba(0, 255, 204, 0.1)',
+            border: '1px solid rgba(0, 255, 204, 0.2)'
           }}>
             <img 
-              src={logoSrc} 
+              src={iconSrc} 
               style={{ 
-                width: '100%', 
-                height: '100%', 
-                objectFit: 'cover', 
-                transform: 'scale(1.8)',
-                objectPosition: 'center'
+                width: '105%', 
+                height: '105%', 
+                objectFit: 'cover'
               }} 
               alt="KONOIKE Logo" 
             />
           </div>
-          <span style={{ fontSize: '0.65rem', color: 'var(--accent-primary)', fontWeight: '900', letterSpacing: '0.2em', opacity: 0.9 }}>KONOIKE</span>
+          <span style={{ fontSize: '0.45rem', color: 'var(--accent-primary)', fontWeight: '900', letterSpacing: '0.3em', opacity: 0.7, marginTop: '2px' }}>KONOIKE</span>
         </div>
       </div>
     </div>
