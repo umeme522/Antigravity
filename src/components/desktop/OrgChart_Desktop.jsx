@@ -57,7 +57,7 @@ const UnitNode = ({ data }) => {
   }
 
   return (
-    <div style={{ width: '280px', position: 'relative' }}>
+    <div style={{ width: '220px', position: 'relative' }}>
       <Handle type="target" position={Position.Top} style={{ background: 'transparent', border: 'none' }} />
       <div
         onClick={onClick}
@@ -94,8 +94,8 @@ const UnitNode = ({ data }) => {
           key={`${leader.id}-${idx}`}
           onClick={() => onMemberClick(leader)}
           style={{
-            padding: '12px 15px',
-            paddingLeft: '35px',
+            padding: '10px 12px',
+            paddingLeft: '15px',
             background: '#1a1d26',
             borderRadius: idx === leaders.length - 1 ? '0 0 16px 16px' : '0',
             border: '1px solid rgba(255, 255, 255, 0.1)',
@@ -103,7 +103,7 @@ const UnitNode = ({ data }) => {
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'flex-start',
-            gap: '20px',
+            gap: '12px',
             cursor: 'pointer',
           }}
         >
@@ -132,15 +132,15 @@ const MemberNode = ({ data }) => {
       className="glass"
       onClick={() => onClick(member)}
       style={{
-        padding: '12px 15px',
-        paddingLeft: '30px',
-        width: '260px',
+        padding: '10px 12px',
+        paddingLeft: '15px',
+        width: '210px',
         borderRadius: '16px',
         border: '1px solid rgba(255, 255, 255, 0.1)',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'flex-start',
-        gap: '20px',
+        gap: '12px',
         cursor: 'pointer',
       }}
     >
