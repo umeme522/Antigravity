@@ -276,15 +276,13 @@ const Sidebar_Desktop = ({ members = [], units = [], searchTerm = '', setSearchT
               <div className="glass" style={{ padding: '14px 18px', borderRadius: '20px', border: '1px solid rgba(255,255,255,0.08)', background: 'rgba(255,255,255,0.02)' }}>
                 <h3 style={{ fontSize: '0.7rem', color: 'rgba(255,255,255,0.4)', marginBottom: '12px', fontWeight: '900', letterSpacing: '0.1em', textTransform: 'uppercase' }}>役職構成比</h3>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
-                  <div style={{ width: '80px', height: '80px', position: 'relative' }}>
-                    width: '110px', height: '110px', borderRadius: '50%', flexShrink: 0,
+                  <div style={{ width: '80px', height: '80px', borderRadius: '50%', flexShrink: 0,
                     background: `conic-gradient(${stats.posData.reduce((acc, pos, idx) => {
                       const prevPercent = stats.posData.slice(0, idx).reduce((sum, p) => sum + p.percent, 0);
                       const mForColor = members.find(m => getGroupTitle(m.position) === pos.label);
                       const color = getPositionColor(mForColor?.position);
                       return `${acc}${idx > 0 ? ',' : ''} transparent ${prevPercent}% ${prevPercent + 0.8}%, ${color} ${prevPercent + 0.8}% ${prevPercent + pos.percent}%`;
-                    }, '')
-                      })`,
+                    }, '')})`,
                     position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'center'
                   }}>
                     <div style={{ 
