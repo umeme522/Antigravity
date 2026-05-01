@@ -304,7 +304,7 @@ const MemberProfile = ({ member, unit, units, onUpdate, onDelete, onClose, isPer
           {/* 経歴編集セクション */}
           <div style={{ marginTop: '10px' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
-              <label style={{ color: 'var(--text-secondary)', fontSize: '0.8rem' }}>経歴（キャリア）</label>
+              <label style={{ color: 'var(--text-secondary)', fontSize: '0.8rem' }}>経歴</label>
               <button onClick={handleAddCareer} style={{ background: 'transparent', border: '1px solid var(--accent-primary)', color: 'var(--accent-primary)', padding: '4px 10px', borderRadius: '6px', fontSize: '0.75rem', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '4px' }}>
                 <Plus size={14} /> 追加
               </button>
@@ -316,18 +316,18 @@ const MemberProfile = ({ member, unit, units, onUpdate, onDelete, onClose, isPer
                   <button onClick={() => handleRemoveCareer(c.id || c._id || i)} style={{ position: 'absolute', top: '8px', right: '8px', background: 'transparent', border: 'none', color: 'rgba(255,0,0,0.5)', cursor: 'pointer' }}>
                     <Trash2 size={14} />
                   </button>
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                  <div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
                     <input 
                       placeholder="年 (例: 2020年)" 
                       value={c.period || ''} 
                       onChange={(e) => handleCareerChange(c.id || c._id || i, 'period', e.target.value)}
-                      style={{ background: 'transparent', border: 'none', borderBottom: '1px solid rgba(255,255,255,0.1)', color: '#fff', fontSize: '0.85rem', width: '90%' }}
+                      style={{ background: 'transparent', border: 'none', borderBottom: '1px solid rgba(255,255,255,0.1)', color: '#fff', fontSize: '0.85rem', width: '80px' }}
                     />
                     <input 
-                      placeholder="部署・内容" 
+                      placeholder="所属・部署" 
                       value={c.department || ''} 
                       onChange={(e) => handleCareerChange(c.id || c._id || i, 'department', e.target.value)}
-                      style={{ background: 'transparent', border: 'none', color: 'rgba(255,255,255,0.7)', fontSize: '0.85rem', width: '100%' }}
+                      style={{ background: 'transparent', border: 'none', borderBottom: '1px solid rgba(255,255,255,0.1)', color: 'rgba(255,255,255,0.8)', fontSize: '0.85rem', flex: 1 }}
                     />
                   </div>
                 </div>
@@ -375,17 +375,18 @@ const MemberProfile = ({ member, unit, units, onUpdate, onDelete, onClose, isPer
             {member.careerHistory && member.careerHistory.length > 0 && (
               <div style={{ marginTop: '10px', background: 'rgba(255,255,255,0.02)', padding: '20px', borderRadius: '16px', border: '1px solid rgba(255,255,255,0.05)' }}>
                 <div style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', marginBottom: '20px', display: 'flex', alignItems: 'center', gap: '10px' }}>
-                  <History size={18} color="var(--accent-primary)" /> <span style={{ fontWeight: '700', color: '#fff' }}>キャリア年表</span>
+                  <History size={18} color="var(--accent-primary)" /> <span style={{ fontWeight: '700', color: '#fff' }}>経歴</span>
                 </div>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '20px', position: 'relative' }}>
-                  {/* 年表の線 */}
                   <div style={{ position: 'absolute', left: '7px', top: '10px', bottom: '10px', width: '2px', background: 'linear-gradient(to bottom, var(--accent-primary), transparent)' }} />
                   
                   {member.careerHistory.map((c, i) => (
                     <div key={i} style={{ paddingLeft: '24px', position: 'relative' }}>
                       <div style={{ position: 'absolute', left: '0', top: '6px', width: '16px', height: '16px', borderRadius: '50%', background: '#1a1d26', border: '3px solid var(--accent-primary)' }} />
-                      <div style={{ fontSize: '0.75rem', color: 'var(--accent-primary)', fontWeight: '700', marginBottom: '2px' }}>{c.period}</div>
-                      <div style={{ fontSize: '0.9rem', color: '#ffffff', lineHeight: '1.4' }}>{c.department}</div>
+                      <div style={{ display: 'flex', gap: '12px', alignItems: 'baseline' }}>
+                        <div style={{ fontSize: '0.75rem', color: 'var(--accent-primary)', fontWeight: '700', whiteSpace: 'nowrap' }}>{c.period}</div>
+                        <div style={{ fontSize: '0.9rem', color: '#ffffff', lineHeight: '1.4' }}>{c.department}</div>
+                      </div>
                     </div>
                   ))}
                 </div>
