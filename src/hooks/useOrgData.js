@@ -8,23 +8,49 @@ export const useOrgData = () => {
   const [members, setMembers] = useState(mockData.members || []);
   const [isSaving, setIsSaving] = useState(false);
 
-  // ローカル記憶も併用して、保存直後のリロードでも消えないようにする
+  // データの初期化と同期ロジック
   useEffect(() => {
     const saved = localStorage.getItem(STORAGE_KEY);
+    let finalMembers = [...mockData.members];
+    let finalUnits = [...mockData.units];
+
     if (saved) {
       try {
         const parsed = JSON.parse(saved);
+        
+        // GitHubのデータ（mockData）とローカルのデータをマージ
+        // GitHub側に新しいメンバーがいる、またはデータが更新されている場合に備え、
+        // 基本的にはGitHubのデータをベースに、ローカルで追加した可能性のあるものだけを補完する
         if (parsed.members) {
-          // 未設定の性別を「男性」で強制補完（キャッシュ対策）
-          const updatedMembers = parsed.members.map(m => ({
+          const localMembers = parsed.members;
+          // IDをキーにしてマージ（GitHub側のデータを優先）
+          const memberMap = new Map();
+          localMembers.forEach(m => memberMap.set(m.id, m));
+          finalMembers.forEach(m => memberMap.set(m.id, m)); // GitHub側で上書き
+          
+          finalMembers = Array.from(memberMap.values()).map(m => ({
             ...m,
             gender: m.gender || "男性"
           }));
-          setMembers(updatedMembers);
         }
-        if (parsed.units) setUnits(parsed.units);
-      } catch (e) { console.error(e); }
+        
+        if (parsed.units) {
+          const unitMap = new Map();
+          parsed.units.forEach(u => unitMap.set(u.id, u));
+          finalUnits.forEach(u => unitMap.set(u.id, u));
+          finalUnits = Array.from(unitMap.values());
+        }
+
+      } catch (e) {
+        console.error('Data sync error', e);
+      }
     }
+
+    setMembers(finalMembers);
+    setUnits(finalUnits);
+    
+    // 同期した結果を再度保存しておく
+    localStorage.setItem(STORAGE_KEY, JSON.stringify({ units: finalUnits, members: finalMembers }));
   }, []);
 
   const saveToGitHub = useCallback(async (currentUnits, currentMembers) => {

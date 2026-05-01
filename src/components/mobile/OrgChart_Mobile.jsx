@@ -11,11 +11,12 @@ import { ChevronDown } from 'lucide-react';
 
 const getPositionColor = (pos) => {
   if (!pos) return '#a0aec0';
-  if (pos.includes('支店長') || pos.includes('副支店長')) return '#ffd700';
-  if (pos.includes('部長')) return '#ff4b4b';
-  if (pos.includes('所長') || pos.includes('課長')) return '#4b7bff';
-  if (pos.includes('副長')) return '#ff9500';
-  if (pos.includes('係長')) return '#00e676';
+  const p = String(pos);
+  if (p.includes('支店長') || p.includes('副支店長')) return '#ffd700';
+  if (p.includes('部長')) return '#ff4b4b';
+  if (p.includes('所長') || p.includes('課長')) return '#4b7bff';
+  if (p.includes('副長')) return '#ff9500';
+  if (p.includes('係長')) return '#00e676';
   return '#a0aec0';
 };
 

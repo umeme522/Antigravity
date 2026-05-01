@@ -4,20 +4,23 @@ import { motion, AnimatePresence } from 'framer-motion';
 
 const getPositionColor = (pos) => {
   if (!pos) return '#a0aec0';
-  if (pos.includes('支店長') || pos.includes('副支店長')) return '#ffd700'; // 金
-  if (pos.includes('部長')) return '#ff4b4b'; // 赤
-  if (pos.includes('所長') || pos.includes('課長')) return '#4b7bff'; // 青
-  if (pos.includes('副長')) return '#ff9500'; // オレンジ
-  if (pos.includes('係長')) return '#00e676'; // 緑
+  const p = String(pos);
+  if (p.includes('支店長') || p.includes('副支店長')) return '#ffd700'; // 金
+  if (p.includes('部長')) return '#ff4b4b'; // 赤
+  if (p.includes('所長') || p.includes('課長')) return '#4b7bff'; // 青
+  if (p.includes('副長')) return '#ff9500'; // オレンジ
+  if (p.includes('係長')) return '#00e676'; // 緑
   return '#a0aec0'; // スタッフ（グレー）
 };
 
 const getGroupTitle = (pos) => {
-  if (pos.includes('支店長') || pos.includes('副支店長')) return '経営・支店長';
-  if (pos.includes('部長')) return '部長職';
-  if (pos.includes('所長') || pos.includes('課長')) return '課長・所長';
-  if (pos.includes('副長')) return '副長職';
-  if (pos.includes('係長')) return '係長職';
+  if (!pos) return '一般スタッフ';
+  const p = String(pos);
+  if (p.includes('支店長') || p.includes('副支店長')) return '経営・支店長';
+  if (p.includes('部長')) return '部長職';
+  if (p.includes('所長') || p.includes('課長')) return '課長・所長';
+  if (p.includes('副長')) return '副長職';
+  if (p.includes('係長')) return '係長職';
   return '一般スタッフ';
 };
 

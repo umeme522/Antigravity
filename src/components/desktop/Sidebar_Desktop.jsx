@@ -26,6 +26,7 @@ const getPriority = (pos = '') => {
 };
 
 const getGroupTitle = (pos = '') => {
+  if (!pos) return 'スタッフ';
   const p = String(pos);
   if (p === '支店長' || p === '副支店長' || p.includes('部長')) return '支店長・副支店長・部長';
   if (p.includes('所長') || p.includes('課長')) return '所長・課長';
@@ -107,7 +108,7 @@ const Sidebar_Desktop = ({ members = [], units = [], searchTerm = '', setSearchT
     const unit = units.find(u => u.id === member.unitId);
     const unitName = unit ? unit.name.toLowerCase() : '';
     
-    return fullName.includes(search) || pos.includes(search) || unitName.includes(search);
+    return fullName.includes(search) || (pos && pos.includes(search)) || (unitName && unitName.includes(search));
   });
 
 
@@ -334,9 +335,10 @@ const MemberCard = ({ m, onMemberClick }) => {
   const roleColor = getPositionColor(m.position);
   
   const getGlowStyle = (pos) => {
-    if (pos === '支店長') return { boxShadow: '0 0 25px rgba(255, 215, 0, 0.25)', border: '1px solid rgba(255, 215, 0, 0.4)' };
-    if (pos === '副支店長') return { boxShadow: '0 0 25px rgba(192, 192, 192, 0.25)', border: '1px solid rgba(192, 192, 192, 0.4)' };
-    if (pos.includes('部長')) return { boxShadow: '0 0 25px rgba(0, 212, 255, 0.25)', border: '1px solid rgba(0, 212, 255, 0.4)' };
+    const p = pos ? String(pos) : '';
+    if (p === '支店長') return { boxShadow: '0 0 25px rgba(255, 215, 0, 0.25)', border: '1px solid rgba(255, 215, 0, 0.4)' };
+    if (p === '副支店長') return { boxShadow: '0 0 25px rgba(192, 192, 192, 0.25)', border: '1px solid rgba(192, 192, 192, 0.4)' };
+    if (p.includes('部長')) return { boxShadow: '0 0 25px rgba(0, 212, 255, 0.25)', border: '1px solid rgba(0, 212, 255, 0.4)' };
     return { border: '1px solid rgba(255, 255, 255, 0.1)' };
   };
 
