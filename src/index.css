@@ -185,8 +185,8 @@ html, body, #root {
 .edit-input, .search-input {
   width: 100%;
   padding: 16px 20px;
-  background: rgba(255, 255, 255, 0.03) !important;
-  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+  background: #1a1d26 !important; /* 不透明な濃い背景にして確実に文字を見せる */
+  border: 1px solid rgba(255, 255, 255, 0.15) !important;
   border-radius: 14px;
   color: #ffffff !important;
   font-family: var(--font-main);
@@ -194,15 +194,26 @@ html, body, #root {
   transition: var(--transition-premium);
 }
 
+/* セレクトボックスの選択肢を強制的に白文字・濃い背景にする */
+.edit-input option {
+  background-color: #1a1d26 !important;
+  color: #ffffff !important;
+}
+
+/* 日付選択のアイコンを白くする */
+.edit-input::-webkit-calendar-picker-indicator {
+  filter: invert(1);
+}
+
 .edit-input:focus, .search-input:focus {
   outline: none;
   border-color: var(--accent-primary) !important;
   box-shadow: 0 0 0 4px rgba(124, 77, 255, 0.2);
-  background: rgba(255, 255, 255, 0.06) !important;
+  background: #1e222e !important;
 }
 
 .edit-input::placeholder, .search-input::placeholder {
-  color: rgba(255, 255, 255, 0.2) !important;
+  color: rgba(255, 255, 255, 0.3) !important;
 }
 
 .glass {
