@@ -22,8 +22,7 @@ function App() {
   const [selectedMember, setSelectedMember] = useState(null);
   const [isMobile, setIsMobile] = useState(typeof window !== 'undefined' ? window.innerWidth < 768 : false);
 
-  // ウィンドウリサイズ監視
-  useEffect(() => {
+  // 繧ｦ繧｣繝ｳ繝峨え繝ｪ繧ｵ繧､繧ｺ逶｣隕・  useEffect(() => {
     const handleResize = () => setIsMobile(window.innerWidth < 768);
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
@@ -54,23 +53,21 @@ function App() {
     setSelectedMember(newMember);
   };
 
-  // Excel出力ロジック
+  // Excel蜃ｺ蜉帙Ο繧ｸ繝・け
   const handleExportData = () => {
-    const headers = ['社員番号', '姓', '名', '性別', '部署', '役職', '入社年次', '生年月日', '出身', '経歴'];
+    const headers = ['遉ｾ蜩｡逡ｪ蜿ｷ', '蟋・, '蜷・, '諤ｧ蛻･', '驛ｨ鄂ｲ', '蠖ｹ閨ｷ', '蜈･遉ｾ蟷ｴ谺｡', '逕溷ｹｴ譛域律', '蜃ｺ霄ｫ', '邨梧ｭｴ'];
     const rows = members.map(m => {
       const unitName = units.find(u => u.id === m.unitId)?.name || '';
       
-      // 出身: あらゆるプロパティを結合（確実性重視）
-      const hometown = [m.birthplace, m.prefecture, m.hometown].filter(v => v).join(' ');
+      // 蜃ｺ霄ｫ: 縺ゅｉ繧・ｋ繝励Ο繝代ユ繧｣繧堤ｵ仙粋・育｢ｺ螳滓ｧ驥崎ｦ厄ｼ・      const hometown = [m.birthplace, m.prefecture, m.hometown].filter(v => v).join(' ');
       
-      // 経歴: あらゆる構造（配列・オブジェクト）を文字列に強制変換（最強のフラットナー）
-      const rawCareer = m.careerHistory || m.career || m.career_history || '';
+      // 邨梧ｭｴ: 縺ゅｉ繧・ｋ讒矩・磯・蛻励・繧ｪ繝悶ず繧ｧ繧ｯ繝茨ｼ峨ｒ譁・ｭ怜・縺ｫ蠑ｷ蛻ｶ螟画鋤・域怙蠑ｷ縺ｮ繝輔Λ繝・ヨ繝翫・・・      const rawCareer = m.careerHistory || m.career || m.career_history || '';
       let careerText = '';
       
       const flatten = (obj) => {
         if (!obj) return '';
         if (typeof obj !== 'object') return String(obj);
-        // idキーを除外して、意味のある値だけを抽出
+        // id繧ｭ繝ｼ繧帝勁螟悶＠縺ｦ縲∵э蜻ｳ縺ｮ縺ゅｋ蛟､縺縺代ｒ謚ｽ蜃ｺ
         return Object.entries(obj)
           .filter(([key]) => key !== 'id')
           .map(([, v]) => (typeof v === 'object' ? flatten(v) : String(v)))
@@ -109,7 +106,7 @@ function App() {
     const link = document.createElement("a");
     const now = new Date();
     const timestamp = `${now.getFullYear()}-${(now.getMonth() + 1).toString().padStart(2, '0')}-${now.getDate().toString().padStart(2, '0')}_${now.getHours().toString().padStart(2, '0')}${now.getMinutes().toString().padStart(2, '0')}`;
-    link.download = `東日本支店_組織データ_${timestamp}.csv`;
+    link.download = `譚ｱ譌･譛ｬ謾ｯ蠎誉邨・ｹ斐ョ繝ｼ繧ｿ_${timestamp}.csv`;
     link.click();
 
   };
@@ -181,13 +178,10 @@ function App() {
         )}
       </div>
 
-      <AnimatePresence initial={false}>
+
         {selectedMember && (
-          <motion.div 
-            initial={isMobile ? { y: '100%' } : { x: '100%' }}
-            animate={isMobile ? { y: 0 } : { x: 0 }}
-            exit={isMobile ? { y: '100%' } : { x: '100%' }}
-            transition={{ type: 'tween', duration: 0.3, ease: 'easeOut' }}
+          <div 
+
             className="profile-sidebar"
             style={{ 
               position: 'fixed', 
@@ -207,9 +201,9 @@ function App() {
               onClose={() => setSelectedMember(null)}
               isPermanent={false}
             />
-          </motion.div>
+          </div>
         )}
-      </AnimatePresence>
+
     </div>
   );
 }

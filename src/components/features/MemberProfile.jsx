@@ -15,12 +15,13 @@ const POSITIONS = [
 
 const getPositionColor = (pos) => {
   if (!pos) return '#A0AEC0';
-  if (pos.includes('支店長')) return '#FFD700'; // Gold
-  if (pos.includes('部長')) return '#FF4B4B';   // Red
-  if (pos.includes('所長') || pos.includes('課長')) return '#4B7BFF'; // Blue
-  if (pos.includes('副長')) return '#FF9500'; // Orange
-  if (pos.includes('係長')) return '#00E676'; // Green
-  return '#A0AEC0'; // Gray (Staff)
+  const p = String(pos);
+  if (p.includes('支店長')) return '#FFD700'; 
+  if (p.includes('部長')) return '#FF4B4B';   
+  if (p.includes('所長') || p.includes('課長')) return '#4B7BFF'; 
+  if (p.includes('副長')) return '#FF9500'; 
+  if (p.includes('係長')) return '#00E676'; 
+  return '#A0AEC0'; 
 };
 
 const calculateAge = (birthDate) => {
@@ -198,13 +199,8 @@ const MemberProfile = ({ member, unit, units, onUpdate, onDelete, onClose, isPer
   const fullName = `${member.lastName || ''} ${member.firstName || ''}`;
 
   return (
-    <motion.div
-      initial={isPermanent ? false : { x: '100%' }}
-      animate={{ x: 0 }}
-      exit={{ x: '100%' }}
-      transition={{ type: 'tween', duration: 0.3, ease: 'easeOut' }}
-      className={isPermanent ? "profile-panel-permanent" : "profile-panel"}
-    >
+    <div className={isPermanent ? "profile-panel-permanent" : "profile-panel"}>
+
 
       {!isPermanent && (
         <button 
@@ -547,7 +543,8 @@ const MemberProfile = ({ member, unit, units, onUpdate, onDelete, onClose, isPer
           </div>
         </>
       )}
-    </motion.div>
+    </div>
+
   );
 };
 
