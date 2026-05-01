@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { mockData } from '../data/mockData';
 
-const STORAGE_KEY = 'antigravity_org_data';
+const STORAGE_KEY = 'antigravity_org_data_v3'; // バージョンを上げて強制リセット
 
 export const useOrgData = () => {
   const [units, setUnits] = useState(mockData.units || []);
@@ -18,10 +18,9 @@ export const useOrgData = () => {
       try {
         const parsed = JSON.parse(saved);
         
-        // 文字化けチェック または 架空データ（渡辺、佐藤、鈴木）が含まれていたらキャッシュをリセット
-        if (saved.includes('譛') || saved.includes('驛') || saved.includes('繧') || 
-            saved.includes('渡辺') || saved.includes('佐藤') || saved.includes('鈴木')) {
-          console.warn('Inconsistent or fabricated data detected, resetting localStorage.');
+        // 文字化けチェック または 旧バージョンの架空データIDが含まれていたらリセット
+        if (saved.includes('譛') || saved.includes('驛') || saved.includes('m_dept2_chief') || saved.includes('m_top')) {
+          console.warn('Old or corrupted data detected, resetting.');
           localStorage.removeItem(STORAGE_KEY);
         } else {
           if (parsed.members) {
