@@ -27,7 +27,17 @@ export const mockData = {
   ],
   members: [
     // --- 東日本支店 直下 ---
-    { id: "m_okubo", lastName: "大久保", firstName: "祐介", position: "支店長", unitId: "u1", photo: "https://api.dicebear.com/7.x/identicon/svg?seed=Okubo", employeeId: "", gender: "男性" },
+    { 
+      id: "m_okubo", 
+      lastName: "大久保", 
+      firstName: "祐介", 
+      position: "支店長 兼 営業革新部長", 
+      unitId: "u1", 
+      additionalUnitIds: ["u_hq_innovation"], 
+      photo: "https://api.dicebear.com/7.x/identicon/svg?seed=Okubo", 
+      employeeId: "", 
+      gender: "男性" 
+    },
     { id: "m_horiuchi", lastName: "堀内", firstName: "芳人", position: "副支店長", unitId: "u1", photo: "https://api.dicebear.com/7.x/identicon/svg?seed=Horiuchi", employeeId: "", joinDate: "2001", birthDate: "1979-02-02", birthplace: "静岡県磐田市", gender: "男性" },
     
     // --- 支店総務部 ---
@@ -114,17 +124,17 @@ export const mockData = {
     { id: "m_sato_k", lastName: "佐藤", firstName: "樹希亜", position: "スタッフ", unitId: "u_kitakanto", photo: "https://api.dicebear.com/7.x/identicon/svg?seed=SatoK", employeeId: "", joinDate: "2020", gender: "男性" },
     
     // 神奈川綾瀬
-    { id: "m_otomo", lastName: "大友", firstName: "俊也", position: "所長", unitId: "u_ayase", photo: "https://api.dicebear.com/7.x/identicon/svg?seed=Otomo", employeeId: "", gender: "男性" },
+    { id: "m_otomo", lastName: "大友", firstName: "俊也", position: "所長", unitId: "u_ayase", photo: "https://api.dicebear.com/7.x/identicon/svg?seed=Otomo", employeeId: "" , gender: "男性" },
     { id: "m_taira", lastName: "平良", firstName: "一和", position: "スタッフ", unitId: "u_ayase", photo: "https://api.dicebear.com/7.x/identicon/svg?seed=Taira", employeeId: "", joinDate: "2020", gender: "男性" },
     
     // 国立流通
-    { id: "m_yasuda", lastName: "安田", firstName: "忠愛", position: "所長", unitId: "u_kunitachi", photo: "https://api.dicebear.com/7.x/identicon/svg?seed=Yasuda", employeeId: "", gender: "男性" },
-    { id: "m_kurishima", lastName: "栗嶋", firstName: "龍作", position: "副長", unitId: "u_kunitachi", photo: "https://api.dicebear.com/7.x/identicon/svg?seed=Kurishima", employeeId: "", gender: "男性" },
+    { id: "m_yasuda", lastName: "安田", firstName: "忠愛", position: "所長", unitId: "u_kunitachi", photo: "https://api.dicebear.com/7.x/identicon/svg?seed=Yasuda", employeeId: "" , gender: "男性" },
+    { id: "m_kurishima", lastName: "栗嶋", firstName: "龍作", position: "副長", unitId: "u_kunitachi", photo: "https://api.dicebear.com/7.x/identicon/svg?seed=Kurishima", employeeId: "" , gender: "男性" },
     { id: "m_tajiri", lastName: "田尻", firstName: "泰悠", position: "係長", unitId: "u_kunitachi", photo: "https://api.dicebear.com/7.x/identicon/svg?seed=Tajiri", employeeId: "", joinDate: "2018", gender: "男性" },
     { id: "m_seki", lastName: "関", firstName: "晋汰", position: "スタッフ", unitId: "u_kunitachi", photo: "https://api.dicebear.com/7.x/identicon/svg?seed=Seki", employeeId: "", joinDate: "2021", gender: "男性" },
     
     // 青梅流通
-    { id: "m_hara_p", lastName: "原", firstName: "翔平", position: "所長", unitId: "u_ome", photo: "https://api.dicebear.com/7.x/identicon/svg?seed=HaraP", employeeId: "", gender: "男性" },
+    { id: "m_hara_p", lastName: "原", firstName: "翔平", position: "所長", unitId: "u_ome", photo: "https://api.dicebear.com/7.x/identicon/svg?seed=HaraP", employeeId: "" , gender: "男性" },
     { id: "m_kishikawa", lastName: "岸川", firstName: "陽平", position: "係長", unitId: "u_ome", photo: "https://api.dicebear.com/7.x/identicon/svg?seed=Kishikawa", employeeId: "", joinDate: "2017", gender: "男性" },
     { id: "m_onishi", lastName: "大西", firstName: "和哉", position: "スタッフ", unitId: "u_ome", photo: "https://api.dicebear.com/7.x/identicon/svg?seed=Onishi", employeeId: "", joinDate: "2025", gender: "男性" },
     { id: "m_fujii", lastName: "藤井", firstName: "壮也", position: "スタッフ", unitId: "u_ome", photo: "https://api.dicebear.com/7.x/identicon/svg?seed=Fujii", employeeId: "", gender: "男性" }
