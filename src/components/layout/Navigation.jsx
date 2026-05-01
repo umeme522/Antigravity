@@ -7,14 +7,19 @@ const Navigation = ({
   setSidebarTab,
   onExport 
 }) => {
-  const baseUrl = import.meta.env.BASE_URL || '/';
+  const getLogoSrc = () => {
+    const base = import.meta.env.BASE_URL || '/';
+    return base.endsWith('/') ? `${base}logo.png` : `${base}/logo.png`;
+  };
+  
+  const logoSrc = getLogoSrc();
   
   return (
     <div className="nav-sidebar">
       <div className="nav-logo" style={{ margin: '0 0 40px 0', textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
         <div className="logo-container">
           <img 
-            src="/logo.png" 
+            src={logoSrc} 
             alt="Logo" 
             className="app-logo-img"
             style={{ width: '48px', height: 'auto' }}
@@ -56,7 +61,7 @@ const Navigation = ({
 
         <div style={{ marginTop: 'auto', padding: '15px 0', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '6px', borderTop: '1px solid rgba(255,255,255,0.05)' }}>
           <img 
-            src="/logo.png" 
+            src={logoSrc} 
             style={{ width: '32px', height: 'auto', marginBottom: '2px' }} 
             alt="Crescent Logo" 
           />
