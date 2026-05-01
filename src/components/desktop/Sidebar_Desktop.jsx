@@ -39,10 +39,10 @@ const getPlaceholderPhoto = (id) => {
   const base = import.meta.env.BASE_URL || '/';
   const b = base.endsWith('/') ? base : `${base}/`;
   const placeholders = [
-    `${b}placeholders/placeholder_einstein.png`,
-    `${b}placeholders/placeholder_ryoma.png`,
-    `${b}placeholders/placeholder_nobunaga.png`,
-    `${b}placeholders/placeholder_curie.png`
+    `${b}placeholders/anime_1.png`,
+    `${b}placeholders/anime_2.png`,
+    `${b}placeholders/anime_3.png`,
+    `${b}placeholders/anime_4.png`
   ];
   const sId = String(id || '0');
   const index = Math.abs(sId.split('').reduce((a, b) => a + b.charCodeAt(0), 0)) % placeholders.length;
@@ -220,9 +220,9 @@ const Sidebar_Desktop = ({ members = [], units = [], searchTerm = '', setSearchT
 
         {activeTab === 'stats' && (
           <div style={{ flex: 1, overflowY: 'auto', paddingRight: '4px' }}>
-            <h2 style={{ fontSize: '1.1rem', fontWeight: '900', color: '#ffffff', marginBottom: '24px' }}>STATISTICS</h2>
+            <h2 style={{ fontSize: '0.8rem', fontWeight: '900', color: 'rgba(255,255,255,0.4)', marginBottom: '8px', letterSpacing: '0.15em', textTransform: 'uppercase' }}>STATISTICS</h2>
 
-            <div style={{ marginBottom: '16px' }}>
+            <div style={{ marginBottom: '8px' }}>
               <StatCard 
                 label="組織構成サマリー" 
                 total={members.length}
@@ -234,29 +234,28 @@ const Sidebar_Desktop = ({ members = [], units = [], searchTerm = '', setSearchT
               />
             </div>
 
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px', marginBottom: '24px' }}>
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px', marginBottom: '8px' }}>
               <StatCard label="平均年齢" value={stats.avgAge} unit="歳" icon={Clock} color="#00e676" />
               <StatCard label="平均勤続" value={stats.avgService} unit="年" icon={TrendingUp} color="#ff9500" />
             </div>
 
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
-              <div className="glass" style={{ padding: '20px', borderRadius: '24px', border: '1px solid rgba(255,255,255,0.08)', background: 'rgba(255,255,255,0.02)' }}>
-                <h3 style={{ fontSize: '0.8rem', color: 'rgba(255,255,255,0.4)', marginBottom: '18px', fontWeight: '900', letterSpacing: '0.1em', textTransform: 'uppercase' }}>年代別構成</h3>
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+              <div className="glass" style={{ padding: '14px 18px', borderRadius: '20px', border: '1px solid rgba(255,255,255,0.08)', background: 'rgba(255,255,255,0.02)' }}>
+                <h3 style={{ fontSize: '0.7rem', color: 'rgba(255,255,255,0.4)', marginBottom: '12px', fontWeight: '900', letterSpacing: '0.1em', textTransform: 'uppercase' }}>年代別構成</h3>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
                   {stats.genData.map(gen => (
                     <div key={gen.label} style={{ position: 'relative' }}>
-                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: '4px' }}>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                          <div style={{ width: '4px', height: '4px', borderRadius: '50%', background: gen.percent > 0 ? '#00b09b' : 'rgba(255,255,255,0.2)' }} />
-                          <span style={{ fontSize: '0.75rem', color: gen.percent > 0 ? '#fff' : 'rgba(255,255,255,0.4)', fontWeight: '800' }}>{gen.label}</span>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: '2px' }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
+                          <div style={{ width: '3px', height: '3px', borderRadius: '50%', background: gen.percent > 0 ? '#00b09b' : 'rgba(255,255,255,0.2)' }} />
+                          <span style={{ fontSize: '0.65rem', color: gen.percent > 0 ? '#fff' : 'rgba(255,255,255,0.4)', fontWeight: '800' }}>{gen.label}</span>
                         </div>
                         <div style={{ display: 'flex', alignItems: 'baseline', gap: '4px' }}>
-                          <span style={{ fontSize: '1rem', color: gen.percent > 0 ? '#fff' : 'rgba(255,255,255,0.3)', fontWeight: '900', lineHeight: 1 }}>{gen.percent}</span>
-                          <span style={{ fontSize: '0.6rem', color: 'rgba(255,255,255,0.3)', fontWeight: '800' }}>%</span>
-                          <span style={{ fontSize: '0.6rem', color: 'rgba(255,255,255,0.2)', fontWeight: '700', marginLeft: '2px' }}>({gen.count}名)</span>
+                          <span style={{ fontSize: '0.85rem', color: gen.percent > 0 ? '#fff' : 'rgba(255,255,255,0.3)', fontWeight: '900', lineHeight: 1 }}>{gen.percent}</span>
+                          <span style={{ fontSize: '0.55rem', color: 'rgba(255,255,255,0.3)', fontWeight: '800' }}>%</span>
                         </div>
                       </div>
-                      <div style={{ height: '8px', background: 'rgba(0,0,0,0.2)', borderRadius: '4px', padding: '1.5px', border: '1px solid rgba(255,255,255,0.02)', position: 'relative', overflow: 'hidden' }}>
+                      <div style={{ height: '5px', background: 'rgba(0,0,0,0.2)', borderRadius: '3px', padding: '1px', border: '1px solid rgba(255,255,255,0.02)', position: 'relative', overflow: 'hidden' }}>
                         <motion.div 
                           initial={{ width: 0 }} 
                           animate={{ width: `${gen.percent}%` }} 
@@ -265,7 +264,7 @@ const Sidebar_Desktop = ({ members = [], units = [], searchTerm = '', setSearchT
                             height: '100%', 
                             background: 'linear-gradient(90deg, #00b09b 0%, #96c93d 100%)', 
                             borderRadius: '2.5px',
-                            boxShadow: gen.percent > 0 ? '0 0 12px rgba(0, 176, 155, 0.3)' : 'none'
+                            boxShadow: gen.percent > 0 ? '0 0 10px rgba(0, 176, 155, 0.3)' : 'none'
                           }} 
                         />
                       </div>
@@ -274,10 +273,10 @@ const Sidebar_Desktop = ({ members = [], units = [], searchTerm = '', setSearchT
                 </div>
               </div>
 
-              <div className="glass" style={{ padding: '24px', borderRadius: '20px', border: '1px solid rgba(255,255,255,0.08)', background: 'rgba(255,255,255,0.02)' }}>
-                <h3 style={{ fontSize: '0.85rem', color: 'rgba(255,255,255,0.5)', marginBottom: '24px', fontWeight: '800', letterSpacing: '0.05em' }}>役職構成比</h3>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '30px' }}>
-                  <div style={{
+              <div className="glass" style={{ padding: '14px 18px', borderRadius: '20px', border: '1px solid rgba(255,255,255,0.08)', background: 'rgba(255,255,255,0.02)' }}>
+                <h3 style={{ fontSize: '0.7rem', color: 'rgba(255,255,255,0.4)', marginBottom: '12px', fontWeight: '900', letterSpacing: '0.1em', textTransform: 'uppercase' }}>役職構成比</h3>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
+                  <div style={{ width: '80px', height: '80px', position: 'relative' }}>
                     width: '110px', height: '110px', borderRadius: '50%', flexShrink: 0,
                     background: `conic-gradient(${stats.posData.reduce((acc, pos, idx) => {
                       const prevPercent = stats.posData.slice(0, idx).reduce((sum, p) => sum + p.percent, 0);
@@ -336,35 +335,35 @@ const StatCard = ({ label, value, unit, total, icon: Icon, color, isSummary }) =
     const [maleP, femaleP] = String(unit).replace(/[()]/g, '').split(':').map(p => parseInt(p));
 
     return (
-      <div className="glass" style={{ padding: '20px', borderRadius: '24px', border: '1px solid rgba(255,255,255,0.08)', background: 'rgba(255, 255, 255, 0.02)', position: 'relative', overflow: 'hidden' }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-            <div style={{ width: '36px', height: '36px', borderRadius: '10px', background: `${color}22`, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-              <Icon size={20} color={color} />
+      <div className="glass" style={{ padding: '12px 16px', borderRadius: '20px', border: '1px solid rgba(255,255,255,0.08)', background: 'rgba(255, 255, 255, 0.02)', position: 'relative', overflow: 'hidden' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <div style={{ width: '32px', height: '32px', borderRadius: '8px', background: `${color}22`, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <Icon size={18} color={color} />
             </div>
-            <span style={{ fontSize: '0.85rem', color: 'rgba(255,255,255,0.6)', fontWeight: '800', letterSpacing: '0.02em' }}>{label}</span>
+            <span style={{ fontSize: '0.8rem', color: 'rgba(255,255,255,0.6)', fontWeight: '800', letterSpacing: '0.02em' }}>{label}</span>
           </div>
-          <span style={{ fontSize: '0.75rem', color: 'rgba(255,255,255,0.4)', fontWeight: '700' }}>{total}</span>
+          <span style={{ fontSize: '0.7rem', color: 'rgba(255,255,255,0.4)', fontWeight: '700' }}>{total}</span>
         </div>
         
-        <div style={{ display: 'flex', gap: '20px', alignItems: 'flex-end' }}>
+        <div style={{ display: 'flex', gap: '16px', alignItems: 'flex-end' }}>
           <div style={{ flex: 1 }}>
-            <div style={{ display: 'flex', alignItems: 'baseline', gap: '6px', marginBottom: '8px' }}>
-              <span style={{ fontSize: '1.8rem', fontWeight: '900', color: '#fff', lineHeight: 1 }}>{maleText.replace('男 ', '').trim()}</span>
-              <span style={{ fontSize: '0.75rem', color: 'rgba(255,255,255,0.4)', fontWeight: '800' }}>名</span>
-              <span style={{ fontSize: '0.85rem', color: color, fontWeight: '900', marginLeft: '2px' }}>{maleP}%</span>
+            <div style={{ display: 'flex', alignItems: 'baseline', gap: '6px', marginBottom: '4px' }}>
+              <span style={{ fontSize: '1.4rem', fontWeight: '900', color: '#fff', lineHeight: 1 }}>{maleText.replace('男 ', '').trim()}</span>
+              <span style={{ fontSize: '0.7rem', color: 'rgba(255,255,255,0.4)', fontWeight: '800' }}>名</span>
+              <span style={{ fontSize: '0.8rem', color: color, fontWeight: '900', marginLeft: '2px' }}>{maleP}%</span>
             </div>
-            <div style={{ height: '6px', background: 'rgba(255,255,255,0.05)', borderRadius: '3px', overflow: 'hidden' }}>
+            <div style={{ height: '5px', background: 'rgba(255,255,255,0.05)', borderRadius: '3px', overflow: 'hidden' }}>
               <motion.div initial={{ width: 0 }} animate={{ width: `${maleP}%` }} transition={{ duration: 1.5, ease: "easeOut" }} style={{ height: '100%', background: 'linear-gradient(90deg, #4b7bff, #32a1fa)', borderRadius: '3px' }} />
             </div>
           </div>
           <div style={{ flex: 1 }}>
-            <div style={{ display: 'flex', alignItems: 'baseline', gap: '6px', marginBottom: '8px' }}>
-              <span style={{ fontSize: '1.8rem', fontWeight: '900', color: '#fff', lineHeight: 1 }}>{femaleText.replace('女 ', '').trim()}</span>
-              <span style={{ fontSize: '0.75rem', color: 'rgba(255,255,255,0.4)', fontWeight: '800' }}>名</span>
-              <span style={{ fontSize: '0.85rem', color: '#ff4b4b', fontWeight: '900', marginLeft: '2px' }}>{femaleP}%</span>
+            <div style={{ display: 'flex', alignItems: 'baseline', gap: '6px', marginBottom: '4px' }}>
+              <span style={{ fontSize: '1.4rem', fontWeight: '900', color: '#fff', lineHeight: 1 }}>{femaleText.replace('女 ', '').trim()}</span>
+              <span style={{ fontSize: '0.7rem', color: 'rgba(255,255,255,0.4)', fontWeight: '800' }}>名</span>
+              <span style={{ fontSize: '0.8rem', color: '#ff4b4b', fontWeight: '900', marginLeft: '2px' }}>{femaleP}%</span>
             </div>
-            <div style={{ height: '6px', background: 'rgba(255,255,255,0.05)', borderRadius: '3px', overflow: 'hidden' }}>
+            <div style={{ height: '5px', background: 'rgba(255,255,255,0.05)', borderRadius: '3px', overflow: 'hidden' }}>
               <motion.div initial={{ width: 0 }} animate={{ width: `${femaleP}%` }} transition={{ duration: 1.5, ease: "easeOut" }} style={{ height: '100%', background: 'linear-gradient(90deg, #f54242, #ff4b4b)', borderRadius: '3px' }} />
             </div>
           </div>

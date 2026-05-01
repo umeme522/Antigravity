@@ -26,10 +26,10 @@ const getPlaceholderPhoto = (id) => {
   const base = import.meta.env.BASE_URL || '/';
   const b = base.endsWith('/') ? base : `${base}/`;
   const placeholders = [
-    `${b}placeholders/placeholder_einstein.png`,
-    `${b}placeholders/placeholder_ryoma.png`,
-    `${b}placeholders/placeholder_nobunaga.png`,
-    `${b}placeholders/placeholder_curie.png`
+    `${b}placeholders/anime_1.png`,
+    `${b}placeholders/anime_2.png`,
+    `${b}placeholders/anime_3.png`,
+    `${b}placeholders/anime_4.png`
   ];
   const sId = String(id || '0');
   const index = Math.abs(sId.split('').reduce((a, b) => a + b.charCodeAt(0), 0)) % placeholders.length;
