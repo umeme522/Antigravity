@@ -5,8 +5,8 @@
   --bg-dark: #0a0c12;
   --bg-dark-accent: #11141d;
   --bg-card: rgba(255, 255, 255, 0.05);
-  --accent-primary: #7c4dff;
-  --accent-secondary: #00d4ff;
+  --accent-primary: #00ffcc;
+  --accent-secondary: #00bf9a;
   --text-primary: #ffffff;
   --text-secondary: rgba(255, 255, 255, 0.7);
   --glass-border: rgba(255, 255, 255, 0.15);
@@ -18,7 +18,7 @@
 /* --- Premium Glow Effects --- */
 .glow-gold { box-shadow: 0 0 20px rgba(255, 215, 0, 0.2), inset 0 0 10px rgba(255, 215, 0, 0.1); border: 1px solid rgba(255, 215, 0, 0.3) !important; }
 .glow-silver { box-shadow: 0 0 20px rgba(192, 192, 192, 0.2), inset 0 0 10px rgba(192, 192, 192, 0.1); border: 1px solid rgba(192, 192, 192, 0.3) !important; }
-.glow-blue { box-shadow: 0 0 20px rgba(0, 212, 255, 0.2), inset 0 0 10px rgba(0, 212, 255, 0.1); border: 1px solid rgba(0, 212, 255, 0.3) !important; }
+.glow-blue { box-shadow: 0 0 20px rgba(0, 255, 204, 0.2), inset 0 0 10px rgba(0, 255, 204, 0.1); border: 1px solid rgba(0, 255, 204, 0.3) !important; }
 
 html, body, #root {
   width: 100%;
