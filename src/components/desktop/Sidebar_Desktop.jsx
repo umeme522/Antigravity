@@ -300,6 +300,8 @@ const Sidebar_Desktop = ({ members = [], units = [], searchTerm = '', setSearchT
                       );
                     })}
                   </div>
+                </div>
+              </div>
             </div>
           </div>
         )}
