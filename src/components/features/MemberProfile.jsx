@@ -318,26 +318,33 @@ const MemberProfile = ({ member, unit, units, onUpdate, onDelete, onClose, isPer
               </button>
             </div>
             
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
               {(formData.careerHistory || []).map((c, i) => (
-                <div key={c.id || c._id || i} style={{ background: 'rgba(255,255,255,0.03)', padding: '12px', borderRadius: '10px', border: '1px solid rgba(255,255,255,0.05)', position: 'relative' }}>
-                  <button onClick={() => handleRemoveCareer(c.id || c._id || i)} style={{ position: 'absolute', top: '8px', right: '8px', background: 'transparent', border: 'none', color: 'rgba(255,0,0,0.5)', cursor: 'pointer' }}>
-                    <Trash2 size={14} />
-                  </button>
-                  <div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
+                <div key={c.id || c._id || i} style={{ background: 'rgba(255,255,255,0.03)', padding: '12px 16px', borderRadius: '12px', border: '1px solid rgba(255,255,255,0.05)', display: 'flex', alignItems: 'center', gap: '15px' }}>
+                  <div style={{ width: '70px', flexShrink: 0 }}>
                     <input 
-                      placeholder="年 (例: 2020年)" 
+                      placeholder="年度" 
                       value={c.period || ''} 
                       onChange={(e) => handleCareerChange(c.id || c._id || i, 'period', e.target.value)}
-                      style={{ background: 'transparent', border: 'none', borderBottom: '1px solid rgba(255,255,255,0.1)', color: '#fff', fontSize: '0.85rem', width: '80px' }}
-                    />
-                    <input 
-                      placeholder="所属・部署" 
-                      value={c.department || ''} 
-                      onChange={(e) => handleCareerChange(c.id || c._id || i, 'department', e.target.value)}
-                      style={{ background: 'transparent', border: 'none', borderBottom: '1px solid rgba(255,255,255,0.1)', color: 'rgba(255,255,255,0.8)', fontSize: '0.85rem', flex: 1 }}
+                      style={{ background: 'transparent', border: 'none', borderBottom: '1px solid rgba(255,255,255,0.2)', color: 'var(--accent-primary)', fontSize: '0.9rem', width: '100%', textAlign: 'center', fontWeight: '700', padding: '4px 0' }}
                     />
                   </div>
+                  <div style={{ flex: 1 }}>
+                    <input 
+                      placeholder="所属・部署名を入力" 
+                      value={c.department || ''} 
+                      onChange={(e) => handleCareerChange(c.id || c._id || i, 'department', e.target.value)}
+                      style={{ background: 'transparent', border: 'none', borderBottom: '1px solid rgba(255,255,255,0.2)', color: 'rgba(255,255,255,0.9)', fontSize: '0.9rem', width: '100%', padding: '4px 0' }}
+                    />
+                  </div>
+                  <button 
+                    onClick={() => handleRemoveCareer(c.id || c._id || i)} 
+                    style={{ background: 'transparent', border: 'none', color: 'rgba(255,75,75,0.6)', cursor: 'pointer', padding: '5px', display: 'flex', alignItems: 'center', justifyContent: 'center', transition: 'all 0.2s' }}
+                    onMouseOver={(e) => e.currentTarget.style.color = '#FF4B4B'}
+                    onMouseOut={(e) => e.currentTarget.style.color = 'rgba(255,75,75,0.6)'}
+                  >
+                    <Trash2 size={18} />
+                  </button>
                 </div>
               ))}
             </div>
