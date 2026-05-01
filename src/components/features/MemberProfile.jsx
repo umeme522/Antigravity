@@ -108,8 +108,8 @@ const MemberProfile = ({ member, unit, units, onUpdate, onDelete, onClose, isPer
       const img = new Image();
       img.onload = () => {
         const canvas = document.createElement('canvas');
-        const MAX_WIDTH = 300;
-        const MAX_HEIGHT = 300;
+        const MAX_WIDTH = 200;
+        const MAX_HEIGHT = 200;
         let width = img.width;
         let height = img.height;
 
@@ -129,7 +129,8 @@ const MemberProfile = ({ member, unit, units, onUpdate, onDelete, onClose, isPer
         canvas.height = height;
         const ctx = canvas.getContext('2d');
         ctx.drawImage(img, 0, 0, width, height);
-        const dataUrl = canvas.toDataURL('image/jpeg', 0.7);
+        // 品質を0.6に設定してさらに軽量化
+        const dataUrl = canvas.toDataURL('image/jpeg', 0.6);
         setFormData(prev => ({ ...prev, photo: dataUrl }));
       };
       img.src = event.target.result;
