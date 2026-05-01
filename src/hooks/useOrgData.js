@@ -25,8 +25,11 @@ export const useOrgData = () => {
         } else {
           if (parsed.members) {
             const memberMap = new Map();
-            parsed.members.forEach(m => memberMap.set(m.id, m));
+            // まずは mockData をベースにセット
             finalMembers.forEach(m => memberMap.set(m.id, m));
+            // その後、保存されている編集済みデータで上書きする
+            parsed.members.forEach(m => memberMap.set(m.id, m));
+            
             finalMembers = Array.from(memberMap.values()).map(m => ({
               ...m,
               gender: m.gender || "男性"
@@ -34,8 +37,8 @@ export const useOrgData = () => {
           }
           if (parsed.units) {
             const unitMap = new Map();
-            parsed.units.forEach(u => unitMap.set(u.id, u));
             finalUnits.forEach(u => unitMap.set(u.id, u));
+            parsed.units.forEach(u => unitMap.set(u.id, u));
             finalUnits = Array.from(unitMap.values());
           }
         }
