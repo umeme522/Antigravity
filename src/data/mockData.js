@@ -14,6 +14,15 @@ export const mockData = {
   ],
   members: [
     {
+      id: "m_dept2_chief",
+      lastName: "佐藤",
+      firstName: "健太",
+      position: "部長",
+      unitId: "u_dept2",
+      photo: "https://api.dicebear.com/7.x/identicon/svg?seed=Sato",
+      employeeId: "10000"
+    },
+    {
       id: "m1",
       lastName: "根岸",
       firstName: "一雄",

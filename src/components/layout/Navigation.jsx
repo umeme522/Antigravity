@@ -7,15 +7,16 @@ const Navigation = ({
   setSidebarTab,
   onExport // 追加: 出力ボタン用のプロップ
 }) => {
+  const baseUrl = import.meta.env.BASE_URL || '/';
+  
   return (
     <div className="nav-sidebar">
       <div className="nav-logo" style={{ margin: '0 0 40px 0', textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
         <div className="logo-container">
           <img 
-            src="logo.png" 
+            src={`${baseUrl}logo.png`} 
             alt="Logo" 
             className="app-logo-img"
-            onError={(e) => { e.target.src = 'public/logo.png'; }}
           />
         </div>
       </div>
@@ -55,7 +56,7 @@ const Navigation = ({
         </button>
 
         <div style={{ marginTop: 'auto', padding: '20px 0', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '8px', borderTop: '1px solid rgba(255,255,255,0.05)' }}>
-          <img src="logo.png" style={{ width: '32px', height: '32px', opacity: 0.6, filter: 'grayscale(1) brightness(2)' }} />
+          <img src={`${baseUrl}logo.png`} style={{ width: '32px', height: '32px', opacity: 0.6, filter: 'grayscale(1) brightness(2)' }} />
           <span style={{ fontSize: '0.5rem', color: 'rgba(255,255,255,0.3)', fontWeight: 'bold', letterSpacing: '0.1em' }}>CRESCENT</span>
         </div>
       </div>
