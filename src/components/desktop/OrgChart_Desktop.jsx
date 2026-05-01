@@ -23,18 +23,17 @@ const getPositionColor = (pos = '') => {
 };
 
 const getPlaceholderPhoto = (id) => {
-  const historicalFigures = [
-    'https://upload.wikimedia.org/wikipedia/commons/d/d3/Albert_Einstein_Head.jpg',
-    'https://upload.wikimedia.org/wikipedia/commons/3/39/GodfreyKneller-IsaacNewton-1689.jpg',
-    'https://upload.wikimedia.org/wikipedia/commons/c/c3/Oda_Nobunaga_Portrait_2.jpg',
-    'https://upload.wikimedia.org/wikipedia/commons/4/4b/Sakamoto_Ryoma_cropped.jpg',
-    'https://upload.wikimedia.org/wikipedia/commons/c/c8/Marie_Curie_1903.jpg',
-    'https://upload.wikimedia.org/wikipedia/commons/5/50/Jacques-Louis_David_-_The_Emperor_Napoleon_in_His_Study_at_the_Tuileries_-_Google_Art_Project.jpg',
-    'https://upload.wikimedia.org/wikipedia/commons/6/6f/Beethoven.jpg'
+  const base = import.meta.env.BASE_URL || '/';
+  const b = base.endsWith('/') ? base : `${base}/`;
+  const placeholders = [
+    `${b}placeholder_1.png`,
+    `${b}placeholder_2.png`,
+    `${b}placeholder_3.png`,
+    `${b}placeholder_4.png`
   ];
   const sId = String(id || '0');
-  const index = Math.abs(sId.split('').reduce((a, b) => a + b.charCodeAt(0), 0)) % historicalFigures.length;
-  return historicalFigures[index];
+  const index = Math.abs(sId.split('').reduce((a, b) => a + b.charCodeAt(0), 0)) % placeholders.length;
+  return placeholders[index];
 };
 
 // --- 統合ノード (部署 + リーダー達) ---
