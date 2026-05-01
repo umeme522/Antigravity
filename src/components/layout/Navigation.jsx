@@ -71,9 +71,11 @@ const Navigation = ({
             <img 
               src={iconSrc} 
               style={{ 
-                width: '105%', 
-                height: '105%', 
-                objectFit: 'cover'
+                width: '100%', 
+                height: '100%', 
+                objectFit: 'cover',
+                transform: 'scale(1.8)',
+                objectPosition: 'center'
               }} 
               alt="KONOIKE Logo" 
             />
