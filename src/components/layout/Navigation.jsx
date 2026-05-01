@@ -9,8 +9,22 @@ const Navigation = ({
 }) => {
   return (
     <div className="nav-sidebar">
-      <div className="nav-logo" style={{ margin: '0 0 40px 0', color: 'var(--accent-primary)', textAlign: 'center' }}>
-        <Network size={32} />
+      <div className="nav-logo" style={{ margin: '0 0 40px 0', textAlign: 'center', display: 'flex', justifyContent: 'center' }}>
+        <div className="logo-container">
+          <img 
+            src="/logo.png" 
+            alt="Logo" 
+            className="app-logo-img"
+            onError={(e) => { 
+              e.target.style.display = 'none'; 
+              const fallback = e.target.parentElement.querySelector('.logo-fallback');
+              if (fallback) fallback.style.display = 'block';
+            }}
+          />
+          <div className="logo-fallback" style={{ display: 'none' }}>
+            <Network size={32} color="var(--accent-primary)" />
+          </div>
+        </div>
       </div>
       
       <div className="nav-items" style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '12px' }}>

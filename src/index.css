@@ -323,3 +323,8 @@ html, body, #root {
   background: rgba(255, 255, 255, 0.25);
 }
 
+
+/* 繝ｭ繧ｴ縺ｮ縺翫＠繧・ｌ縺ｪ貊晏・ */
+.logo-container { position: relative; width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; }
+.app-logo-img { width: 100%; height: 100%; object-fit: contain; filter: drop-shadow(0 0 10px rgba(0, 230, 118, 0.4)); animation: logo-glow 3s infinite alternate; }
+@keyframes logo-glow { from { filter: drop-shadow(0 0 5px rgba(0, 230, 118, 0.3)) brightness(1); } to { filter: drop-shadow(0 0 15px rgba(0, 230, 118, 0.6)) brightness(1.2); } }
