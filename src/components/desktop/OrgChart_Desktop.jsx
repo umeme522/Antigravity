@@ -205,9 +205,9 @@ const OrgChart_Desktop = ({ units, members, onMemberClick }) => {
 
     const vNodes = [];
     const vEdges = [];
-    const VERTICAL_GAP = 220;
-    const HORIZONTAL_GAP = 70;
-    const MEMBER_GAP = 110;
+    const VERTICAL_GAP = 150;
+    const HORIZONTAL_GAP = 40;
+    const MEMBER_GAP = 85;
 
     const subtreeSizeMap = {};
 
@@ -220,15 +220,15 @@ const OrgChart_Desktop = ({ units, members, onMemberClick }) => {
       });
       const generalMembers = u.members.filter(m => !isLeader(m, u));
       const mHeight = isExpanded ? (generalMembers.length * MEMBER_GAP) + 60 : 0;
-      const unitNodeHeight = 60 + (leaders.length * 68);
+      const unitNodeHeight = 50 + (leaders.length * 62);
 
       if (!isExpanded || u.children.length === 0) {
-        subtreeSizeMap[unitId] = { width: 280, height: unitNodeHeight + mHeight };
+        subtreeSizeMap[unitId] = { width: 180, height: unitNodeHeight + mHeight };
         return subtreeSizeMap[unitId];
       }
 
       const cSizes = u.children.map(calculateSize);
-      const w = Math.max(280, cSizes.reduce((a, s) => a + s.width, 0) + (u.children.length - 1) * HORIZONTAL_GAP);
+      const w = Math.max(180, cSizes.reduce((a, s) => a + s.width, 0) + (u.children.length - 1) * HORIZONTAL_GAP);
       const h = unitNodeHeight + mHeight + VERTICAL_GAP + Math.max(...cSizes.map(s => s.height));
       subtreeSizeMap[unitId] = { width: w, height: h };
       return subtreeSizeMap[unitId];
@@ -275,14 +275,14 @@ const OrgChart_Desktop = ({ units, members, onMemberClick }) => {
         id: unitId,
         type: 'unit',
         data: { label: u.name, level, leaders, isExpanded, hasGeneralMembers: generalMembers.length > 0 || u.children.length > 0, onClick: () => toggleUnit(unitId), onMemberClick },
-        position: { x: x - 140, y },
+        position: { x: x - 90, y }, // 180px幅の半分
       });
 
       if (u.parentId) {
         vEdges.push({ id: `e-${u.parentId}-${unitId}`, source: u.parentId, target: unitId, type: 'smoothstep', style: { strokeDasharray: '5,5' } });
       }
 
-      const unitHeight = 60 + (leaders.length * 68);
+      const unitHeight = 50 + (leaders.length * 62);
       if (isExpanded) {
         generalMembers.forEach((m, i) => {
           const mId = `m-${m.id}-at-${unitId}`;
@@ -290,7 +290,7 @@ const OrgChart_Desktop = ({ units, members, onMemberClick }) => {
             id: mId,
             type: 'member',
             data: { member: m, onClick: onMemberClick },
-            position: { x: x - 130, y: y + unitHeight + 40 + (i * MEMBER_GAP) },
+            position: { x: x - 85, y: y + unitHeight + 30 + (i * MEMBER_GAP) }, // 170px幅の半分に近い値
           });
           vEdges.push({ id: `e-${unitId}-${mId}`, source: unitId, target: mId, type: 'smoothstep' });
         });
