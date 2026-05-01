@@ -18,9 +18,10 @@ export const useOrgData = () => {
       try {
         const parsed = JSON.parse(saved);
         
-        // 文字化けチェック
-        if (saved.includes('譛') || saved.includes('驛') || saved.includes('繧')) {
-          console.warn('Corrupted data detected, resetting localStorage.');
+        // 文字化けチェック または 架空データ（渡辺、佐藤、鈴木）が含まれていたらキャッシュをリセット
+        if (saved.includes('譛') || saved.includes('驛') || saved.includes('繧') || 
+            saved.includes('渡辺') || saved.includes('佐藤') || saved.includes('鈴木')) {
+          console.warn('Inconsistent or fabricated data detected, resetting localStorage.');
           localStorage.removeItem(STORAGE_KEY);
         } else {
           if (parsed.members) {
