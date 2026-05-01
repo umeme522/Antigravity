@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 
 // Layout & Features (Split into Desktop and Mobile)
 import Sidebar_Desktop from './components/desktop/Sidebar_Desktop';
@@ -166,33 +167,39 @@ function App() {
         )}
       </div>
 
-      {/* プロフィール画面 (アニメーションなしで確実に表示) */}
-      {selectedMember && (
-        <div 
-          className="profile-sidebar"
-          style={{ 
-            position: 'fixed', 
-            right: 0, 
-            top: 0, 
-            bottom: 0, 
-            width: isMobile ? '100%' : '450px', 
-            zIndex: 99999,
-            background: '#1f2937', // 少し明るめのグレー（確実に存在がわかるように）
-            borderLeft: '2px solid #4B7BFF', // 左端に青い線を入れて区切りを明確に
-            overflowY: 'auto',
-            boxShadow: '-10px 0 30px rgba(0,0,0,0.5)'
-          }}
-        >
-          <MemberProfile 
-            member={selectedMember}
-            unit={selectedUnit}
-            units={units}
-            onUpdate={handleUpdateMember}
-            onClose={() => setSelectedMember(null)}
-            isPermanent={false}
-          />
-        </div>
-      )}
+      {/* プロフィール画面 (アニメーション復活) */}
+      <AnimatePresence initial={false}>
+        {selectedMember && (
+          <motion.div 
+            initial={isMobile ? { y: '100%' } : { x: '100%' }}
+            animate={isMobile ? { y: 0 } : { x: 0 }}
+            exit={isMobile ? { y: '100%' } : { x: '100%' }}
+            transition={{ type: 'tween', duration: 0.3, ease: 'easeOut' }}
+            className="profile-sidebar"
+            style={{ 
+              position: 'fixed', 
+              right: 0, 
+              top: 0, 
+              bottom: 0, 
+              width: isMobile ? '100%' : '450px', 
+              zIndex: 99999,
+              background: '#1f2937',
+              borderLeft: '2px solid #4B7BFF',
+              overflowY: 'auto',
+              boxShadow: '-10px 0 30px rgba(0,0,0,0.5)'
+            }}
+          >
+            <MemberProfile 
+              member={selectedMember}
+              unit={selectedUnit}
+              units={units}
+              onUpdate={handleUpdateMember}
+              onClose={() => setSelectedMember(null)}
+              isPermanent={false}
+            />
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }

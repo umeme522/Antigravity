@@ -114,12 +114,12 @@ const MemberNode = ({ data }) => {
   const roleColor = getPositionColor(member.position);
   return (
     <div
+      className="glass"
       onClick={() => onClick(member)}
       style={{
         padding: '12px 15px',
         paddingLeft: '30px',
         width: '260px',
-        background: '#1a1d26',
         borderRadius: '16px',
         border: '1px solid rgba(255, 255, 255, 0.1)',
         display: 'flex',

@@ -206,7 +206,8 @@ html, body, #root {
 }
 
 .glass {
-  background: #1e222d;
+  background: rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(25px) saturate(150%);
   border: 1px solid var(--glass-border);
   box-shadow: var(--glass-shadow);
 }

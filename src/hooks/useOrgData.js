@@ -106,16 +106,14 @@ export const useOrgData = () => {
     return memberToSave;
   };
 
-  const createNewMember = (defaultUnitId) => {
     return {
       id: `m_${Date.now()}`,
       lastName: '', firstName: '', reading: '', position: '',
       unitId: defaultUnitId || '',
-      photo: `https://api.dicebear.com/7.x/avataaars/svg?seed=${Date.now()}`,
+      photo: `https://api.dicebear.com/7.x/identicon/svg?seed=${Date.now()}`,
       birthDate: '', joinDate: new Date().getFullYear().toString(),
       employeeId: '', birthplace: '', careerHistory: [], isNew: true
     };
-  };
 
   return { units, members, updateMember, createNewMember, isSaving };
 };

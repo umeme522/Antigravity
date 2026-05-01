@@ -153,13 +153,13 @@ const MemberProfile = ({ member, unit, units, onUpdate, onDelete, onClose, isPer
   };
 
   const InfoRow = ({ icon: Icon, label, value }) => (
-    <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+    <motion.div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
       <Icon size={18} color="var(--accent-primary)" />
       <div style={{ flex: 1 }}>
         <div style={{ fontSize: '0.75rem', color: 'var(--text-secondary)' }}>{label}</div>
         <div style={{ fontSize: '0.95rem', color: '#ffffff' }}>{value || '-'}</div>
       </div>
-    </div>
+    </motion.div>
   );
 
   const renderUnitOptions = () => {
@@ -199,7 +199,19 @@ const MemberProfile = ({ member, unit, units, onUpdate, onDelete, onClose, isPer
   const fullName = `${member.lastName || ''} ${member.firstName || ''}`;
 
   return (
-    <div className={isPermanent ? "profile-panel-permanent" : "profile-panel"}>
+    <motion.div
+      initial={isPermanent ? false : { x: '100%' }}
+      animate={{ x: 0 }}
+      exit={{ x: '100%' }}
+      transition={{ type: 'tween', duration: 0.3, ease: 'easeOut' }}
+      className={isPermanent ? "profile-panel-permanent" : "profile-panel"}
+      style={{
+        background: 'rgba(26, 32, 44, 0.8)',
+        backdropFilter: 'blur(10px)',
+        border: '1px solid rgba(255, 255, 255, 0.1)',
+        zIndex: 100
+      }}
+    >
 
 
       {!isPermanent && (
