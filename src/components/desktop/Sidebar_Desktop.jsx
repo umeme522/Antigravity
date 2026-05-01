@@ -349,18 +349,20 @@ const StatCard = ({ label, value, unit, total, icon: Icon, color, isSummary }) =
         
         <div style={{ display: 'flex', gap: '20px', alignItems: 'flex-end' }}>
           <div style={{ flex: 1 }}>
-            <div style={{ display: 'flex', alignItems: 'baseline', gap: '4px', marginBottom: '8px' }}>
+            <div style={{ display: 'flex', alignItems: 'baseline', gap: '6px', marginBottom: '8px' }}>
               <span style={{ fontSize: '1.8rem', fontWeight: '900', color: '#fff', lineHeight: 1 }}>{maleText.replace('男 ', '').trim()}</span>
-              <span style={{ fontSize: '0.7rem', color: 'rgba(255,255,255,0.4)', fontWeight: '800' }}>名 (男性)</span>
+              <span style={{ fontSize: '0.75rem', color: 'rgba(255,255,255,0.4)', fontWeight: '800' }}>名</span>
+              <span style={{ fontSize: '0.85rem', color: color, fontWeight: '900', marginLeft: '2px' }}>{maleP}%</span>
             </div>
             <div style={{ height: '6px', background: 'rgba(255,255,255,0.05)', borderRadius: '3px', overflow: 'hidden' }}>
               <motion.div initial={{ width: 0 }} animate={{ width: `${maleP}%` }} transition={{ duration: 1.5, ease: "easeOut" }} style={{ height: '100%', background: 'linear-gradient(90deg, #4b7bff, #32a1fa)', borderRadius: '3px' }} />
             </div>
           </div>
           <div style={{ flex: 1 }}>
-            <div style={{ display: 'flex', alignItems: 'baseline', gap: '4px', marginBottom: '8px' }}>
+            <div style={{ display: 'flex', alignItems: 'baseline', gap: '6px', marginBottom: '8px' }}>
               <span style={{ fontSize: '1.8rem', fontWeight: '900', color: '#fff', lineHeight: 1 }}>{femaleText.replace('女 ', '').trim()}</span>
-              <span style={{ fontSize: '0.7rem', color: 'rgba(255,255,255,0.4)', fontWeight: '800' }}>名 (女性)</span>
+              <span style={{ fontSize: '0.75rem', color: 'rgba(255,255,255,0.4)', fontWeight: '800' }}>名</span>
+              <span style={{ fontSize: '0.85rem', color: '#ff4b4b', fontWeight: '900', marginLeft: '2px' }}>{femaleP}%</span>
             </div>
             <div style={{ height: '6px', background: 'rgba(255,255,255,0.05)', borderRadius: '3px', overflow: 'hidden' }}>
               <motion.div initial={{ width: 0 }} animate={{ width: `${femaleP}%` }} transition={{ duration: 1.5, ease: "easeOut" }} style={{ height: '100%', background: 'linear-gradient(90deg, #f54242, #ff4b4b)', borderRadius: '3px' }} />
