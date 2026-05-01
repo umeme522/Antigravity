@@ -330,37 +330,36 @@ const StatCard = ({ label, value, unit, total, icon: Icon, color, isSummary }) =
     const [maleP, femaleP] = String(unit).replace(/[()]/g, '').split(':').map(p => parseInt(p));
 
     return (
-      <div className="glass" style={{ padding: '16px 20px', borderRadius: '18px', border: '1px solid var(--glass-border)', background: 'rgba(255, 255, 255, 0.05)' }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <Icon size={16} color={color} />
-            <span style={{ fontSize: '0.75rem', color: 'rgba(255,255,255,0.4)', fontWeight: '800' }}>{label}</span>
-          </div>
-          <div style={{ display: 'flex', alignItems: 'baseline', gap: '4px' }}>
-            <span style={{ fontSize: '1.4rem', fontWeight: '900', color: '#ffffff' }}>{total}</span>
-            <span style={{ fontSize: '0.7rem', color: 'rgba(255,255,255,0.7)', fontWeight: 'bold' }}>名</span>
-          </div>
-        </div>
-
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
-          <div style={{ display: 'flex', gap: '12px' }}>
-            <div style={{ fontSize: '0.75rem', fontWeight: '800' }}>
-              <span style={{ color: '#4b7bff', marginRight: '4px' }}>男</span>
-              <span style={{ color: '#ffffff' }}>{maleText.replace('男 ', '').trim()}</span>
+      <div className="glass" style={{ padding: '20px', borderRadius: '24px', border: '1px solid rgba(255,255,255,0.08)', background: 'rgba(255, 255, 255, 0.02)', position: 'relative', overflow: 'hidden' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+            <div style={{ width: '36px', height: '36px', borderRadius: '10px', background: `${color}22`, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <Icon size={20} color={color} />
             </div>
-            <div style={{ fontSize: '0.75rem', fontWeight: '800' }}>
-              <span style={{ color: '#ff4b4b', marginRight: '4px' }}>女</span>
-              <span style={{ color: '#ffffff' }}>{femaleText.replace('女 ', '').trim()}</span>
+            <span style={{ fontSize: '0.85rem', color: 'rgba(255,255,255,0.6)', fontWeight: '800', letterSpacing: '0.02em' }}>{label}</span>
+          </div>
+          <span style={{ fontSize: '0.75rem', color: 'rgba(255,255,255,0.4)', fontWeight: '700' }}>{total}</span>
+        </div>
+        
+        <div style={{ display: 'flex', gap: '20px', alignItems: 'flex-end' }}>
+          <div style={{ flex: 1 }}>
+            <div style={{ display: 'flex', alignItems: 'baseline', gap: '4px', marginBottom: '8px' }}>
+              <span style={{ fontSize: '1.8rem', fontWeight: '900', color: '#fff', lineHeight: 1 }}>{maleText.replace('男 ', '').trim()}</span>
+              <span style={{ fontSize: '0.7rem', color: 'rgba(255,255,255,0.4)', fontWeight: '800' }}>名 (男性)</span>
+            </div>
+            <div style={{ height: '6px', background: 'rgba(255,255,255,0.05)', borderRadius: '3px', overflow: 'hidden' }}>
+              <motion.div initial={{ width: 0 }} animate={{ width: `${maleP}%` }} transition={{ duration: 1.5, ease: "easeOut" }} style={{ height: '100%', background: 'linear-gradient(90deg, #4b7bff, #32a1fa)', borderRadius: '3px' }} />
             </div>
           </div>
-          <div style={{ fontSize: '0.7rem', fontWeight: '900', color: 'rgba(255,255,255,0.8)' }}>
-            {maleP}% : {femaleP}%
+          <div style={{ flex: 1 }}>
+            <div style={{ display: 'flex', alignItems: 'baseline', gap: '4px', marginBottom: '8px' }}>
+              <span style={{ fontSize: '1.8rem', fontWeight: '900', color: '#fff', lineHeight: 1 }}>{femaleText.replace('女 ', '').trim()}</span>
+              <span style={{ fontSize: '0.7rem', color: 'rgba(255,255,255,0.4)', fontWeight: '800' }}>名 (女性)</span>
+            </div>
+            <div style={{ height: '6px', background: 'rgba(255,255,255,0.05)', borderRadius: '3px', overflow: 'hidden' }}>
+              <motion.div initial={{ width: 0 }} animate={{ width: `${femaleP}%` }} transition={{ duration: 1.5, ease: "easeOut" }} style={{ height: '100%', background: 'linear-gradient(90deg, #f54242, #ff4b4b)', borderRadius: '3px' }} />
+            </div>
           </div>
-        </div>
-
-        <div style={{ width: '100%', height: '6px', background: 'rgba(255,255,255,0.05)', borderRadius: '10px', overflow: 'hidden', display: 'flex' }}>
-          <div style={{ width: `${maleP}%`, height: '100%', background: 'linear-gradient(90deg, #4b7bff, #32a1fa)', borderRadius: '10px 0 0 10px' }} />
-          <div style={{ width: `${femaleP}%`, height: '100%', background: 'linear-gradient(90deg, #f54242, #ff4b4b)', borderRadius: '0 10px 10px 0' }} />
         </div>
       </div>
     );
@@ -368,23 +367,24 @@ const StatCard = ({ label, value, unit, total, icon: Icon, color, isSummary }) =
 
   return (
     <div className="glass" style={{ 
-      padding: '12px 16px', 
-      borderRadius: '14px', 
-      border: '1px solid var(--glass-border)',
-      display: 'flex', 
-      alignItems: 'center', 
-      justifyContent: 'space-between',
-      gap: '12px'
+      padding: '20px', 
+      borderRadius: '20px', 
+      border: '1px solid rgba(255,255,255,0.08)', 
+      background: 'rgba(255,255,255,0.02)',
+      display: 'flex',
+      flexDirection: 'column',
+      gap: '12px',
+      position: 'relative'
     }}>
-      <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-        <div style={{ padding: '6px', borderRadius: '8px', background: `${color}15`, color: color, display: 'flex' }}>
-          <Icon size={14} />
+      <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+        <div style={{ width: '32px', height: '32px', borderRadius: '8px', background: `${color}15`, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          <Icon size={18} color={color} />
         </div>
-        <span style={{ fontSize: '0.7rem', color: 'rgba(255,255,255,0.4)', fontWeight: '800', whiteSpace: 'nowrap' }}>{label}</span>
+        <span style={{ fontSize: '0.75rem', color: 'rgba(255,255,255,0.5)', fontWeight: '800', letterSpacing: '0.02em' }}>{label}</span>
       </div>
-      <div style={{ display: 'flex', alignItems: 'baseline', gap: '4px' }}>
-        <span style={{ fontSize: '1.1rem', fontWeight: '900', color: 'white' }}>{value}</span>
-        <span style={{ fontSize: '0.65rem', color: 'rgba(255,255,255,0.6)', fontWeight: '600' }}>{unit}</span>
+      <div style={{ display: 'flex', alignItems: 'baseline', gap: '4px', marginLeft: '2px' }}>
+        <span style={{ fontSize: '1.6rem', fontWeight: '900', color: '#fff', lineHeight: 1 }}>{value}</span>
+        <span style={{ fontSize: '0.75rem', color: 'rgba(255,255,255,0.4)', fontWeight: '800' }}>{unit}</span>
       </div>
     </div>
   );
