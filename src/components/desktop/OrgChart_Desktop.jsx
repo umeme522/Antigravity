@@ -22,6 +22,21 @@ const getPositionColor = (pos = '') => {
   return '#A0AEC0'; 
 };
 
+const getPlaceholderPhoto = (id) => {
+  const historicalFigures = [
+    'https://upload.wikimedia.org/wikipedia/commons/d/d3/Albert_Einstein_Head.jpg',
+    'https://upload.wikimedia.org/wikipedia/commons/3/39/GodfreyKneller-IsaacNewton-1689.jpg',
+    'https://upload.wikimedia.org/wikipedia/commons/c/c3/Oda_Nobunaga_Portrait_2.jpg',
+    'https://upload.wikimedia.org/wikipedia/commons/4/4b/Sakamoto_Ryoma_cropped.jpg',
+    'https://upload.wikimedia.org/wikipedia/commons/c/c8/Marie_Curie_1903.jpg',
+    'https://upload.wikimedia.org/wikipedia/commons/5/50/Jacques-Louis_David_-_The_Emperor_Napoleon_in_His_Study_at_the_Tuileries_-_Google_Art_Project.jpg',
+    'https://upload.wikimedia.org/wikipedia/commons/6/6f/Beethoven.jpg'
+  ];
+  const sId = String(id || '0');
+  const index = Math.abs(sId.split('').reduce((a, b) => a + b.charCodeAt(0), 0)) % historicalFigures.length;
+  return historicalFigures[index];
+};
+
 // --- 統合ノード (部署 + リーダー達) ---
 const UnitNode = ({ data }) => {
   const { label, level, leaders, isExpanded, onClick, onMemberClick, hasGeneralMembers } = data;
@@ -93,9 +108,11 @@ const UnitNode = ({ data }) => {
             cursor: 'pointer',
           }}
         >
-          {leader.photo && (
-            <img src={leader.photo} alt={leader.lastName} style={{ width: '44px', height: '44px', borderRadius: '10px', objectFit: 'cover', objectPosition: 'center' }} />
-          )}
+          <img 
+            src={leader.photo || getPlaceholderPhoto(leader.id)} 
+            alt={leader.lastName} 
+            style={{ width: '44px', height: '44px', borderRadius: '10px', objectFit: 'cover', objectPosition: 'center' }} 
+          />
 
           <div style={{ textAlign: 'left' }}>
             <div style={{ fontWeight: '700', fontSize: '1rem', color: '#fff' }}>{leader.lastName} {leader.firstName}</div>
@@ -129,9 +146,11 @@ const MemberNode = ({ data }) => {
       }}
     >
       <Handle type="target" position={Position.Top} style={{ background: 'transparent', border: 'none' }} />
-      {member.photo && (
-        <img src={member.photo} alt={member.lastName} style={{ width: '44px', height: '44px', borderRadius: '10px', objectFit: 'cover', objectPosition: 'center' }} />
-      )}
+      <img 
+        src={member.photo || getPlaceholderPhoto(member.id)} 
+        alt={member.lastName} 
+        style={{ width: '44px', height: '44px', borderRadius: '10px', objectFit: 'cover', objectPosition: 'center' }} 
+      />
 
       <div style={{ textAlign: 'left' }}>
         <div style={{ fontWeight: '700', fontSize: '1rem', color: '#fff' }}>{member.lastName} {member.firstName}</div>

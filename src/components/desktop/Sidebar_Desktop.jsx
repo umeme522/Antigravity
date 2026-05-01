@@ -35,6 +35,21 @@ const getGroupTitle = (pos = '') => {
   return 'スタッフ';
 };
 
+const getPlaceholderPhoto = (id) => {
+  const historicalFigures = [
+    'https://upload.wikimedia.org/wikipedia/commons/d/d3/Albert_Einstein_Head.jpg',
+    'https://upload.wikimedia.org/wikipedia/commons/3/39/GodfreyKneller-IsaacNewton-1689.jpg',
+    'https://upload.wikimedia.org/wikipedia/commons/c/c3/Oda_Nobunaga_Portrait_2.jpg',
+    'https://upload.wikimedia.org/wikipedia/commons/4/4b/Sakamoto_Ryoma_cropped.jpg',
+    'https://upload.wikimedia.org/wikipedia/commons/c/c8/Marie_Curie_1903.jpg',
+    'https://upload.wikimedia.org/wikipedia/commons/5/50/Jacques-Louis_David_-_The_Emperor_Napoleon_in_His_Study_at_the_Tuileries_-_Google_Art_Project.jpg',
+    'https://upload.wikimedia.org/wikipedia/commons/6/6f/Beethoven.jpg'
+  ];
+  const sId = String(id || '0');
+  const index = Math.abs(sId.split('').reduce((a, b) => a + b.charCodeAt(0), 0)) % historicalFigures.length;
+  return historicalFigures[index];
+};
+
 
 const Sidebar_Desktop = ({ members = [], units = [], searchTerm = '', setSearchTerm, onMemberClick, onAddMember, activeTab, setActiveTab }) => {
   const [groupBy, setGroupBy] = useState('position');
@@ -377,11 +392,9 @@ const MemberCard = ({ m, onMemberClick }) => {
       }}
     >
       <div style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '4px', background: roleColor, borderRadius: '18px 18px 0 0', opacity: 0.8 }} />
-      {m.photo && (
-        <div style={{ width: '52px', height: '52px', margin: '0 auto 10px', borderRadius: '14px', overflow: 'hidden', border: '2px solid rgba(255,255,255,0.1)', background: 'rgba(0,0,0,0.2)' }}>
-          <img src={m.photo} alt={m.lastName} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-        </div>
-      )}
+      <div style={{ width: '52px', height: '52px', margin: '0 auto 10px', borderRadius: '14px', overflow: 'hidden', border: '2px solid rgba(255,255,255,0.1)', background: 'rgba(0,0,0,0.2)' }}>
+        <img src={m.photo || getPlaceholderPhoto(m.id)} alt={m.lastName} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+      </div>
       <div style={{ fontWeight: '800', fontSize: '0.85rem', color: '#fff', marginBottom: '4px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{m.lastName} {m.firstName}</div>
       <div style={{ fontSize: '0.7rem', color: roleColor, fontWeight: '900', opacity: 0.9 }}>{m.position}</div>
     </motion.div>
