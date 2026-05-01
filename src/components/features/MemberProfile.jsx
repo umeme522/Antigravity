@@ -108,29 +108,26 @@ const MemberProfile = ({ member, unit, units, onUpdate, onDelete, onClose, isPer
       const img = new Image();
       img.onload = () => {
         const canvas = document.createElement('canvas');
-        const MAX_WIDTH = 200;
-        const MAX_HEIGHT = 200;
-        let width = img.width;
-        let height = img.height;
-
-        if (width > height) {
-          if (width > MAX_WIDTH) {
-            height *= MAX_WIDTH / width;
-            width = MAX_WIDTH;
-          }
-        } else {
-          if (height > MAX_HEIGHT) {
-            width *= MAX_HEIGHT / height;
-            height = MAX_HEIGHT;
-          }
-        }
-
-        canvas.width = width;
-        canvas.height = height;
+        // 組織図のアイコンとして最適なサイズに設定
+        const SIZE = 256; 
+        canvas.width = SIZE;
+        canvas.height = SIZE;
+        
         const ctx = canvas.getContext('2d');
-        ctx.drawImage(img, 0, 0, width, height);
-        // 品質を0.6に設定してさらに軽量化
-        const dataUrl = canvas.toDataURL('image/jpeg', 0.6);
+        
+        // 中央で正方形に切り抜くロジック
+        const minSide = Math.min(img.width, img.height);
+        const sourceX = (img.width - minSide) / 2;
+        const sourceY = (img.height - minSide) / 2;
+        
+        ctx.drawImage(img, sourceX, sourceY, minSide, minSide, 0, 0, SIZE, SIZE);
+        
+        // WebPが使えるなら使い、なければJPEGで圧縮 (0.7品質)
+        const mimeType = canvas.toDataURL('image/webp').indexOf('data:image/webp') === 0 
+          ? 'image/webp' 
+          : 'image/jpeg';
+        
+        const dataUrl = canvas.toDataURL(mimeType, 0.7);
         setFormData(prev => ({ ...prev, photo: dataUrl }));
       };
       img.src = event.target.result;
