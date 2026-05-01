@@ -240,23 +240,23 @@ const Sidebar_Desktop = ({ members = [], units = [], searchTerm = '', setSearchT
             </div>
 
             <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
-              <div className="glass" style={{ padding: '24px', borderRadius: '24px', border: '1px solid rgba(255,255,255,0.08)', background: 'rgba(255,255,255,0.02)' }}>
-                <h3 style={{ fontSize: '0.85rem', color: 'rgba(255,255,255,0.4)', marginBottom: '28px', fontWeight: '900', letterSpacing: '0.1em', textTransform: 'uppercase' }}>年代別構成</h3>
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '22px' }}>
+              <div className="glass" style={{ padding: '20px', borderRadius: '24px', border: '1px solid rgba(255,255,255,0.08)', background: 'rgba(255,255,255,0.02)' }}>
+                <h3 style={{ fontSize: '0.8rem', color: 'rgba(255,255,255,0.4)', marginBottom: '18px', fontWeight: '900', letterSpacing: '0.1em', textTransform: 'uppercase' }}>年代別構成</h3>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
                   {stats.genData.map(gen => (
                     <div key={gen.label} style={{ position: 'relative' }}>
-                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: '10px' }}>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: '4px' }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
                           <div style={{ width: '4px', height: '4px', borderRadius: '50%', background: gen.percent > 0 ? '#00b09b' : 'rgba(255,255,255,0.2)' }} />
-                          <span style={{ fontSize: '0.8rem', color: gen.percent > 0 ? '#fff' : 'rgba(255,255,255,0.4)', fontWeight: '800' }}>{gen.label}</span>
+                          <span style={{ fontSize: '0.75rem', color: gen.percent > 0 ? '#fff' : 'rgba(255,255,255,0.4)', fontWeight: '800' }}>{gen.label}</span>
                         </div>
-                        <div style={{ display: 'flex', alignItems: 'baseline', gap: '6px' }}>
-                          <span style={{ fontSize: '1.1rem', color: gen.percent > 0 ? '#fff' : 'rgba(255,255,255,0.3)', fontWeight: '900', lineHeight: 1 }}>{gen.percent}</span>
+                        <div style={{ display: 'flex', alignItems: 'baseline', gap: '4px' }}>
+                          <span style={{ fontSize: '1rem', color: gen.percent > 0 ? '#fff' : 'rgba(255,255,255,0.3)', fontWeight: '900', lineHeight: 1 }}>{gen.percent}</span>
                           <span style={{ fontSize: '0.6rem', color: 'rgba(255,255,255,0.3)', fontWeight: '800' }}>%</span>
-                          <span style={{ fontSize: '0.65rem', color: 'rgba(255,255,255,0.2)', fontWeight: '700', marginLeft: '4px' }}>({gen.count}名)</span>
+                          <span style={{ fontSize: '0.6rem', color: 'rgba(255,255,255,0.2)', fontWeight: '700', marginLeft: '2px' }}>({gen.count}名)</span>
                         </div>
                       </div>
-                      <div style={{ height: '10px', background: 'rgba(0,0,0,0.2)', borderRadius: '5px', padding: '2px', border: '1px solid rgba(255,255,255,0.03)', position: 'relative', overflow: 'hidden' }}>
+                      <div style={{ height: '8px', background: 'rgba(0,0,0,0.2)', borderRadius: '4px', padding: '1.5px', border: '1px solid rgba(255,255,255,0.02)', position: 'relative', overflow: 'hidden' }}>
                         <motion.div 
                           initial={{ width: 0 }} 
                           animate={{ width: `${gen.percent}%` }} 
@@ -264,8 +264,8 @@ const Sidebar_Desktop = ({ members = [], units = [], searchTerm = '', setSearchT
                           style={{ 
                             height: '100%', 
                             background: 'linear-gradient(90deg, #00b09b 0%, #96c93d 100%)', 
-                            borderRadius: '3px',
-                            boxShadow: gen.percent > 0 ? '0 0 15px rgba(0, 176, 155, 0.4)' : 'none'
+                            borderRadius: '2.5px',
+                            boxShadow: gen.percent > 0 ? '0 0 12px rgba(0, 176, 155, 0.3)' : 'none'
                           }} 
                         />
                       </div>
