@@ -300,17 +300,6 @@ const Sidebar_Desktop = ({ members = [], units = [], searchTerm = '', setSearchT
                       );
                     })}
                   </div>
-                </div>
-              </div>
-textAlign: 'right' }}>
-                          <span style={{ color: '#ffffff', fontWeight: '900' }}>{pos.percent}%</span>
-                          <span style={{ color: 'rgba(255,255,255,0.9)', marginLeft: '4px', fontWeight: 'bold' }}>({pos.count}名)</span>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </div>
             </div>
           </div>
         )}
