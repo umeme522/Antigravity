@@ -261,7 +261,7 @@ const MemberProfile = ({ member, unit, units, onUpdate, onDelete, onClose, isPer
               </select>
             </div>
             <div className="form-group">
-              <label style={{ color: 'var(--text-secondary)', fontSize: '0.8rem', marginBottom: '4px', display: 'block' }}>生年月日</label>
+              <label style={{ color: 'var(--text-secondary)', fontSize: '0.8rem', marginBottom: '4px', display: 'block' }}>生年月日（年齢自動算出）</label>
               <input type="date" name="birthDate" value={formData.birthDate || ''} onChange={handleChange} className="edit-input" />
             </div>
           </div>
@@ -318,7 +318,7 @@ const MemberProfile = ({ member, unit, units, onUpdate, onDelete, onClose, isPer
                   </button>
                   <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
                     <input 
-                      placeholder="期間 (例: 2020年4月〜)" 
+                      placeholder="年 (例: 2020年)" 
                       value={c.period || ''} 
                       onChange={(e) => handleCareerChange(c.id || c._id || i, 'period', e.target.value)}
                       style={{ background: 'transparent', border: 'none', borderBottom: '1px solid rgba(255,255,255,0.1)', color: '#fff', fontSize: '0.85rem', width: '90%' }}
