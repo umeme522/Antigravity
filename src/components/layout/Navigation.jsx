@@ -22,31 +22,7 @@ const Navigation = ({
   
   return (
     <div className="nav-sidebar">
-      <div className="nav-logo" style={{ margin: '10px 0 40px 0', textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-        <div className="logo-container" style={{ 
-          width: '72px', 
-          height: '72px', 
-          borderRadius: '50%', 
-          overflow: 'hidden', 
-          display: 'flex', 
-          alignItems: 'center', 
-          justifyContent: 'center',
-          background: 'rgba(0, 255, 204, 0.05)',
-          border: '1px solid rgba(0, 255, 204, 0.3)',
-          boxShadow: 'none'
-        }}>
-          <img 
-            src={iconSrc} 
-            alt="Logo" 
-            className="app-logo-img"
-            style={{ 
-              width: '105%', 
-              height: '105%', 
-              objectFit: 'cover'
-            }}
-          />
-        </div>
-      </div>
+      <div style={{ height: '40px' }} />
       
       <div className="nav-items" style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '12px' }}>
         <button onClick={() => setIsSidebarOpen(false)} className={`nav-btn ${!isSidebarOpen ? 'active' : ''}`} style={{ width: '100%' }} title="組織図">
