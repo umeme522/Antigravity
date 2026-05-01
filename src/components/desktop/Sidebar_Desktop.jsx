@@ -83,7 +83,7 @@ const Sidebar_Desktop = ({ members = [], units = [], searchTerm = '', setSearchT
     })).sort((a, b) => a.priority - b.priority);
 
     const genderCounts = safeMembers.reduce((acc, m) => {
-      const g = m.gender || '男性'; // 未設定は男性扱い
+      const g = m.gender || '男性'; 
       if (g === '男性') acc.male++;
       else if (g === '女性') acc.female++;
       return acc;
@@ -165,7 +165,6 @@ const Sidebar_Desktop = ({ members = [], units = [], searchTerm = '', setSearchT
                   return 100;
                 };
 
-
                 return getGroupPriority(a) - getGroupPriority(b);
               }).map(([title, ms]) => (
                 <div key={title} style={{ marginBottom: '24px' }}>
@@ -221,12 +220,10 @@ const Sidebar_Desktop = ({ members = [], units = [], searchTerm = '', setSearchT
               />
             </div>
 
-
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px', marginBottom: '24px' }}>
               <StatCard label="平均年齢" value={stats.avgAge} unit="歳" icon={Clock} color="#00e676" />
               <StatCard label="平均勤続" value={stats.avgService} unit="年" icon={TrendingUp} color="#ff9500" />
             </div>
-
 
             <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
               <div className="glass" style={{ padding: '20px', borderRadius: '16px', border: '1px solid rgba(255,255,255,0.1)' }}>
@@ -290,42 +287,37 @@ const StatCard = ({ label, value, unit, total, icon: Icon, color, isSummary }) =
     const [maleP, femaleP] = String(unit).replace(/[()]/g, '').split(':').map(p => parseInt(p));
 
     return (
-      <div className="glass" style={{ padding: '24px', borderRadius: '20px', border: '1px solid var(--glass-border)', background: 'rgba(255, 255, 255, 0.05)' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '20px' }}>
-          <div style={{ padding: '10px', borderRadius: '12px', background: `${color}15`, color: color }}>
-            <Icon size={20} />
+      <div className="glass" style={{ padding: '16px 20px', borderRadius: '18px', border: '1px solid var(--glass-border)', background: 'rgba(255, 255, 255, 0.05)' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <Icon size={16} color={color} />
+            <span style={{ fontSize: '0.75rem', color: 'rgba(255,255,255,0.4)', fontWeight: '800' }}>{label}</span>
           </div>
-          <span style={{ fontSize: '0.8rem', color: 'rgba(255,255,255,0.5)', fontWeight: '800', letterSpacing: '0.08em' }}>{label}</span>
-        </div>
-        
-        <div style={{ textAlign: 'center', marginBottom: '24px' }}>
-          <div style={{ fontSize: '0.75rem', color: 'rgba(255,255,255,0.4)', marginBottom: '4px', fontWeight: 'bold' }}>総人数</div>
-          <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'center', gap: '8px' }}>
-            <span style={{ fontSize: '2.8rem', fontWeight: '900', color: '#ffffff', lineHeight: 1 }}>{total}</span>
-            <span style={{ fontSize: '1rem', color: 'rgba(255,255,255,0.3)', fontWeight: 'bold' }}>名</span>
+          <div style={{ display: 'flex', alignItems: 'baseline', gap: '4px' }}>
+            <span style={{ fontSize: '1.4rem', fontWeight: '900', color: '#ffffff' }}>{total}</span>
+            <span style={{ fontSize: '0.7rem', color: 'rgba(255,255,255,0.3)', fontWeight: 'bold' }}>名</span>
           </div>
         </div>
 
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: '12px' }}>
-          <div style={{ textAlign: 'left' }}>
-            <div style={{ fontSize: '0.65rem', color: '#4b7bff', fontWeight: '900', marginBottom: '2px' }}>男性</div>
-            <span style={{ fontSize: '1.4rem', fontWeight: '900', color: '#ffffff' }}>{maleText.replace('男 ', '').trim()}</span>
-            <span style={{ fontSize: '0.7rem', color: 'rgba(255,255,255,0.3)', marginLeft: '4px' }}>名</span>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
+          <div style={{ display: 'flex', gap: '12px' }}>
+            <div style={{ fontSize: '0.75rem', fontWeight: '800' }}>
+              <span style={{ color: '#4b7bff', marginRight: '4px' }}>男</span>
+              <span style={{ color: '#ffffff' }}>{maleText.replace('男 ', '').trim()}</span>
+            </div>
+            <div style={{ fontSize: '0.75rem', fontWeight: '800' }}>
+              <span style={{ color: '#ff4b4b', marginRight: '4px' }}>女</span>
+              <span style={{ color: '#ffffff' }}>{femaleText.replace('女 ', '').trim()}</span>
+            </div>
           </div>
-          <div style={{ textAlign: 'right' }}>
-            <div style={{ fontSize: '0.65rem', color: '#ff4b4b', fontWeight: '900', marginBottom: '2px' }}>女性</div>
-            <span style={{ fontSize: '1.4rem', fontWeight: '900', color: '#ffffff' }}>{femaleText.replace('女 ', '').trim()}</span>
-            <span style={{ fontSize: '0.7rem', color: 'rgba(255,255,255,0.3)', marginLeft: '4px' }}>名</span>
+          <div style={{ fontSize: '0.7rem', fontWeight: '900', color: 'rgba(255,255,255,0.4)' }}>
+            {maleP}% : {femaleP}%
           </div>
         </div>
 
-        <div style={{ width: '100%', height: '10px', background: 'rgba(255,255,255,0.05)', borderRadius: '10px', overflow: 'hidden', display: 'flex' }}>
+        <div style={{ width: '100%', height: '6px', background: 'rgba(255,255,255,0.05)', borderRadius: '10px', overflow: 'hidden', display: 'flex' }}>
           <div style={{ width: `${maleP}%`, height: '100%', background: 'linear-gradient(90deg, #4b7bff, #32a1fa)', borderRadius: '10px 0 0 10px' }} />
           <div style={{ width: `${femaleP}%`, height: '100%', background: 'linear-gradient(90deg, #f54242, #ff4b4b)', borderRadius: '0 10px 10px 0' }} />
-        </div>
-        <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '8px', fontSize: '0.75rem', fontWeight: '900', color: 'rgba(255,255,255,0.5)' }}>
-          <span>{maleP}%</span>
-          <span>{femaleP}%</span>
         </div>
       </div>
     );
@@ -390,4 +382,3 @@ const MemberCard = ({ m, onMemberClick }) => {
 
 
 export default Sidebar_Desktop;
-
