@@ -56,7 +56,6 @@ const UnitNode = ({ data }) => {
           fontSize: '1.1rem',
           textAlign: 'center',
           cursor: 'pointer',
-          boxShadow: '0 10px 20px rgba(0,0,0,0.15)',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
@@ -373,7 +372,7 @@ const ZoomControls = () => {
   const zoom = useStore((s) => s.transform[2]);
   const zoomPercent = Math.round(zoom * 100);
 
-  const btnStyle = { width: '44px', height: '44px', borderRadius: '12px', background: '#2d3748', border: '1px solid rgba(255, 255, 255, 0.1)', color: 'white', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', transition: 'all 0.2s ease', boxShadow: '0 4px 15px rgba(0,0,0,0.3)' };
+  const btnStyle = { width: '44px', height: '44px', borderRadius: '12px', background: '#2d3748', border: '1px solid rgba(255, 255, 255, 0.1)', color: 'white', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', transition: 'all 0.2s ease' };
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '8px' }}>
