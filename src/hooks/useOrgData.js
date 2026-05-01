@@ -18,29 +18,27 @@ export const useOrgData = () => {
       try {
         const parsed = JSON.parse(saved);
         
-        // GitHubのデータ（mockData）とローカルのデータをマージ
-        // GitHub側に新しいメンバーがいる、またはデータが更新されている場合に備え、
-        // 基本的にはGitHubのデータをベースに、ローカルで追加した可能性のあるものだけを補完する
-        if (parsed.members) {
-          const localMembers = parsed.members;
-          // IDをキーにしてマージ（GitHub側のデータを優先）
-          const memberMap = new Map();
-          localMembers.forEach(m => memberMap.set(m.id, m));
-          finalMembers.forEach(m => memberMap.set(m.id, m)); // GitHub側で上書き
-          
-          finalMembers = Array.from(memberMap.values()).map(m => ({
-            ...m,
-            gender: m.gender || "男性"
-          }));
+        // 文字化けチェック: 特徴的な化け文字が含まれていたらキャッシュを破棄
+        if (saved.includes('譛') || saved.includes('驛') || saved.includes('繧')) {
+          console.warn('Corrupted data detected, resetting localStorage.');
+          localStorage.removeItem(STORAGE_KEY);
+        } else {
+          if (parsed.members) {
+            const memberMap = new Map();
+            parsed.members.forEach(m => memberMap.set(m.id, m));
+            finalMembers.forEach(m => memberMap.set(m.id, m));
+            finalMembers = Array.from(memberMap.values()).map(m => ({
+              ...m,
+              gender: m.gender || "男性"
+            }));
+          }
+          if (parsed.units) {
+            const unitMap = new Map();
+            parsed.units.forEach(u => unitMap.set(u.id, u));
+            finalUnits.forEach(u => unitMap.set(u.id, u));
+            finalUnits = Array.from(unitMap.values());
+          }
         }
-        
-        if (parsed.units) {
-          const unitMap = new Map();
-          parsed.units.forEach(u => unitMap.set(u.id, u));
-          finalUnits.forEach(u => unitMap.set(u.id, u));
-          finalUnits = Array.from(unitMap.values());
-        }
-
       } catch (e) {
         console.error('Data sync error', e);
       }

@@ -70,7 +70,7 @@ const UnitNode = ({ data }) => {
 
         <span style={{ flex: 1 }}>{label}</span>
         {hasGeneralMembers && (
-          <div style={{ transform: isExpanded ? 'rotate(180deg)' : 'rotate(0deg)', transition: 'transform(0.4s)', opacity: 0.7 }}>
+          <div style={{ transform: isExpanded ? 'rotate(180deg)' : 'rotate(0deg)', transition: 'transform 0.4s', opacity: 0.7 }}>
             <ChevronDown size={18} />
           </div>
         )}
