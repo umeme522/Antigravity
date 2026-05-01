@@ -26,14 +26,14 @@ const getPlaceholderPhoto = (id) => {
   const base = import.meta.env.BASE_URL || '/';
   const b = base.endsWith('/') ? base : `${base}/`;
   const placeholders = [
-    `${b}placeholder_1.png`,
-    `${b}placeholder_2.png`,
-    `${b}placeholder_3.png`,
-    `${b}placeholder_4.png`
+    `${b}placeholders/placeholder_einstein.png`,
+    `${b}placeholders/placeholder_ryoma.png`,
+    `${b}placeholders/placeholder_nobunaga.png`,
+    `${b}placeholders/placeholder_curie.png`
   ];
   const sId = String(id || '0');
   const index = Math.abs(sId.split('').reduce((a, b) => a + b.charCodeAt(0), 0)) % placeholders.length;
-  return placeholders[index];
+  return placeholders[index].replace('//', '/');
 };
 
 // --- 統合ノード (部署 + リーダー達) ---
