@@ -262,7 +262,14 @@ const MemberProfile = ({ member, unit, units, onUpdate, onDelete, onClose, isPer
             </div>
             <div className="form-group">
               <label style={{ color: 'var(--text-secondary)', fontSize: '0.8rem', marginBottom: '4px', display: 'block' }}>生年月日（年齢自動算出）</label>
-              <input type="date" name="birthDate" value={formData.birthDate || ''} onChange={handleChange} className="edit-input" />
+              <input 
+                type="text" 
+                name="birthDate" 
+                value={formData.birthDate || ''} 
+                onChange={handleChange} 
+                className="edit-input" 
+                placeholder="例: 1980-01-01"
+              />
             </div>
           </div>
 
