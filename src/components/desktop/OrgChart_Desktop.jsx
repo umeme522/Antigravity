@@ -57,7 +57,7 @@ const UnitNode = ({ data }) => {
   }
 
   return (
-    <div style={{ width: '220px', position: 'relative' }}>
+    <div style={{ width: '180px', position: 'relative' }}>
       <Handle type="target" position={Position.Top} style={{ background: 'transparent', border: 'none' }} />
       <div
         onClick={onClick}
@@ -67,7 +67,7 @@ const UnitNode = ({ data }) => {
           borderRadius: leaders && leaders.length > 0 ? '16px 16px 0 0' : '16px',
           color: textColor,
           fontWeight: '900',
-          fontSize: '1.1rem',
+          fontSize: '0.9rem',
           textAlign: 'center',
           cursor: 'pointer',
           display: 'flex',
@@ -110,12 +110,12 @@ const UnitNode = ({ data }) => {
           <img 
             src={leader.photo || getPlaceholderPhoto(leader.id)} 
             alt={leader.lastName} 
-            style={{ width: '48px', height: '48px', borderRadius: '50%', objectFit: 'cover', border: `2px solid ${getPositionColor(leader.position)}44`, boxShadow: '0 4px 10px rgba(0,0,0,0.3)' }} 
+            style={{ width: '40px', height: '40px', borderRadius: '50%', objectFit: 'cover', border: `2px solid ${getPositionColor(leader.position)}44`, boxShadow: '0 4px 10px rgba(0,0,0,0.3)' }} 
           />
 
           <div style={{ textAlign: 'left' }}>
-            <div style={{ fontWeight: '700', fontSize: '1rem', color: '#fff' }}>{leader.lastName} {leader.firstName}</div>
-            <div style={{ fontSize: '0.75rem', color: getPositionColor(leader.position), fontWeight: '900', marginTop: '2px' }}>{leader.position}</div>
+            <div style={{ fontWeight: '700', fontSize: '0.9rem', color: '#fff' }}>{leader.lastName} {leader.firstName}</div>
+            <div style={{ fontSize: '0.65rem', color: getPositionColor(leader.position), fontWeight: '900', marginTop: '1px' }}>{leader.position}</div>
           </div>
         </div>
       ))}
@@ -132,15 +132,15 @@ const MemberNode = ({ data }) => {
       className="glass"
       onClick={() => onClick(member)}
       style={{
-        padding: '10px 12px',
-        paddingLeft: '15px',
-        width: '210px',
-        borderRadius: '16px',
+        padding: '8px 10px',
+        paddingLeft: '12px',
+        width: '170px',
+        borderRadius: '14px',
         border: '1px solid rgba(255, 255, 255, 0.1)',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'flex-start',
-        gap: '12px',
+        gap: '10px',
         cursor: 'pointer',
       }}
     >
@@ -148,12 +148,12 @@ const MemberNode = ({ data }) => {
       <img 
         src={member.photo || getPlaceholderPhoto(member.id)} 
         alt={member.lastName} 
-        style={{ width: '48px', height: '48px', borderRadius: '50%', objectFit: 'cover', border: `2px solid ${getPositionColor(member.position)}44`, boxShadow: '0 4px 10px rgba(0,0,0,0.3)' }} 
+        style={{ width: '40px', height: '40px', borderRadius: '50%', objectFit: 'cover', border: `2px solid ${getPositionColor(member.position)}44`, boxShadow: '0 4px 10px rgba(0,0,0,0.3)' }} 
       />
 
       <div style={{ textAlign: 'left' }}>
-        <div style={{ fontWeight: '700', fontSize: '1rem', color: '#fff' }}>{member.lastName} {member.firstName}</div>
-        <div style={{ fontSize: '0.75rem', color: roleColor, fontWeight: '900', marginTop: '2px' }}>{member.position}</div>
+        <div style={{ fontWeight: '700', fontSize: '0.9rem', color: '#fff' }}>{member.lastName} {member.firstName}</div>
+        <div style={{ fontSize: '0.65rem', color: roleColor, fontWeight: '900', marginTop: '1px' }}>{member.position}</div>
       </div>
 
       <Handle type="source" position={Position.Bottom} style={{ background: 'transparent', border: 'none' }} />
