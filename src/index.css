@@ -16,9 +16,9 @@
 }
 
 /* --- Premium Glow Effects --- */
-.glow-gold { box-shadow: 0 0 20px rgba(255, 215, 0, 0.2), inset 0 0 10px rgba(255, 215, 0, 0.1); border: 1px solid rgba(255, 215, 0, 0.3) !important; }
-.glow-silver { box-shadow: 0 0 20px rgba(192, 192, 192, 0.2), inset 0 0 10px rgba(192, 192, 192, 0.1); border: 1px solid rgba(192, 192, 192, 0.3) !important; }
-.glow-blue { box-shadow: 0 0 20px rgba(0, 255, 204, 0.2), inset 0 0 10px rgba(0, 255, 204, 0.1); border: 1px solid rgba(0, 255, 204, 0.3) !important; }
+.glow-gold { border: 1px solid rgba(255, 215, 0, 0.4) !important; }
+.glow-silver { border: 1px solid rgba(192, 192, 192, 0.4) !important; }
+.glow-blue { border: 1px solid rgba(0, 255, 204, 0.4) !important; }
 
 html, body, #root {
   width: 100%;

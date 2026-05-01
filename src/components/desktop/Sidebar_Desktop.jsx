@@ -345,9 +345,9 @@ const MemberCard = ({ m, onMemberClick }) => {
   
   const getGlowStyle = (pos) => {
     const p = pos ? String(pos) : '';
-    if (p === '支店長') return { boxShadow: '0 0 25px rgba(255, 215, 0, 0.25)', border: '1px solid rgba(255, 215, 0, 0.4)' };
-    if (p === '副支店長') return { boxShadow: '0 0 25px rgba(192, 192, 192, 0.25)', border: '1px solid rgba(192, 192, 192, 0.4)' };
-    if (p.includes('部長')) return { boxShadow: '0 0 25px rgba(0, 212, 255, 0.25)', border: '1px solid rgba(0, 212, 255, 0.4)' };
+    if (p === '支店長') return { border: '1px solid rgba(255, 215, 0, 0.3)' };
+    if (p === '副支店長') return { border: '1px solid rgba(192, 192, 192, 0.3)' };
+    if (p.includes('部長')) return { border: '1px solid rgba(0, 255, 204, 0.3)' };
     return { border: '1px solid rgba(255, 255, 255, 0.1)' };
   };
 
