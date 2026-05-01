@@ -13,11 +13,12 @@ import { motion } from 'framer-motion';
 
 const getPositionColor = (pos) => {
   if (!pos) return '#a0aec0';
-  if (pos.includes('支店長') || pos.includes('副支店長')) return '#ffd700';
-  if (pos.includes('部長')) return '#ff4b4b';
-  if (pos.includes('所長') || pos.includes('課長')) return '#4b7bff';
-  if (pos.includes('副長')) return '#ff9500';
-  if (pos.includes('係長')) return '#00e676';
+  const p = String(pos);
+  if (p.includes('支店長') || p.includes('副支店長')) return '#ffd700';
+  if (p.includes('部長')) return '#ff4b4b';
+  if (p.includes('所長') || p.includes('課長')) return '#4b7bff';
+  if (p.includes('副長')) return '#ff9500';
+  if (p.includes('係長')) return '#00e676';
   return '#a0aec0';
 };
 
@@ -154,7 +155,7 @@ const OrgChart_Desktop = ({ units, members, onMemberClick }) => {
     units.forEach(u => { unitMap[u.id] = { ...u, children: [], members: [] }; });
 
     const isLeader = (m, unit) => {
-      const p = m.position;
+      const p = m.position ? String(m.position) : '';
       const unitMembers = members.filter(mem => mem.unitId === unit.id);
 
       // 支店長・副支店長は常にリーダー
@@ -164,7 +165,7 @@ const OrgChart_Desktop = ({ units, members, onMemberClick }) => {
       if (m.additionalUnitIds && m.additionalUnitIds.includes(unit.id)) return true;
 
       const minPrio = Math.min(...unitMembers.map(mem => {
-        const pos = mem.position;
+        const pos = mem.position ? String(mem.position) : '';
         if (pos.includes('支店長')) return 1;
         if (pos.includes('副支店長')) return 2;
         if (pos.includes('部長')) return 3;
@@ -227,9 +228,10 @@ const OrgChart_Desktop = ({ units, members, onMemberClick }) => {
         .filter(m => !isLeader(m, u))
         .sort((a, b) => {
           const getP = (p) => {
-            if (p.includes('所長') || p.includes('課長')) return 10;
-            if (p.includes('副長')) return 20;
-            if (p.includes('係長')) return 30;
+            const ps = p ? String(p) : '';
+            if (ps.includes('所長') || ps.includes('課長')) return 10;
+            if (ps.includes('副長')) return 20;
+            if (ps.includes('係長')) return 30;
             return 100;
           };
           const prioA = getP(a.position);
