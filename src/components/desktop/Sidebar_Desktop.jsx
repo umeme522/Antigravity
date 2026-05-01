@@ -209,9 +209,16 @@ const Sidebar_Desktop = ({ members = [], units = [], searchTerm = '', setSearchT
           <div style={{ flex: 1, overflowY: 'auto', paddingRight: '4px' }}>
             <h2 style={{ fontSize: '1.1rem', fontWeight: '900', color: '#ffffff', marginBottom: '24px' }}>STATISTICS</h2>
 
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px', marginBottom: '10px' }}>
-              <StatCard label="総人数" value={members.length} unit="名" icon={Users} color="#4b7bff" />
-              <StatCard label="男女構成比" value={stats.genderRatioLabel} unit={stats.genderPercentLabel} icon={Users} color="#ff4b4b" isGender={true} />
+            <div style={{ marginBottom: '16px' }}>
+              <StatCard 
+                label="組織構成サマリー" 
+                total={members.length}
+                value={stats.genderRatioLabel} 
+                unit={stats.genderPercentLabel} 
+                icon={Users} 
+                color="var(--accent-primary)" 
+                isSummary={true} 
+              />
             </div>
 
 
@@ -277,36 +284,46 @@ const Sidebar_Desktop = ({ members = [], units = [], searchTerm = '', setSearchT
   );
 };
 
-const StatCard = ({ label, value, unit, icon: Icon, color, isGender }) => {
-  if (isGender) {
+const StatCard = ({ label, value, unit, total, icon: Icon, color, isSummary }) => {
+  if (isSummary) {
     const [maleText, femaleText] = String(value).split(':');
     const [maleP, femaleP] = String(unit).replace(/[()]/g, '').split(':').map(p => parseInt(p));
 
     return (
-      <div className="glass" style={{ padding: '20px', borderRadius: '18px', border: '1px solid var(--glass-border)', gridColumn: 'span 2' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '16px' }}>
-          <div style={{ padding: '8px', borderRadius: '10px', background: `${color}15`, color: color }}>
-            <Icon size={18} />
+      <div className="glass" style={{ padding: '24px', borderRadius: '20px', border: '1px solid var(--glass-border)', background: 'rgba(255, 255, 255, 0.05)' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '20px' }}>
+          <div style={{ padding: '10px', borderRadius: '12px', background: `${color}15`, color: color }}>
+            <Icon size={20} />
           </div>
-          <span style={{ fontSize: '0.75rem', color: 'rgba(255,255,255,0.4)', fontWeight: '800', letterSpacing: '0.05em' }}>{label}</span>
+          <span style={{ fontSize: '0.8rem', color: 'rgba(255,255,255,0.5)', fontWeight: '800', letterSpacing: '0.08em' }}>{label}</span>
         </div>
         
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: '10px' }}>
-          <div>
-            <span style={{ fontSize: '1.6rem', fontWeight: '900', color: '#4b7bff' }}>{maleText.replace('男 ', '').trim()}</span>
-            <span style={{ fontSize: '0.75rem', color: 'rgba(255,255,255,0.3)', marginLeft: '4px' }}>名 (男)</span>
-          </div>
-          <div>
-            <span style={{ fontSize: '1.6rem', fontWeight: '900', color: '#ff4b4b' }}>{femaleText.replace('女 ', '').trim()}</span>
-            <span style={{ fontSize: '0.75rem', color: 'rgba(255,255,255,0.3)', marginLeft: '4px' }}>名 (女)</span>
+        <div style={{ textAlign: 'center', marginBottom: '24px' }}>
+          <div style={{ fontSize: '0.75rem', color: 'rgba(255,255,255,0.4)', marginBottom: '4px', fontWeight: 'bold' }}>総人数</div>
+          <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'center', gap: '8px' }}>
+            <span style={{ fontSize: '2.8rem', fontWeight: '900', color: '#ffffff', lineHeight: 1 }}>{total}</span>
+            <span style={{ fontSize: '1rem', color: 'rgba(255,255,255,0.3)', fontWeight: 'bold' }}>名</span>
           </div>
         </div>
 
-        <div style={{ width: '100%', height: '8px', background: 'rgba(255,255,255,0.05)', borderRadius: '10px', overflow: 'hidden', display: 'flex' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: '12px' }}>
+          <div style={{ textAlign: 'left' }}>
+            <div style={{ fontSize: '0.65rem', color: '#4b7bff', fontWeight: '900', marginBottom: '2px' }}>男性</div>
+            <span style={{ fontSize: '1.4rem', fontWeight: '900', color: '#ffffff' }}>{maleText.replace('男 ', '').trim()}</span>
+            <span style={{ fontSize: '0.7rem', color: 'rgba(255,255,255,0.3)', marginLeft: '4px' }}>名</span>
+          </div>
+          <div style={{ textAlign: 'right' }}>
+            <div style={{ fontSize: '0.65rem', color: '#ff4b4b', fontWeight: '900', marginBottom: '2px' }}>女性</div>
+            <span style={{ fontSize: '1.4rem', fontWeight: '900', color: '#ffffff' }}>{femaleText.replace('女 ', '').trim()}</span>
+            <span style={{ fontSize: '0.7rem', color: 'rgba(255,255,255,0.3)', marginLeft: '4px' }}>名</span>
+          </div>
+        </div>
+
+        <div style={{ width: '100%', height: '10px', background: 'rgba(255,255,255,0.05)', borderRadius: '10px', overflow: 'hidden', display: 'flex' }}>
           <div style={{ width: `${maleP}%`, height: '100%', background: 'linear-gradient(90deg, #4b7bff, #32a1fa)', borderRadius: '10px 0 0 10px' }} />
           <div style={{ width: `${femaleP}%`, height: '100%', background: 'linear-gradient(90deg, #f54242, #ff4b4b)', borderRadius: '0 10px 10px 0' }} />
         </div>
-        <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '6px', fontSize: '0.65rem', fontWeight: '800', opacity: 0.4 }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '8px', fontSize: '0.75rem', fontWeight: '900', color: 'rgba(255,255,255,0.5)' }}>
           <span>{maleP}%</span>
           <span>{femaleP}%</span>
         </div>
