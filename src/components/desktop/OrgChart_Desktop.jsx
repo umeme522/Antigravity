@@ -217,16 +217,28 @@ const OrgChart_Desktop = ({ units, members, onMemberClick }) => {
       return subtreeSizeMap[unitId];
     };
 
+    const getContextualMember = (m, unitId) => {
+      if (m.unitPositions && m.unitPositions[unitId]) {
+        return { ...m, position: m.unitPositions[unitId] };
+      }
+      return m;
+    };
+
     const layout = (unitId, x, y, level = 0) => {
       const u = unitMap[unitId];
       const isExpanded = expandedUnits.has(unitId);
       const size = subtreeSizeMap[unitId];
-      const leaders = u.members.filter(m => isLeader(m, u)).sort((a, b) => {
-        const getP = (p) => p.includes('支店長') ? 1 : (p.includes('副支店長') ? 2 : 3);
-        return getP(a.position) - getP(b.position);
-      });
+      const leaders = u.members
+        .filter(m => isLeader(m, u))
+        .map(m => getContextualMember(m, unitId)) // その場所での役職に上書き
+        .sort((a, b) => {
+          const getP = (p) => p.includes('支店長') ? 1 : (p.includes('副支店長') ? 2 : 3);
+          return getP(a.position) - getP(b.position);
+        });
+        
       const generalMembers = u.members
         .filter(m => !isLeader(m, u))
+        .map(m => getContextualMember(m, unitId)) // その場所での役職に上書き
         .sort((a, b) => {
           const getP = (p) => {
             const ps = p ? String(p) : '';
@@ -238,8 +250,6 @@ const OrgChart_Desktop = ({ units, members, onMemberClick }) => {
           const prioA = getP(a.position);
           const prioB = getP(b.position);
           if (prioA !== prioB) return prioA - prioB;
-
-          // 同役職なら入社年度順（古い順）
           return String(a.joinDate || '9999').localeCompare(String(b.joinDate || '9999'));
         });
 

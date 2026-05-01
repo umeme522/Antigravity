@@ -31,9 +31,10 @@ export const mockData = {
       id: "m_okubo", 
       lastName: "大久保", 
       firstName: "祐介", 
-      position: "支店長 兼 営業革新部長", 
+      position: "支店長", 
       unitId: "u1", 
       additionalUnitIds: ["u_hq_innovation"], 
+      unitPositions: { "u_hq_innovation": "部長" }, // 兼務先での役職
       photo: "https://api.dicebear.com/7.x/identicon/svg?seed=Okubo", 
       employeeId: "", 
       gender: "男性" 
@@ -42,9 +43,10 @@ export const mockData = {
       id: "m_horiuchi", 
       lastName: "堀内", 
       firstName: "芳人", 
-      position: "副支店長 兼 業務3部長", 
+      position: "副支店長", 
       unitId: "u1", 
       additionalUnitIds: ["u_dept3"],
+      unitPositions: { "u_dept3": "部長" }, // 兼務先での役職
       photo: "https://api.dicebear.com/7.x/identicon/svg?seed=Horiuchi", 
       employeeId: "", 
       joinDate: "2001", 
