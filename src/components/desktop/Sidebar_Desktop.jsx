@@ -240,16 +240,29 @@ const Sidebar_Desktop = ({ members = [], units = [], searchTerm = '', setSearchT
             </div>
 
             <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
-              <div className="glass" style={{ padding: '20px', borderRadius: '16px', border: '1px solid rgba(255,255,255,0.1)' }}>
-                <h3 style={{ fontSize: '0.85rem', color: 'rgba(255,255,255,0.6)', marginBottom: '16px', fontWeight: 'bold' }}>年代別構成</h3>
+              <div className="glass" style={{ padding: '24px', borderRadius: '20px', border: '1px solid rgba(255,255,255,0.08)', background: 'rgba(255,255,255,0.02)' }}>
+                <h3 style={{ fontSize: '0.85rem', color: 'rgba(255,255,255,0.5)', marginBottom: '24px', fontWeight: '800', letterSpacing: '0.05em' }}>年代別構成</h3>
                 {stats.genData.map(gen => (
-                  <div key={gen.label} style={{ marginBottom: '12px' }}>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '6px', fontSize: '0.75rem' }}>
-                      <span style={{ color: 'white', fontWeight: 'bold' }}>{gen.label}</span>
-                      <span style={{ color: '#ffffff', fontWeight: 'bold', opacity: 0.9 }}>{gen.count}名 ({gen.percent}%)</span>
+                  <div key={gen.label} style={{ marginBottom: '18px' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
+                      <span style={{ fontSize: '0.75rem', color: 'rgba(255,255,255,0.9)', fontWeight: '700' }}>{gen.label}</span>
+                      <div style={{ textAlign: 'right' }}>
+                        <span style={{ fontSize: '0.85rem', color: '#fff', fontWeight: '900' }}>{gen.percent}%</span>
+                        <span style={{ fontSize: '0.65rem', color: 'rgba(255,255,255,0.4)', fontWeight: '700', marginLeft: '6px' }}>{gen.count}名</span>
+                      </div>
                     </div>
-                    <div style={{ height: '6px', background: 'rgba(255,255,255,0.05)', borderRadius: '3px', overflow: 'hidden' }}>
-                      <motion.div initial={{ width: 0 }} animate={{ width: `${gen.percent}%` }} transition={{ duration: 1 }} style={{ height: '100%', background: 'var(--accent-primary)', borderRadius: '3px' }} />
+                    <div style={{ height: '8px', background: 'rgba(255,255,255,0.04)', borderRadius: '4px', overflow: 'hidden', position: 'relative' }}>
+                      <motion.div 
+                        initial={{ width: 0 }} 
+                        animate={{ width: `${gen.percent}%` }} 
+                        transition={{ duration: 1.2, ease: "easeOut" }} 
+                        style={{ 
+                          height: '100%', 
+                          background: 'linear-gradient(90deg, #00b09b, #96c93d)', 
+                          borderRadius: '4px',
+                          boxShadow: gen.percent > 0 ? '0 0 10px rgba(0, 176, 155, 0.2)' : 'none'
+                        }} 
+                      />
                     </div>
                   </div>
                 ))}
