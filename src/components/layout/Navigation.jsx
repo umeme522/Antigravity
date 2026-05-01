@@ -100,8 +100,6 @@ const Navigation = ({
           </div>
           <span style={{ fontSize: '0.55rem', color: 'var(--accent-primary)', fontWeight: '900', letterSpacing: '0.15em', opacity: 0.8 }}>CRESCENT</span>
         </div>
-          <span style={{ fontSize: '0.55rem', color: 'var(--accent-primary)', fontWeight: '900', letterSpacing: '0.15em', opacity: 0.8 }}>CRESCENT</span>
-        </div>
       </div>
     </div>
   );
