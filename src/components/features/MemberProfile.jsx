@@ -254,10 +254,10 @@ const MemberProfile = ({ member, unit, units, onUpdate, onDelete, onClose, isPer
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
             <div className="form-group">
               <label style={{ color: 'var(--text-secondary)', fontSize: '0.8rem', marginBottom: '4px', display: 'block' }}>性別</label>
-              <select name="gender" value={formData.gender || ''} onChange={handleChange} className="edit-input">
-                <option value="">未設定</option>
-                <option value="男性">男性</option>
-                <option value="女性">女性</option>
+              <select name="gender" value={formData.gender || ''} onChange={handleChange} className="edit-input" style={{ color: '#fff', background: '#1a1d26' }}>
+                <option value="" style={{ background: '#1a1d26', color: '#fff' }}>未設定</option>
+                <option value="男性" style={{ background: '#1a1d26', color: '#fff' }}>男性</option>
+                <option value="女性" style={{ background: '#1a1d26', color: '#fff' }}>女性</option>
               </select>
             </div>
             <div className="form-group">
@@ -268,16 +268,16 @@ const MemberProfile = ({ member, unit, units, onUpdate, onDelete, onClose, isPer
 
           <div className="form-group">
             <label style={{ color: 'var(--text-secondary)', fontSize: '0.8rem', marginBottom: '4px', display: 'block' }}>役職</label>
-            <select name="position" value={formData.position || ''} onChange={handleChange} className="edit-input">
-              <option value="">役職なし</option>
-              {POSITIONS.map(p => <option key={p} value={p}>{p}</option>)}
+            <select name="position" value={formData.position || ''} onChange={handleChange} className="edit-input" style={{ color: '#fff', background: '#1a1d26' }}>
+              <option value="" style={{ background: '#1a1d26', color: '#fff' }}>役職なし</option>
+              {POSITIONS.map(p => <option key={p} value={p} style={{ background: '#1a1d26', color: '#fff' }}>{p}</option>)}
             </select>
           </div>
 
           <div className="form-group">
             <label style={{ color: 'var(--text-secondary)', fontSize: '0.8rem', marginBottom: '4px', display: 'block' }}>所属部署</label>
-            <select name="unitId" value={formData.unitId || ''} onChange={handleChange} className="edit-input">
-              <option value="">部署なし</option>
+            <select name="unitId" value={formData.unitId || ''} onChange={handleChange} className="edit-input" style={{ color: '#fff', background: '#1a1d26' }}>
+              <option value="" style={{ background: '#1a1d26', color: '#fff' }}>部署なし</option>
               {renderUnitOptions()}
             </select>
           </div>
@@ -289,8 +289,8 @@ const MemberProfile = ({ member, unit, units, onUpdate, onDelete, onClose, isPer
             </div>
             <div className="form-group">
               <label style={{ color: 'var(--text-secondary)', fontSize: '0.8rem', marginBottom: '4px', display: 'block' }}>入社年度</label>
-              <select name="joinDate" value={formData.joinDate || ''} onChange={handleChange} className="edit-input">
-                <option value="">未設定</option>
+              <select name="joinDate" value={formData.joinDate || ''} onChange={handleChange} className="edit-input" style={{ color: '#fff', background: '#1a1d26' }}>
+                <option value="" style={{ background: '#1a1d26', color: '#fff' }}>未設定</option>
                 {renderYearOptions()}
               </select>
             </div>
