@@ -134,7 +134,7 @@ const Sidebar_Desktop = ({ members = [], units = [], searchTerm = '', setSearchT
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
               <div style={{ display: 'flex', alignItems: 'baseline', gap: '12px' }}>
                 <h2 style={{ fontSize: '1.1rem', fontWeight: '900', color: '#ffffff', margin: 0 }}>MEMBER</h2>
-                <span style={{ fontSize: '0.8rem', color: 'rgba(255,255,255,0.4)' }}>{members.length}名</span>
+                <span style={{ fontSize: '0.8rem', color: 'rgba(255,255,255,0.7)' }}>{members.length}名</span>
               </div>
               <button onClick={onAddMember} className="save-btn" style={{ padding: '6px 12px', height: '32px', width: 'auto' }}><Plus size={14} /> 追加</button>
             </div>
@@ -170,7 +170,7 @@ const Sidebar_Desktop = ({ members = [], units = [], searchTerm = '', setSearchT
                 <div key={title} style={{ marginBottom: '24px' }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '12px', borderBottom: '1px solid rgba(255,255,255,0.05)', paddingBottom: '6px' }}>
                     <h3 style={{ fontSize: '0.9rem', color: 'var(--accent-primary)', fontWeight: '800' }}>{title}</h3>
-                    <span style={{ fontSize: '0.75rem', color: 'rgba(255,255,255,0.3)' }}>{ms.length}名</span>
+                    <span style={{ fontSize: '0.75rem', color: 'rgba(255,255,255,0.6)' }}>{ms.length}名</span>
                   </div>
                   <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(110px, 1fr))', gap: '12px' }}>
                     {ms.sort((a, b) => {
@@ -232,7 +232,7 @@ const Sidebar_Desktop = ({ members = [], units = [], searchTerm = '', setSearchT
                   <div key={gen.label} style={{ marginBottom: '12px' }}>
                     <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '6px', fontSize: '0.75rem' }}>
                       <span style={{ color: 'white', fontWeight: 'bold' }}>{gen.label}</span>
-                      <span style={{ color: '#ffffff', fontWeight: 'bold' }}>{gen.count}名 ({gen.percent}%)</span>
+                      <span style={{ color: '#ffffff', fontWeight: 'bold', opacity: 0.9 }}>{gen.count}名 ({gen.percent}%)</span>
                     </div>
                     <div style={{ height: '6px', background: 'rgba(255,255,255,0.05)', borderRadius: '3px', overflow: 'hidden' }}>
                       <motion.div initial={{ width: 0 }} animate={{ width: `${gen.percent}%` }} transition={{ duration: 1 }} style={{ height: '100%', background: 'var(--accent-primary)', borderRadius: '3px' }} />
@@ -265,7 +265,7 @@ const Sidebar_Desktop = ({ members = [], units = [], searchTerm = '', setSearchT
                         <span style={{ color: 'white', whiteSpace: 'nowrap', fontWeight: 'bold' }}>{pos.label}</span>
                         <div style={{ marginLeft: 'auto', textAlign: 'right' }}>
                           <span style={{ color: '#ffffff', fontWeight: '900' }}>{pos.percent}%</span>
-                          <span style={{ color: 'rgba(255,255,255,0.7)', marginLeft: '4px', fontWeight: 'bold' }}>({pos.count}名)</span>
+                          <span style={{ color: 'rgba(255,255,255,0.9)', marginLeft: '4px', fontWeight: 'bold' }}>({pos.count}名)</span>
                         </div>
                       </div>
                     ))}
@@ -295,7 +295,7 @@ const StatCard = ({ label, value, unit, total, icon: Icon, color, isSummary }) =
           </div>
           <div style={{ display: 'flex', alignItems: 'baseline', gap: '4px' }}>
             <span style={{ fontSize: '1.4rem', fontWeight: '900', color: '#ffffff' }}>{total}</span>
-            <span style={{ fontSize: '0.7rem', color: 'rgba(255,255,255,0.3)', fontWeight: 'bold' }}>名</span>
+            <span style={{ fontSize: '0.7rem', color: 'rgba(255,255,255,0.7)', fontWeight: 'bold' }}>名</span>
           </div>
         </div>
 
@@ -310,7 +310,7 @@ const StatCard = ({ label, value, unit, total, icon: Icon, color, isSummary }) =
               <span style={{ color: '#ffffff' }}>{femaleText.replace('女 ', '').trim()}</span>
             </div>
           </div>
-          <div style={{ fontSize: '0.7rem', fontWeight: '900', color: 'rgba(255,255,255,0.4)' }}>
+          <div style={{ fontSize: '0.7rem', fontWeight: '900', color: 'rgba(255,255,255,0.8)' }}>
             {maleP}% : {femaleP}%
           </div>
         </div>
@@ -341,7 +341,7 @@ const StatCard = ({ label, value, unit, total, icon: Icon, color, isSummary }) =
       </div>
       <div style={{ display: 'flex', alignItems: 'baseline', gap: '4px' }}>
         <span style={{ fontSize: '1.1rem', fontWeight: '900', color: 'white' }}>{value}</span>
-        <span style={{ fontSize: '0.65rem', color: 'rgba(255,255,255,0.25)', fontWeight: '600' }}>{unit}</span>
+        <span style={{ fontSize: '0.65rem', color: 'rgba(255,255,255,0.6)', fontWeight: '600' }}>{unit}</span>
       </div>
     </div>
   );
