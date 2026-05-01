@@ -80,7 +80,6 @@ const UnitNode = ({ data }) => {
         <div
           key={`${leader.id}-${idx}`}
           onClick={() => onMemberClick(leader)}
-          className="glass"
           style={{
             padding: '12px 15px',
             paddingLeft: '35px',
@@ -91,7 +90,7 @@ const UnitNode = ({ data }) => {
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'flex-start',
-            gap: '28px',
+            gap: '20px',
             cursor: 'pointer',
           }}
         >
@@ -115,16 +114,18 @@ const MemberNode = ({ data }) => {
   const roleColor = getPositionColor(member.position);
   return (
     <div
-      className="glass"
       onClick={() => onClick(member)}
       style={{
+        padding: '12px 15px',
+        paddingLeft: '30px',
+        width: '260px',
         background: '#1a1d26',
         borderRadius: '16px',
-        border: '1px solid rgba(255, 255, 255, 0.08)',
+        border: '1px solid rgba(255, 255, 255, 0.1)',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'flex-start',
-        gap: '28px',
+        gap: '20px',
         cursor: 'pointer',
       }}
     >
