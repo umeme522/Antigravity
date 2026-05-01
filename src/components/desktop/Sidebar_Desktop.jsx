@@ -255,29 +255,54 @@ const Sidebar_Desktop = ({ members = [], units = [], searchTerm = '', setSearchT
                 ))}
               </div>
 
-              <div className="glass" style={{ padding: '20px', borderRadius: '16px', border: '1px solid rgba(255,255,255,0.1)' }}>
-                <h3 style={{ fontSize: '0.85rem', color: 'rgba(255,255,255,0.6)', marginBottom: '20px', fontWeight: 'bold' }}>役職構成比</h3>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
+              <div className="glass" style={{ padding: '24px', borderRadius: '20px', border: '1px solid rgba(255,255,255,0.08)', background: 'rgba(255,255,255,0.02)' }}>
+                <h3 style={{ fontSize: '0.85rem', color: 'rgba(255,255,255,0.5)', marginBottom: '24px', fontWeight: '800', letterSpacing: '0.05em' }}>役職構成比</h3>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '30px' }}>
                   <div style={{
-                    width: '100px', height: '100px', borderRadius: '50%', flexShrink: 0,
+                    width: '110px', height: '110px', borderRadius: '50%', flexShrink: 0,
                     background: `conic-gradient(${stats.posData.reduce((acc, pos, idx) => {
                       const prevPercent = stats.posData.slice(0, idx).reduce((sum, p) => sum + p.percent, 0);
                       const mForColor = members.find(m => getGroupTitle(m.position) === pos.label);
                       const color = getPositionColor(mForColor?.position);
-                      return `${acc}${idx > 0 ? ',' : ''} ${color} ${prevPercent}% ${prevPercent + pos.percent}%`;
+                      return `${acc}${idx > 0 ? ',' : ''} transparent ${prevPercent}% ${prevPercent + 0.8}%, ${color} ${prevPercent + 0.8}% ${prevPercent + pos.percent}%`;
                     }, '')
                       })`,
-                    position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 0 20px rgba(0,0,0,0.3)'
+                    position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'center'
                   }}>
-                    <div style={{ width: '60px', height: '60px', borderRadius: '50%', background: '#0d1117' }} />
+                    <div style={{ 
+                      width: '74px', height: '74px', borderRadius: '50%', 
+                      background: '#0d1117', display: 'flex', flexDirection: 'column', 
+                      alignItems: 'center', justifyContent: 'center',
+                      border: '1px solid rgba(255,255,255,0.05)'
+                    }}>
+                      <span style={{ fontSize: '1.1rem', fontWeight: '900', color: '#fff', lineHeight: 1 }}>{members.length}</span>
+                      <span style={{ fontSize: '0.55rem', color: 'rgba(255,255,255,0.4)', fontWeight: '800', marginTop: '2px' }}>TOTAL</span>
+                    </div>
                   </div>
 
-                  <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '8px' }}>
-                    {stats.posData.map(pos => (
-                      <div key={pos.label} style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '0.7rem' }}>
-                        <div style={{ width: '8px', height: '8px', borderRadius: '2px', background: getPositionColor(members.find(m => getGroupTitle(m.position) === pos.label)?.position) }} />
-                        <span style={{ color: 'white', whiteSpace: 'nowrap', fontWeight: 'bold' }}>{pos.label}</span>
-                        <div style={{ marginLeft: 'auto', textAlign: 'right' }}>
+                  <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                    {stats.posData.map(pos => {
+                      const mForColor = members.find(m => getGroupTitle(m.position) === pos.label);
+                      const color = getPositionColor(mForColor?.position);
+                      return (
+                        <div key={pos.label} style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                          <div style={{ width: '8px', height: '8px', borderRadius: '2px', background: color }} />
+                          <div style={{ flex: 1 }}>
+                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline' }}>
+                              <span style={{ fontSize: '0.7rem', color: 'rgba(255,255,255,0.7)', fontWeight: '700' }}>{pos.label}</span>
+                              <span style={{ fontSize: '0.75rem', color: '#fff', fontWeight: '900' }}>{pos.percent}%</span>
+                            </div>
+                            <div style={{ height: '2px', background: 'rgba(255,255,255,0.05)', borderRadius: '1px', marginTop: '3px', overflow: 'hidden' }}>
+                              <div style={{ height: '100%', width: `${pos.percent}%`, background: color, opacity: 0.4 }} />
+                            </div>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              </div>
+textAlign: 'right' }}>
                           <span style={{ color: '#ffffff', fontWeight: '900' }}>{pos.percent}%</span>
                           <span style={{ color: 'rgba(255,255,255,0.9)', marginLeft: '4px', fontWeight: 'bold' }}>({pos.count}名)</span>
                         </div>
@@ -390,12 +415,12 @@ const MemberCard = ({ m, onMemberClick }) => {
         ...getGlowStyle(m.position)
       }}
     >
-      <div style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '4px', background: roleColor, borderRadius: '18px 18px 0 0', opacity: 0.8 }} />
-      <div style={{ width: '52px', height: '52px', margin: '0 auto 10px', borderRadius: '14px', overflow: 'hidden', border: '2px solid rgba(255,255,255,0.1)', background: 'rgba(0,0,0,0.2)' }}>
+      <div style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '3px', background: roleColor, borderRadius: '20px 20px 0 0', opacity: 0.8 }} />
+      <div style={{ width: '64px', height: '64px', margin: '0 auto 12px', borderRadius: '50%', overflow: 'hidden', border: `2px solid ${roleColor}44`, background: 'rgba(0,0,0,0.2)', boxShadow: `0 8px 16px rgba(0,0,0,0.3)` }}>
         <img src={m.photo || getPlaceholderPhoto(m.id)} alt={m.lastName} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
       </div>
-      <div style={{ fontWeight: '800', fontSize: '0.85rem', color: '#fff', marginBottom: '4px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{m.lastName} {m.firstName}</div>
-      <div style={{ fontSize: '0.7rem', color: roleColor, fontWeight: '900', opacity: 0.9 }}>{m.position}</div>
+      <div style={{ fontWeight: '800', fontSize: '0.9rem', color: '#fff', marginBottom: '4px', letterSpacing: '0.02em' }}>{m.lastName} {m.firstName}</div>
+      <div style={{ fontSize: '0.7rem', color: roleColor, fontWeight: '900', opacity: 0.9, letterSpacing: '0.05em' }}>{m.position}</div>
     </motion.div>
   );
 };

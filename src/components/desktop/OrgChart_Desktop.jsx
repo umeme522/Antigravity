@@ -110,7 +110,7 @@ const UnitNode = ({ data }) => {
           <img 
             src={leader.photo || getPlaceholderPhoto(leader.id)} 
             alt={leader.lastName} 
-            style={{ width: '44px', height: '44px', borderRadius: '10px', objectFit: 'cover', objectPosition: 'center' }} 
+            style={{ width: '48px', height: '48px', borderRadius: '50%', objectFit: 'cover', border: `2px solid ${getPositionColor(leader.position)}44`, boxShadow: '0 4px 10px rgba(0,0,0,0.3)' }} 
           />
 
           <div style={{ textAlign: 'left' }}>
@@ -148,7 +148,7 @@ const MemberNode = ({ data }) => {
       <img 
         src={member.photo || getPlaceholderPhoto(member.id)} 
         alt={member.lastName} 
-        style={{ width: '44px', height: '44px', borderRadius: '10px', objectFit: 'cover', objectPosition: 'center' }} 
+        style={{ width: '48px', height: '48px', borderRadius: '50%', objectFit: 'cover', border: `2px solid ${getPositionColor(member.position)}44`, boxShadow: '0 4px 10px rgba(0,0,0,0.3)' }} 
       />
 
       <div style={{ textAlign: 'left' }}>
